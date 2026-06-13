@@ -10,6 +10,10 @@ load_dotenv()
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
 BOT_USERNAME = "@tayx361_test_bot"
 
+#                        Tayx        Laxan3000
+BOT_ADMINS: list[int] = [6028722644, 463844793]
+
+
 #### COMANDI ####
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -87,8 +91,6 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
 
     game_name = " ".join(context.args).strip().lower()
-    print(game_name)
-    id = ""
 
     best_similarity: float = 0
     best_id: str = ""    
@@ -122,8 +124,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     message_type: str = update.message.chat.type
     text: str = update.message.text or ''
 
-    print(f"User ({update.message.chat.id}) in {message_type}: \"{text}\"")
-
     if message_type == 'group':
         if BOT_USERNAME in text:
             new_text: str = text.replace(BOT_USERNAME, "").strip()
@@ -132,17 +132,21 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             return
     else:
         response = handle_responses(text)
-    
-    print("Bot:", response)
+
     await update.message.reply_text(response)
 
 
-async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print(f"Update {update} caused error {context.error}")
 
 
+async def post_init(application: Application) -> None:
+    for admin in BOT_ADMINS:
+        await application.bot.send_message(admin, "Bot online!")
+
+
 if __name__ == "__main__":
-    app = Application.builder().token(BOT_TOKEN).build()
+    app = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
 
     # Comandi
     app.add_handler(CommandHandler('start', start))
@@ -158,5 +162,4 @@ if __name__ == "__main__":
     app.add_error_handler(error) # type: ignore
 
     # Long Polling
-    print("Polling...")
-    app.run_polling()
+    app.run_polling(drop_pending_updates=True)
