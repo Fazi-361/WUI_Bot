@@ -1,8 +1,10 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-
 from dotenv import load_dotenv
+from jellyfish import jaro_winkler_similarity
+
 import os
+
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -35,7 +37,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti")
 
 async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Dato la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
+    """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
     
     if not context.args:
         await update.message.reply_text("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
@@ -60,26 +62,35 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(response)
 
-# TODO aggiustare, il codice non funziona ancora. Il gioco dato in input non viene mai trovato.
+
 async def id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
     if not context.args:
-        await update.message.reply_text("Scrivere il nome del gioco da cercare dopo lo /. \nesempio: /id La via della fortuna")
+        await update.message.reply_text("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
         return
 
     game_name = " ".join(context.args).strip().lower()
     print(game_name)
     id = ""
-    
+
+    best_similarity: float = 0
+    best_id: str = ""    
     with open("wiitdb.txt", "r", encoding="utf-8") as database:
         for line in database:
-            if line[8:].lower().strip == game_name:
-                id = line[0:6].strip()
-                break    
-    
-    if id=="":
-        await update.message.reply_text("Gioco non trovato")
+            line_game_name = line[9:].lower().strip()
+            similarity = jaro_winkler_similarity(game_name, line_game_name)
+            if similarity > best_similarity:
+                best_similarity = similarity
+                best_id = line[:6].removesuffix("=").strip()
+
+    response: str = ""
+    if best_similarity > 0.8:
+        response = best_id
     else:
-        await update.message.reply_text(id)
+        response = "Gioco non trovato"
+        
+    await update.message.reply_text(response)
+        
 
 # Risposte
 
