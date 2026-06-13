@@ -1,2 +1,25 @@
-- name: SSH Remote Commands
-  uses: appleboy/ssh-action@v1.2.5
+on: push
+
+jobs:
+  push_to_alwaysdata:
+    name: Pull
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute remote SSH commands using password
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: git pull
+
+  restart_bot:
+    name: Restart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart bot using curl API request
+        run: >
+          curl --basic --user ${{ secrets.API_KEY }}: 
+          --data '' --request POST 
+          https://api.alwaysdata.com/v1/service/${{ secrets.SERVICE_ID }}/restart
+      
