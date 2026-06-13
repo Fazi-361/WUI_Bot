@@ -1,8 +1,8 @@
 on: push
 
 jobs:
-  push_to_alwaysdata:
-    name: Pull
+  push_and_restart_bot_alwaysdata:
+    name: Pull and restart
     runs-on: ubuntu-latest
     steps:
       - name: Execute remote SSH commands using password
@@ -12,14 +12,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: git pull
-
-  restart_bot:
-    name: Restart
-    runs-on: ubuntu-latest
-    steps:
       - name: Restart bot using curl API request
         run: >
           curl --basic --user ${{ secrets.API_KEY }}: 
           --data '' --request POST 
           https://api.alwaysdata.com/v1/service/${{ secrets.SERVICE_ID }}/restart
-      
