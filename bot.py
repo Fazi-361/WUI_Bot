@@ -12,9 +12,13 @@ BOT_USERNAME = "@tayx361_test_bot"
 #### COMANDI ####
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Avvia il bot"""
+    
     await update.message.reply_text('Hello! Welcome!')
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Mostra la lista dei comandi"""
+
     await update.message.reply_text("""Ecco una lista dei comandi:
     /start - Avvia il bot
     /help - Mostra questo menù
@@ -22,15 +26,17 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     /deid - Restituisce il gioco della Wii o Gamecube corrispondente all'ID dato.""")
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # context.args è una lista, es: ['ciao', 'a', 'tutti']
+    """Ripete la frase data come argomento."""
+
     if context.args:
-        # Unisce le parole separate da uno spazio
         frase = " ".join(context.args)
         await update.message.reply_text(frase)
     else:
         await update.message.reply_text("Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti")
 
 async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Dato la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
+    
     if not context.args:
         await update.message.reply_text("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
         return
@@ -42,6 +48,7 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE):
         found = False
         with open("wiitdb.txt", "r", encoding="utf-8") as database:
             for line in database:
+                # Se i primi caratteri corrispondono all'ID, aggiungere il nome del gioco a game_names
                 if line[:len(id)] == id:
                     game_names.append(line[len(id)+2:].strip())
                     found = True
@@ -53,6 +60,7 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(response)
 
+# TODO aggiustare, il codice non funziona ancora. Il gioco dato in input non viene mai trovato.
 async def id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
         await update.message.reply_text("Scrivere il nome del gioco da cercare dopo lo /. \nesempio: /id La via della fortuna")
@@ -103,19 +111,19 @@ async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
 if __name__ == "__main__":
     app = Application.builder().token(BOT_TOKEN).build()
 
-    # Commands
+    # Comandi
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(CommandHandler('echo', echo))
     app.add_handler(CommandHandler('deid', deid))
     app.add_handler(CommandHandler('id', id))
 
-    # Messages
+    # Messagi estranei
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
 
-    # Errors
+    # Errori
     app.add_error_handler(error)
 
-    # Polls the bot
+    # Long Polling
     print("Polling...")
     app.run_polling()
