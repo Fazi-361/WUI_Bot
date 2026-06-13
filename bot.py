@@ -10,26 +10,24 @@ load_dotenv()
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
 BOT_USERNAME = "@tayx361_test_bot"
 
-#                        Tayx        Laxan3000
-BOT_ADMINS: list[int] = [6028722644, 463844793]
+#                       Tayx        Laxan3000
+BOT_ADMINS: set[int] = {6028722644, 463844793}
 
 
 #### COMANDI ####
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Avvia il bot"""
     if not update.message:
         return
 
-    """Avvia il bot"""
-
-    await update.message.reply_text('Hello! Welcome!')
+    await update.message.reply_text('Bot ancora in beta! Ritorna più tardi :)')
 
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Mostra la lista dei comandi"""
     if not update.message:
         return
-
-    """Mostra la lista dei comandi"""
 
     await update.message.reply_text("""Ecco una lista dei comandi:
     /start - Avvia il bot
@@ -39,10 +37,9 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Ripete la frase data come argomento."""
     if not update.message:
         return
-
-    """Ripete la frase data come argomento."""
 
     if context.args:
         frase = " ".join(context.args)
@@ -52,10 +49,9 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
     if not update.message:
         return
-
-    """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
     
     if not context.args:
         await update.message.reply_text("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
@@ -82,10 +78,10 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
     if not update.message:
         return
 
-    """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
     if not context.args:
         await update.message.reply_text("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
         return
