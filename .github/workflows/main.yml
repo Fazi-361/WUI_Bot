@@ -13,7 +13,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: git pull
       - name: Restart bot using curl API request
-        run: >
-          curl --basic --user ${{ secrets.API_KEY }}: 
-          --data '' --request POST 
-          https://api.alwaysdata.com/v1/service/${{ secrets.SERVICE_ID }}/restart
+        run: "curl -X POST --basic --user ${{ secrets.API_KEY }}: https://api.alwaysdata.com/v1/service/${{ secrets.SERVICE_ID }}/restart/"
