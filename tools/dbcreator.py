@@ -44,10 +44,10 @@ if (games := root.iter('game')) is None:
 else:
     CURSOR.executescript(
         """CREATE TABLE IF NOT EXISTS Game (
-            ShortID TEXT PRIMARY KEY,
+            MiniID TEXT PRIMARY KEY,
             PublisherID TEXT NOT NULL,
             
-            UNIQUE (ShortID, PublisherID),
+            UNIQUE (MiniID, PublisherID),
             FOREIGN KEY (PublisherID)
                 REFERENCES Company(Code)
                 ON DELETE CASCADE
@@ -58,20 +58,21 @@ else:
             Title TEXT NOT NULL,
             Synopsis TEXT,
             Game TEXT NOT NULL,
+            Region TEXT NOT NULL,
             
             PRIMARY KEY (Lang, Title),
             FOREIGN KEY (Game)
-                REFERENCES Game(ShortID)
+                REFERENCES Game(MiniID)
                 ON DELETE CASCADE
         ) STRICT;
         
         CREATE TABLE IF NOT EXISTS GameRelease (
-            ID TEXT PRIMARY KEY,
-            ShortID TEXT UNIQUE NOT NULL,
+            ShortID TEXT PRIMARY KEY,
+            MiniID TEXT UNIQUE NOT NULL,
             Date TEXT NOT NULL,
             
-            FOREIGN KEY (ShortID)
-                REFERENCES Game(ShortID)
+            FOREIGN KEY (MiniID)
+                REFERENCES Game(MiniID)
                 ON DELETE CASCADE
         );"""
     )
@@ -89,7 +90,7 @@ else:
             continue
 
         game_id = game_id.upper()
-        game_short_id: str = game_id[:3]
+        game_mini_id: str = game_id[:3]
         game_year: str = game_date.attrib["year"].rjust(4, '0')
         game_month: str = game_date.attrib["month"].rjust(2, '0')
         game_day: str = game_date.attrib["day"].rjust(2, '0')
@@ -98,7 +99,7 @@ else:
             CURSOR.execute(
                 "INSERT OR IGNORE INTO Game VALUES (?, ?)",
                 [
-                    game_short_id,
+                    game_mini_id,
                     game_id[4:]
                 ]
             )
@@ -115,20 +116,21 @@ else:
                 else None
             
             CURSOR.execute(
-                "INSERT OR REPLACE INTO GameLocale VALUES (?, ?, ?, ?)",
+                "INSERT OR REPLACE INTO GameLocale VALUES (?, ?, ?, ?, ?)",
                 [
                     game_locale.attrib["lang"].upper(),
                     game_title.text,
                     game_synopsis,
-                    game_short_id
+                    game_mini_id,
+                    game_id[3],
                 ]
             )
         
         CURSOR.execute(
             "INSERT OR REPLACE INTO GameRelease VALUES (?, ?, ?)",
             [
-                game_id,
-                game_short_id,
+                game_id[:4],
+                game_mini_id,
                 "-".join([game_year, game_month, game_day])
             ]
         )
