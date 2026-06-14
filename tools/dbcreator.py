@@ -45,6 +45,7 @@ else:
     CURSOR.executescript(
         """CREATE TABLE IF NOT EXISTS Game (
             MiniID TEXT PRIMARY KEY,
+            Developer TEXT,
             PublisherID TEXT NOT NULL,
             
             UNIQUE (MiniID, PublisherID),
@@ -74,38 +75,47 @@ else:
             FOREIGN KEY (MiniID)
                 REFERENCES Game(MiniID)
                 ON DELETE CASCADE
-        );"""
+        ) STRICT, WITHOUT ROWID;
+        
+        CREATE TABLE IF NOT EXISTS GameROM (
+            ShortID TEXT NOT NULL,
+            Version TEXT NOT NULL,
+            CRC TEXT UNIQUE,
+            MD5 TEXT UNIQUE,
+            SHA1 TEXT UNIQUE,
+            
+            PRIMARY KEY (ShortID, Version)
+        ) STRICT;"""
     )
     
     for game in games:
         # Removes custom games and games which are missing some keys
-        if (game_type := game.find("type")) is None \
-        or game_type.text == "CUSTOM" \
-        or (game_id := game.find("id")) is None \
-        or (game_id := game_id.text) is None \
-        or len(game_id) != 6 \
-        or (game_date := game.find("date")) is None \
-        or not {"year", "month", "day"}.issubset(game_date.attrib) \
-        or len(game_locales := game.findall("locale")) < 1:
+        #! FIXME: Currently WiiWares aren't included as their TitleID are always 4 letters
+        if (game_type := game.find("type")) is not None and bool(game_type.text) and game_type.text.casefold() in {"custom", "homebrew"} \
+        or ((game_id := game.find("id")) is None or (game_id := game_id.text) is None or len(game_id) != 6) \
+        or ((game_date := game.find("date")) is None or not {"year", "month", "day"}.issubset(game_date.attrib)) \
+        or len(game_locales := game.findall("locale")) < 1 \
+        or len(game_roms := game.findall("rom")) < 1:
+            print(f"{game.attrib["name"]} has been skipped.")
             continue
 
         game_id = game_id.upper()
         game_mini_id: str = game_id[:3]
+        game_short_id: str = game_id[:4]
         game_year: str = game_date.attrib["year"].rjust(4, '0')
         game_month: str = game_date.attrib["month"].rjust(2, '0')
         game_day: str = game_date.attrib["day"].rjust(2, '0')
 
-        try: 
-            CURSOR.execute(
-                "INSERT OR IGNORE INTO Game VALUES (?, ?)",
-                [
-                    game_mini_id,
-                    game_id[4:]
-                ]
-            )
-        except:
-            print(game_id)
-            exit()
+        CURSOR.execute(
+            "INSERT OR IGNORE INTO Game VALUES (?, ?, ?)",
+            [
+                game_mini_id,
+                game_developer.text
+                    if (game_developer := game.find("developer")) is not None
+                    else None,
+                game_id[4:]
+            ]
+        )
 
         for game_locale in game_locales:
             if (game_title := game_locale.find("title")) is None:
@@ -129,11 +139,23 @@ else:
         CURSOR.execute(
             "INSERT OR REPLACE INTO GameRelease VALUES (?, ?, ?)",
             [
-                game_id[:4],
+                game_short_id,
                 game_mini_id,
                 "-".join([game_year, game_month, game_day])
             ]
         )
+        
+        for game_rom in game_roms:
+            CURSOR.execute(
+                "INSERT OR REPLACE INTO GameROM VALUES (?, ?, ?, ?, ?)",
+                [
+                    game_short_id,
+                    game_rom.attrib["version"],
+                    game_rom.attrib.get("crc"),
+                    game_rom.attrib.get("md5"),
+                    game_rom.attrib.get("sha1")
+                ]
+            )
     
     print("Games have been inserted")
         
