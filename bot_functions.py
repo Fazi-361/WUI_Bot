@@ -92,7 +92,10 @@ async def deid_DB(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 WHERE gl.Game || gl.Region || g.PublisherID = '{id}'
                 LIMIT 1;""").fetchone()
             #print(game_name)
-            game_names.append(game_name if game_name is not None else f"{id} non trovato")
+            if game_name is None:
+                game_names.append(f"{id} non trovatp")
+            else:
+                game_names.append(game_name[0])
     
     response = "\n".join(game_names)
     await update.message.reply_text(response)
