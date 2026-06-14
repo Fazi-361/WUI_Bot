@@ -1,10 +1,8 @@
 import os
-import sqlite3
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from dotenv import load_dotenv
-from jellyfish import jaro_winkler_similarity
 
 from bot_functions import *
 

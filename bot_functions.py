@@ -1,10 +1,12 @@
-import os
 import sqlite3
 
+from pathlib import Path
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from dotenv import load_dotenv
+from telegram.ext import ContextTypes
 from jellyfish import jaro_winkler_similarity
+
+PATH: Path = Path(__file__).parent.resolve()
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Avvia il bot"""
@@ -68,6 +70,7 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     await update.message.reply_text(response)
 
+
 async def deid_DB(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
@@ -80,25 +83,24 @@ async def deid_DB(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     game_names: list[str] = []
 
-    with sqlite3.connect("Tools/database.db") as connection:
+    with sqlite3.connect(PATH/"tools"/"database.db") as connection:
         cursor = connection.cursor()
         for arg in context.args:
             id = arg.upper().strip()
             game_name = cursor.execute(
-                f"""
-                SELECT gl.Title
+                """SELECT gl.Title
                 FROM GameLocale gl
                 JOIN Game g ON gl.Game = g.MiniID
-                WHERE gl.Game || gl.Region || g.PublisherID = '{id}'
-                LIMIT 1;""").fetchone()
-            #print(game_name)
-            if game_name is None:
-                game_names.append(f"{id} non trovatp")
-            else:
-                game_names.append(game_name[0])
-    
+                WHERE CONCAT(gl.Game, gl.Region, g.PublisherID) = ?
+                LIMIT 1""",
+                [id]
+            ).fetchone()
+            
+            game_names.append(f"{id} non orato" if game_name is None else game_name[0])
+
     response = "\n".join(game_names)
     await update.message.reply_text(response)
+
 
 async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
