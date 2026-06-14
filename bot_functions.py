@@ -100,15 +100,23 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(response)
 
 async def copertina_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not context.args or not update.message:
+    if not update.message:
         return
     
-    if len(context.args) < 1:
+    if not context.args:
         await update.message.reply_text("Inserisci un ID!")
         return
-    
+
+    lang_codes=["EN", "JA", "FR", "DE", "ES", "IT", "NL", "PT", "RU", "KO", "ZHCN", "ZHTW"]
     id = context.args[0]
+    lang_code = "EN"  if id[3] != 'J' else "JA"
+    if len(context.args) > 1: 
+        lang_code = context.args[1].upper()
+        if lang_code not in lang_codes:
+            await update.message.reply_text("Codice della lingua non valido.")
+            return
+
     try:
-        await update.message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{"EN" if id[3] != 'J' else "JA"}/{id}.png")
+        await update.message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{lang_code}/{id}.png")
     except:
-        await update.message.reply_text("Apparentemente non esiste una copertina di questo gioco su GameTDB in EN o JA...")
+        await update.message.reply_text("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
