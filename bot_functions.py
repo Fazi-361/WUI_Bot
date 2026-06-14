@@ -100,4 +100,5 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(response)
 
 async def copertina_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    id = context.args[0]
     await update.message.reply_photo(f"https://art.gametdb.com/wii/cover/EN/{id}.png")
