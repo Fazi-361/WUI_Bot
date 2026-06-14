@@ -54,8 +54,9 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(CommandHandler('echo', echo))
-    app.add_handler(CommandHandler('deid', deid_DB))
+    app.add_handler(CommandHandler('deid', deid))
     app.add_handler(CommandHandler('id', id))
+    app.app_handler(CommandHandler('copertina_id', copertina_id))
 
     # Messagi estranei
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
