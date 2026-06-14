@@ -1,3 +1,6 @@
 .env
 .venv/
 test.py
+__pycache__
+__*
+.vscode

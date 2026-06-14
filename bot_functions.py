@@ -87,8 +87,10 @@ async def deid_DB(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             game_name = cursor.execute(
                 """SELECT gl.Title
                 FROM GameLocale gl
-                JOIN Game g ON gl.Game = g.MiniID
-                WHERE (gl.Game || gl.Region || g.PublisherID) = ?
+                JOIN GamePublisher gp
+                ON gl.MiniID = gp.MiniID
+                AND gl.Type = gp.Type
+                WHERE (gl.MiniID || gl.Region || COALESCE(gp.PublisherID, '')) = ?
                 LIMIT 1""",
                 [id]
             ).fetchone()
