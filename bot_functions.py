@@ -100,5 +100,15 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(response)
 
 async def copertina_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not context.args or not update.message:
+        return
+    
+    if len(context.args) < 1:
+        await update.message.reply_text("Inserisci un ID!")
+        return
+    
     id = context.args[0]
-    await update.message.reply_photo(f"https://art.gametdb.com/wii/cover/EN/{id}.png")
+    try:
+        await update.message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{"EN" if id[3] != 'J' else "JA"}/{id}.png")
+    except:
+        await update.message.reply_text("Apparentemente non esiste una copertina di questo gioco su GameTDB in EN o JA...")
