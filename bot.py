@@ -33,7 +33,8 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     /start - Avvia il bot
     /help - Mostra questo menù
     /echo - Ripete la parola data
-    /deid - Restituisce il gioco della Wii o Gamecube corrispondente all'ID dato.""")
+    /deid - Restituisce il gioco della Wii o Gamecube corrispondente all'ID dato.
+    /id   - Restituisce l'ID di un gioco della Wii o Gamecube dato il nome.""")
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -92,12 +93,12 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     best_id: str = ""    
     with open("wiitdb.txt", "r", encoding="utf-8") as database:
         for line in database:
-            line_game_name = line[9:].lower().strip()
+            is_wiiware = True if line[5] == "=" else False
+            line_game_name = line[7:].lower().strip() if is_wiiware else line[9:].lower().strip()
             similarity = jaro_winkler_similarity(game_name, line_game_name)
             if similarity > best_similarity:
                 best_similarity = similarity
-                best_id = line[:6].removesuffix("=").strip()
-
+                best_id = line[:4] if is_wiiware else line[:6]
     response: str = ""
     if best_similarity > 0.8:
         response = best_id
