@@ -1,11 +1,8 @@
 import sqlite3
 
-from pathlib import Path
 from telegram import Update
 from telegram.ext import ContextTypes
 from jellyfish import jaro_winkler_similarity
-
-PATH: Path = Path(__file__).parent.resolve()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -83,7 +80,7 @@ async def deid_DB(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     game_names: list[str] = []
 
-    with sqlite3.connect(PATH/"tools"/"database.db") as connection:
+    with sqlite3.connect("./tools/database.db") as connection:
         cursor = connection.cursor()
         for arg in context.args:
             id = arg.upper().strip()
