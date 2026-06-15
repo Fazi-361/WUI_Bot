@@ -18,11 +18,15 @@ async def get_title_page(
                 SELECT DISTINCT Lang, MiniID, Type, Region
                 FROM GameLocale
                 WHERE MiniID = ?
-                AND LENGTH(LANG) = 2
-                AND (LANG != 'EN' OR Region = 'P' OR Region = 'E')
-                AND (LANG != 'ES' OR Region = 'P')
-                AND LANG != 'KO'
-                AND LANG != 'DK'
+                AND (Lang != 'JA' OR Region = 'A' OR Region = 'J')
+                AND (Lang != 'EN' OR Region = 'A' OR Region = 'P' OR Region = 'E' OR REGION = 'N')
+                AND (Lang != 'DE' OR Region = 'A' OR Region = 'D' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
+                AND (Lang != 'FR' OR Region = 'A' OR Region = 'F' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
+                AND (Lang != 'IT' OR Region = 'A' OR Region = 'I' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
+                AND (Lang != 'ES' OR Region = 'A' OR Region = 'S' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
+                AND (Lang != 'KO' OR Region = 'A' OR Region = 'K' OR Region = 'Q' OR Region = 'T')
+                AND (Lang != 'SE' OR Region = 'V' OR Region = 'W')
+                AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
             ) l
             LEFT JOIN GamePublisher p
             ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
@@ -32,6 +36,7 @@ async def get_title_page(
         
         if results:
             markdown += "<tg-slideshow>\n"
+            # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
             if result_userlang := next((x for x in results if x[1] == lang), None):
                 results.insert(0, results.pop(results.index(result_userlang)))
         for result_type, result_lang, result_miniID, \
@@ -44,6 +49,7 @@ async def get_title_page(
             if not result_titleID in title_titleIDs:
                 title_titleIDs.append(result_titleID)
             
+            # Controlla che tutte le copertine esistano, controllando l'head dell'url
             cover_url = f"https://art.gametdb.com/{result_type}/coverfullHQ/{result_lang}/{result_titleID}.png"
             try:
                 if not (await requests_async.head(cover_url, timeout=3)).status_code == 200:
@@ -60,7 +66,7 @@ async def get_title_page(
         ).fetchone()
         
         markdown += f"# {result_title}\n"
-        markdown += f"<sup>{', '.join(f"[{f"=={x}==" if x == title_titleIDs[0] else x}](https://wiki.dolphin-emu.org/index.php?title={x})" for x in title_titleIDs)}</sup>\n"
+        markdown += f"<sup>[{', '.join(f'=={x}==' if x == titleID else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={titleID})</sup>\n"
         if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>"
     
     # TODO: continue

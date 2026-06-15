@@ -92,11 +92,12 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply("Inserisci un ID!")
         return
 
+    args = command.args.split()
     lang_codes=["EN", "JA", "FR", "DE", "ES", "IT", "NL", "PT", "RU", "KO", "ZHCN", "ZHTW"]
-    id = command.args[0]
+    id = args[0]
     lang_code = "EN"  if id[3] != 'J' else "JA"
-    if len(command.args) > 1: 
-        lang_code = command.args[1].upper()
+    if len(args) > 1: 
+        lang_code = args[1].upper()
         if lang_code not in lang_codes:
             await message.reply("Codice della lingua non valido.")
             return
@@ -107,6 +108,14 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
         
 
-async def test(message: Message) -> None:
+async def test(message: Message, command: CommandObject) -> None:
+    if not command.args \
+    or len(lang := (args := command.args.split())[0]) not in {2, 4}\
+    or len(titleID := args[1]) not in {4, 6}:
+        await message.reply("Inserisci la lingua e l'ID del titolo. Es: IT ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
+        return
+    
     from utils.get_title_page import get_title_page
-    await message.reply_rich(await get_title_page())
+    
+    try: await message.reply_rich(await get_title_page(lang, titleID))
+    except: await message.reply("Titolo non trovato o errore nella generazione della pagina.")
