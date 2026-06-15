@@ -110,7 +110,8 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
 
 async def test(message: Message, command: CommandObject) -> None:
     if not command.args \
-    or len(lang := (args := command.args.split())[0]) not in {2, 4}\
+    or len(args := command.args.split()) != 2 \
+    or len(lang := args[0]) not in {2, 4} \
     or len(title_id := args[1]) not in {4, 6}:
         await message.reply("Inserisci la lingua e l'ID del titolo. Es: IT ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
         return
@@ -118,7 +119,9 @@ async def test(message: Message, command: CommandObject) -> None:
     from utils.get_title_page import get_title_page
     import traceback
     
-    try: await message.reply_rich(await get_title_page(lang, title_id))
+    reply: Message = await message.reply("Generando le informazioni...")
+    try:
+        await reply.edit_text(rich_message= await get_title_page(lang, title_id))
     except Exception:
         print(traceback.format_exc())
-        await message.reply("Titolo non trovato o errore nella generazione della pagina.")
+        await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")

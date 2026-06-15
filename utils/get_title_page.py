@@ -1,7 +1,9 @@
 import sqlite3, requests_async
 from aiogram.types.input_rich_message import InputRichMessage
+from async_lru import alru_cache
 
 
+@alru_cache()
 async def get_title_page(
     lang: str = 'IT',
     title_id: str = 'ST7P01'
