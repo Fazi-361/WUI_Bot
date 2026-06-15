@@ -11,8 +11,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: |
-            git pull
-            if git diff --exit-code requirements.txt; then pip install -r requirements.txt; fi
+          script: git pull
       - name: Restart bot using curl API request
         run: "curl -X POST --basic --user ${{ secrets.API_KEY }}: https://api.alwaysdata.com/v1/service/${{ secrets.SERVICE_ID }}/restart/"
