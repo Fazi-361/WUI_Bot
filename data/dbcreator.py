@@ -80,7 +80,7 @@ else:
             Type TEXT DEFAULT `Wii`,
             Region TEXT NOT NULL,
             
-            PRIMARY KEY (Lang, Title, Region),
+            PRIMARY KEY (Lang, Region, MiniID),
             FOREIGN KEY (MiniID, Type)
                 REFERENCES Game(MiniID, Type)
                 ON DELETE CASCADE

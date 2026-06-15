@@ -41,7 +41,7 @@ async def deid(message: Message, command: CommandObject) -> None:
 
     with sqlite3.connect("./data/database.db") as connection:
         cursor = connection.cursor()
-        for arg in command.args:
+        for arg in command.args.split():
             id = arg.upper().strip()
             game_name = cursor.execute(
                 """SELECT gl.Title
@@ -105,3 +105,8 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{lang_code}/{id}.png")
     except:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
+        
+
+async def test(message: Message) -> None:
+    from utils.get_title_page import get_title_page
+    await message.reply_rich(await get_title_page())
