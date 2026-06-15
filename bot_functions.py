@@ -39,7 +39,7 @@ async def deid(message: Message, command: CommandObject) -> None:
 
     game_names: list[str] = []
 
-    with sqlite3.connect("/data/database.db") as connection:
+    with sqlite3.connect("./data/database.db") as connection:
         cursor = connection.cursor()
         for arg in command.args:
             id = arg.upper().strip()
