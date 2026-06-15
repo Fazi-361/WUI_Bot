@@ -170,10 +170,14 @@ else:
                 if (game_synopsis := game_locale.find("synopsis")) is not None \
                 else None
             
+            game_locale_name: str = game_locale.attrib["lang"].upper()
+            if game_locale_name == "EN" and game_region == "E":
+                game_locale_name = "US"
+            
             CURSOR.execute(
                 "INSERT OR REPLACE INTO GameLocale VALUES (?, ?, ?, ?, ?, ?)",
                 [
-                    game_locale.attrib["lang"].upper(),
+                    game_locale_name,
                     game_title.text,
                     game_synopsis,
                     game_mini_id,
