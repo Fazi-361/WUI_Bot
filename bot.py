@@ -106,7 +106,10 @@ if __name__ == "__main__":
     dp.message.register(copertina_id, CustomCommand('copertina_id'))
 
     # Messagi estranei
-    dp.message.register(handle_message, F.text)
+    dp.message.register(handle_message, 
+        F.text,
+        F.chat.type == "private"
+    )
 
     dp.error.register(error_handler)
 
