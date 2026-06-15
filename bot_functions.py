@@ -67,7 +67,7 @@ async def id(message: Message, command: CommandObject) -> None:
         await message.reply("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
         return
 
-    game_name = " ".join(command.args).strip().lower()
+    game_name = command.args.strip().lower()
 
     best_similarity: float = 0
     best_id: str = ""    
