@@ -1,24 +1,19 @@
 import sqlite3
 
-from telegram import Update
-from telegram.ext import ContextTypes
+from aiogram.types import Message
+from aiogram.filters import CommandObject
 from jellyfish import jaro_winkler_similarity
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(message: Message) -> None:
     """Avvia il bot"""
-    if not update.message:
-        return
-
-    await update.message.reply_text('Bot ancora in beta! Ritorna più tardi :)')
+    await message.reply('Bot ancora in beta! Ritorna più tardi :)')
 
 
-async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help(message: Message) -> None:
     """Mostra la lista dei comandi"""
-    if not update.message:
-        return
 
-    await update.message.reply_text("""Ecco una lista dei comandi:
+    await message.reply("""Ecco una lista dei comandi:
     /start - Avvia il bot
     /help - Mostra questo menù
     /echo - Ripete la parola data
@@ -26,32 +21,27 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     /id   - Restituisce l'ID di un gioco della Wii o Gamecube dato il nome.""")
 
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def echo(message: Message, command: CommandObject) -> None:
     """Ripete la frase data come argomento."""
-    if not update.message:
-        return
 
-    if context.args:
-        frase = " ".join(context.args)
-        await update.message.reply_text(frase)
-    else:
-        await update.message.reply_text("Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti")
+    await message.reply(
+        " ".join(command.args)
+        if command.args
+        else "Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti"
+    )
 
-async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-
+async def deid(message: Message, command: CommandObject) -> None:
     """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
-    if not update.message:
-        return
     
-    if not context.args:
-        await update.message.reply_text("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
+    if not command.args:
+        await message.reply("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
         return
 
     game_names: list[str] = []
 
     with sqlite3.connect("./tools/database.db") as connection:
         cursor = connection.cursor()
-        for arg in context.args:
+        for arg in command.args:
             id = arg.upper().strip()
             game_name = cursor.execute(
                 """SELECT gl.Title
@@ -67,19 +57,17 @@ async def deid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             game_names.append(f"{id} non orato" if game_name is None else game_name[0])
 
     response = "\n".join(game_names)
-    await update.message.reply_text(response)
+    await message.reply(response)
 
 
-async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def id(message: Message, command: CommandObject) -> None:
     """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
-    if not update.message:
+
+    if not command.args:
+        await message.reply("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
         return
 
-    if not context.args:
-        await update.message.reply_text("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
-        return
-
-    game_name = " ".join(context.args).strip().lower()
+    game_name = " ".join(command.args).strip().lower()
 
     best_similarity: float = 0
     best_id: str = ""    
@@ -97,26 +85,23 @@ async def id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         response = "Gioco non trovato"
         
-    await update.message.reply_text(response)
+    await message.reply(response)
 
-async def copertina_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
-        return
-    
-    if not context.args:
-        await update.message.reply_text("Inserisci un ID!")
+async def copertina_id(message: Message, command: CommandObject) -> None:
+    if not command.args:
+        await message.reply("Inserisci un ID!")
         return
 
     lang_codes=["EN", "JA", "FR", "DE", "ES", "IT", "NL", "PT", "RU", "KO", "ZHCN", "ZHTW"]
-    id = context.args[0]
+    id = command.args[0]
     lang_code = "EN"  if id[3] != 'J' else "JA"
-    if len(context.args) > 1: 
-        lang_code = context.args[1].upper()
+    if len(command.args) > 1: 
+        lang_code = command.args[1].upper()
         if lang_code not in lang_codes:
-            await update.message.reply_text("Codice della lingua non valido.")
+            await message.reply("Codice della lingua non valido.")
             return
 
     try:
-        await update.message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{lang_code}/{id}.png")
+        await message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{lang_code}/{id}.png")
     except:
-        await update.message.reply_text("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
+        await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")

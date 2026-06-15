@@ -1,30 +1,58 @@
 import os
 
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from traceback import format_exception
+from asyncio import run
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, ErrorEvent
+from aiogram.client.default import DefaultBotProperties
+from aiogram.filters import Command
+from aiogram.enums.parse_mode import ParseMode
+from aiogram.filters.command import CommandPatternType
 from dotenv import load_dotenv
 
 from bot_functions import *
 
 load_dotenv()
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
+dp: Dispatcher = Dispatcher()
+bot: Bot = Bot(
+    token= BOT_TOKEN,
+    default= DefaultBotProperties(
+        parse_mode=ParseMode.HTML,
+        disable_notification=True,
+        allow_sending_without_reply=True
+    )
+)
 BOT_USERNAME = "@tayx361_test_bot"
-
-#                       Tayx        Laxan3000
 BOT_ADMINS: set[int] = {6028722644, 463844793}
+#                       Tayx        Laxan3000
+
+# Classe Command personalizzata per impostare i prefissi
+# e le impostazioni di base per ogni comando predefinito
+class CustomCommand(Command):
+    def __init__(
+        self,
+        *values: CommandPatternType,
+        commands: tuple[CommandPatternType, ...] | CommandPatternType | None = None
+    ):
+        super().__init__(
+            *values,
+            commands= commands,
+            prefix= '/!.,;?',
+            ignore_case= True,
+            ignore_mention= False,
+        )
+
 
 
 # Risposte
 def handle_responses(text: str) -> str:
-    return "Non ho capito cos'hai scritto..."
+    return "Non ho capito cos'hai scritto..." # ?
 
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message:
-        return
-
-    message_type: str = update.message.chat.type
-    text: str = update.message.text or ''
+async def handle_message(message: Message) -> None:
+    message_type: str = message.chat.type
+    text: str = message.text or ''
 
     if message_type == 'group':
         if BOT_USERNAME in text:
@@ -35,34 +63,51 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     else:
         response = handle_responses(text)
 
-    await update.message.reply_text(response)
+    await message.reply(response)
 
 
-async def error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    print(f"Update {update} caused error {context.error}")
+async def error_handler(event: ErrorEvent) -> bool:
+    try:
+        print(''.join(format_exception(
+            type(event.exception),
+            value= event.exception,
+            tb= event.exception.__traceback__
+        )))
+    except:
+        return False
+    else:
+        return True
 
 
-async def post_init(application: Application) -> None:
+@dp.startup()
+async def startup_func(*args) -> None:
+    print("Bot started.")
     for admin in BOT_ADMINS:
-        await application.bot.send_message(admin, "Bot online!")
+        try: await bot.send_message(admin, "Bot online!")
+        except: pass
+
+
+async def main_polling() -> None:
+    await bot.delete_webhook(
+        drop_pending_updates= True
+    )
+    
+    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
-    app = Application.builder().token(BOT_TOKEN).post_init(post_init).build()
-
     # Comandi
-    app.add_handler(CommandHandler('start', start))
-    app.add_handler(CommandHandler('help', help))
-    app.add_handler(CommandHandler('echo', echo))
-    app.add_handler(CommandHandler('deid', deid))
-    app.add_handler(CommandHandler('id', id))
-    app.add_handler(CommandHandler('copertina_id', copertina_id))
+    dp.message.register(start, CustomCommand('start'))
+    dp.message.register(help, CustomCommand('help'))
+    dp.message.register(echo, CustomCommand('echo'))
+    dp.message.register(deid, CustomCommand('deid'))
+    dp.message.register(id, CustomCommand('id'))
+    dp.message.register(copertina_id, CustomCommand('copertina_id'))
 
     # Messagi estranei
-    app.add_handler(MessageHandler(filters.TEXT, handle_message))
+    dp.message.register(handle_message, F.text)
 
-    # Errori
-    # app.add_error_handler(error) # type: ignore
+    dp.error.register(error_handler)
 
     # Long Polling
-    app.run_polling(drop_pending_updates=True)
+    run(main_polling())
