@@ -4,11 +4,12 @@ from aiogram.types.input_rich_message import InputRichMessage
 
 async def get_title_page(
     lang: str = 'IT',
-    titleID: str = 'ST7P01'
+    title_id: str = 'ST7P01'
 ) -> InputRichMessage:
-    title_mini_id: str = titleID[:3]
-    title_region: str = titleID[3]
-    title_titleIDs: list[str] = [titleID]
+    title_mini_id: str = title_id[:3]
+    title_region: str = title_id[3]
+    title_publisher_id: str | None = title_id[4:] or None
+    title_titleIDs: list[str] = [title_id]
     markdown: str = ""
     
     with sqlite3.connect("./data/database.db") as conn:
@@ -25,13 +26,14 @@ async def get_title_page(
                 AND (Lang != 'IT' OR Region = 'A' OR Region = 'I' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
                 AND (Lang != 'ES' OR Region = 'A' OR Region = 'S' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
                 AND (Lang != 'KO' OR Region = 'A' OR Region = 'K' OR Region = 'Q' OR Region = 'T')
-                AND (Lang != 'SE' OR Region = 'V' OR Region = 'W')
+                AND ((Lang != 'SE' AND Lang != 'FI') OR Region = 'V' OR Region = 'W')
                 AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
             ) l
             LEFT JOIN GamePublisher p
             ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
+            WHERE p.PublisherID IS ?
             ORDER BY l.Region DESC""",
-            [title_mini_id]
+            [title_mini_id, title_publisher_id]
         ).fetchall()
         
         if results:
@@ -60,13 +62,23 @@ async def get_title_page(
         else:
             markdown += "</tg-slideshow>\n\n"
     
-        result_title, result_synopsis = conn.execute(
-            "SELECT Title, Synopsis FROM GameLocale WHERE LANG = ? AND Region = ? AND MiniID = ?",
-            [lang, title_region, title_mini_id]
-        ).fetchone()
+        # Aggiungi fallback alle lingue. Prova l'inglese come seconda opzione, poi il giapponese
+        result_title, result_synopsis = None, None
+        for test_lang in (lang, 'EN', 'JA'):
+            try:
+                result_title, result_synopsis = conn.execute(
+                    """SELECT l.Title, l.Synopsis
+                    FROM GameLocale l
+                    LEFT JOIN GamePublisher p
+                    ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
+                    WHERE l.LANG = ? AND l.Region = ? AND l.MiniID = ? AND p.PublisherID IS ?""",
+                    [test_lang, title_region, title_mini_id, title_publisher_id]
+                ).fetchone()
+            except: continue
+            else: break
         
         markdown += f"# {result_title}\n"
-        markdown += f"<sup>[{', '.join(f'=={x}==' if x == titleID else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={titleID})</sup>\n"
+        markdown += f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
         if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>"
     
     # TODO: continue
