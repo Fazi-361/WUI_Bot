@@ -19,14 +19,14 @@ async def get_title_page(
                 SELECT DISTINCT Lang, MiniID, Type, Region
                 FROM GameLocale
                 WHERE MiniID = ?
-                AND (Lang != 'JA' OR Region = 'A' OR Region = 'J')
-                AND (Lang != 'EN' OR Region = 'A' OR Region = 'P' OR Region = 'E' OR REGION = 'N')
-                AND (Lang != 'DE' OR Region = 'A' OR Region = 'D' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
-                AND (Lang != 'FR' OR Region = 'A' OR Region = 'F' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
-                AND (Lang != 'IT' OR Region = 'A' OR Region = 'I' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
-                AND (Lang != 'ES' OR Region = 'A' OR Region = 'S' OR Region = 'P' OR REGION = 'L' OR REGION = 'M')
-                AND (Lang != 'KO' OR Region = 'A' OR Region = 'K' OR Region = 'Q' OR Region = 'T')
-                AND ((Lang != 'SE' AND Lang != 'FI') OR Region = 'V' OR Region = 'W')
+                AND (Lang != 'JA' OR Region IN ('A', 'J'))
+                AND (Lang != 'EN' OR Region IN ('A', 'P', 'E', 'N'))
+                AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M'))
+                AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M'))
+                AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M'))
+                AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M'))
+                AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
+                AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
                 AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
             ) l
             LEFT JOIN GamePublisher p
