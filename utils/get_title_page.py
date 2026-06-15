@@ -34,9 +34,8 @@ async def get_title_page(
             ) l
             LEFT JOIN GamePublisher p
             ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
-            WHERE p.PublisherID IS ?
             ORDER BY l.Region DESC""",
-            [title_mini_id, title_publisher_id]
+            [title_mini_id]
         ).fetchall()
         
         if results:
