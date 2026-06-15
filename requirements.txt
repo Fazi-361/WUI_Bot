@@ -4,11 +4,15 @@ aiohappyeyeballs==2.6.2
 aiohttp==3.14.1
 aiosignal==1.4.0
 annotated-types==0.7.0
+anyio==4.13.0
 attrs==26.1.0
 certifi==2026.5.20
 charset-normalizer==3.4.7
 dotenv==0.9.9
 frozenlist==1.8.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
 idna==3.18
 jellyfish==1.2.1
 magic-filter==1.0.12
@@ -18,6 +22,8 @@ pydantic==2.13.4
 pydantic_core==2.46.4
 python-dotenv==1.2.2
 requests==2.34.2
+requests-async==0.2.4
+socksio==1.0.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.7.0
