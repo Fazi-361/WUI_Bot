@@ -1,6 +1,7 @@
-import sqlite3, requests_async
+import sqlite3
 from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
+from utils.fetch_url_head import fetch_url_head
 
 
 @alru_cache()
@@ -55,10 +56,8 @@ async def get_title_page(
             
             # Controlla che tutte le copertine esistano, controllando l'head dell'url
             cover_url = f"https://art.gametdb.com/{result_type}/coverfullHQ/{result_lang}/{result_titleID}.png"
-            try:
-                if not (await requests_async.head(cover_url, timeout=3)).status_code == 200:
-                    continue
-            except: continue
+            if not await fetch_url_head(cover_url):
+                continue
             
             markdown += f"![]({cover_url})"
         else:
