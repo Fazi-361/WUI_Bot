@@ -111,7 +111,15 @@ else:
             FOREIGN KEY (MiniID, Type)
                 REFERENCES Game(MiniID, Type)
                 ON DELETE CASCADE
-        ) STRICT;"""
+        ) STRICT;
+        
+        CREATE VIEW IF NOT EXISTS GameLocalePublisher AS
+        SELECT
+            p.MiniID, p.Type, p.Region, p.PublisherID, p.Publisher,
+            l.Lang, l.Title, l.Synopsis
+        FROM GameLocale l
+        LEFT JOIN GamePublisher p
+        ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region"""
     )
     
     for game in games:

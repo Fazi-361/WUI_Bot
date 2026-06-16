@@ -38,25 +38,20 @@ async def get_title_page(
     
     with sqlite3.connect("./data/database.db") as conn:
         results = conn.execute(
-            """SELECT DISTINCT l.Lang, l.MiniID, l.Region, p.PublisherID
-            FROM (
-                SELECT DISTINCT Lang, MiniID, Type, Region
-                FROM GameLocale
-                WHERE MiniID = ?
-                AND (Lang != 'JA' OR Region IN ('A', 'J'))
-                AND ((Lang != 'EN' AND Lang != 'US') OR Region IN ('A', 'P', 'E', 'N'))
-                AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M'))
-                AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M'))
-                AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M'))
-                AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M'))
-                AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
-                AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
-                AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
-            ) l
-            LEFT JOIN GamePublisher p
-            ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region"""
-            f" WHERE p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
-            " ORDER BY l.Region DESC",
+            """SELECT DISTINCT Lang, MiniID, Region, PublisherID
+            FROM GameLocalePublisher
+            WHERE MiniID = ?
+            AND (Lang != 'JA' OR Region IN ('A', 'J'))
+            AND ((Lang != 'EN' AND Lang != 'US') OR Region IN ('A', 'P', 'E', 'N'))
+            AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M'))
+            AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M'))
+            AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M'))
+            AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M'))
+            AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
+            AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
+            AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')"""
+            f" AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
+            " ORDER BY Region DESC",
             [title_mini_id]
         ).fetchall()
         
@@ -83,12 +78,10 @@ async def get_title_page(
         # Aggiungi fallback alle lingue per titolo e sinossi
         for test_lang, test_region in ((lang, title_region), ('US', 'E'), ('EN', 'P'), ('JA', 'J')):
             try: result_title, result_synopsis = conn.execute(
-                    """SELECT l.Title, l.Synopsis
-                    FROM GameLocale l
-                    LEFT JOIN GamePublisher p
-                    ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
-                    WHERE l.Lang = ? AND l.MiniID = ? AND l.Region = ?"""
-                    f" AND p.PublisherID IS {' NOT' if is_full_title_id else ''} NULL",
+                    """SELECT Title, Synopsis
+                    FROM GameLocalePublisher
+                    WHERE Lang = ? AND MiniID = ? AND Region = ?"""
+                    f" AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL",
                     [test_lang, title_mini_id, test_region]
                 ).fetchone()
             except: continue
@@ -99,13 +92,11 @@ async def get_title_page(
                 
                 # Ottieni il nome in tutte le altre lingue
                 results = conn.execute(
-                    """SELECT DISTINCT l.Lang, l.Region, l.Title
-                    FROM GameLocale l
-                    LEFT JOIN GamePublisher p
-                    ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
-                    WHERE l.MiniID = ? AND NOT (l.Lang = ? AND l.Region = ?)"""
-                    f" AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
-                    " ORDER BY l.Region DESC",
+                    """SELECT DISTINCT Lang, Region, Title
+                    FROM GameLocalePublisher
+                    WHERE MiniID = ? AND NOT (Lang = ? AND Region = ?)"""
+                    f" AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
+                    " ORDER BY Region DESC",
                     [title_mini_id, test_lang, test_region]
                 ).fetchall()
 
