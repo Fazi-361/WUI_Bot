@@ -1,4 +1,5 @@
 import sqlite3
+# from timeit import default_timer as timer
 from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
 from utils.fetch_url_head import fetch_cover_head
@@ -29,6 +30,7 @@ async def get_title_page(
     lang: str = 'IT',
     title_id: str = 'ST7P01'
 ) -> InputRichMessage:
+    # timer_start: float = timer()
     title_id_len: int = len(title_id)
     is_full_title_id: bool = title_id_len == 6
     title_mini_id: str = title_id[:3]
@@ -161,6 +163,8 @@ async def get_title_page(
                 markdown += "</details>\n"
     
     # TODO: continue
+    
+    # markdown += f"<sub>*generato in {timer() - timer_start:.3f} secondi*</sub>"
     
     return InputRichMessage(
         markdown=markdown,
