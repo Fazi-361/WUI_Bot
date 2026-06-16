@@ -81,16 +81,21 @@ async def error_handler(event: ErrorEvent) -> bool:
 
 @dp.startup()
 async def startup_func(*args) -> None:
-    if HOST and PATH: await bot.set_webhook(
-        url= f"{HOST}{PATH}",
-        drop_pending_updates= True,
-        secret_token= SECRET
-    )
+    if HOST and PATH:
+        await bot.set_webhook(
+            url= f"{HOST}{PATH}",
+            drop_pending_updates= True,
+            secret_token= SECRET
+        )
+    else:
+        await bot.delete_webhook(
+            drop_pending_updates= True
+        )
     
     print("Bot started.")
     for admin in BOT_ADMINS:
         try: await bot.send_message(admin, "Bot online!")
-        except: pass
+        except: print(f"Admin {admin} suffers from skill issue.")
 
 
 def main_webhook() -> None:
@@ -112,10 +117,6 @@ def main_webhook() -> None:
 
 
 async def main_polling() -> None:
-    await bot.delete_webhook(
-        drop_pending_updates= True
-    )
-    
     await dp.start_polling(bot)
 
 
