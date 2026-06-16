@@ -37,25 +37,9 @@ async def get_title_page(
     markdown: str = ""
     
     with sqlite3.connect("./data/database.db") as conn:
-        if results := conn.execute(
-            f"""SELECT g.Type, g.Developer, {'c.Name' if is_full_title_id else 'p.Publisher'}
-            FROM Game g
-            JOIN GamePublisher p
-            ON g.MiniID = p.MiniID AND g.Type = p.Type
-            {'LEFT JOIN Company c ON p.PublisherID = c.Code' if is_full_title_id else ''}
-            WHERE g.MiniID = ? and p.Region = ?
-            AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL
-            LIMIT 1""",
-            [title_mini_id, title_region]
-        ).fetchone():
-            title_type, title_developer, title_publisher = results
-        else:
-            raise
-        
         # Aggiungi fallback alle lingue per titolo e sinossi,
         # cambiando il valore del parametro lang e title_region
-        result_title = result_synopsis = None
-        for lang, title_region in ((lang, title_region), ('US', 'E'), ('EN', 'P'), ('JA', 'J')): #? Forse ottimizzabile
+        for lang in (lang, 'US', 'EN', 'JA'):
             if results := conn.execute(
                 """SELECT Title, Synopsis
                 FROM GameLocalePublisher
@@ -64,9 +48,26 @@ async def get_title_page(
                 [lang, title_mini_id, title_region]
             ).fetchone():
                 result_title, result_synopsis = results
+                english_japanese = lang == 'EN' and title_region == 'J'
                 break
-            
-        if not result_title:
+        else:
+            raise
+        
+        if results := conn.execute(
+            f"""SELECT g.Type, g.Developer, {'c.Name' if is_full_title_id else 'p.Publisher'}, r.Date, UNIXEPOCH(r.Date)
+            FROM Game g
+            JOIN GamePublisher p
+            ON g.MiniID = p.MiniID AND g.Type = p.Type
+            JOIN GameRelease r
+            ON g.MiniID = r.MiniID AND g.Type = r.Type and r.Region = p.Region
+            {'LEFT JOIN Company c ON p.PublisherID = c.Code' if is_full_title_id else ''}
+            WHERE g.MiniID = ? and p.Region = ?
+            AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL
+            LIMIT 1""",
+            [title_mini_id, title_region]
+        ).fetchone():
+            title_type, title_developer, title_publisher, title_release_date, title_release_unix = results
+        else:
             raise
         
         if results := conn.execute(
@@ -87,7 +88,8 @@ async def get_title_page(
         ).fetchall():
             markdown += "<tg-slideshow>\n"
             # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
-            if result_userlang := next((x for x in results if x[0] == lang), None):
+            cover_lang: str = "JA" if english_japanese else lang
+            if result_userlang := next((x for x in results if x[0] == cover_lang), None):
                 results.insert(0, results.pop(results.index(result_userlang)))
 
             for result_lang, result_titleID in results:
@@ -107,7 +109,8 @@ async def get_title_page(
             f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
             "\n"
             f"**Developer**: {title_developer}  \n"
-            f"**Publisher**: {title_publisher}\n\n"
+            f"**Publisher**: {title_publisher}  \n"
+            f"**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n"
         )
         
         if result_synopsis:
@@ -139,7 +142,7 @@ async def get_title_page(
                 markdown += f"<details><summary>Name in other languages</summary>\n"
                 
                 for result_lang, _, result_title, result_flag in results:
-                    markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' else ''}\n\n"
+                    markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
                 
                 markdown += f"</details>\n"
     
