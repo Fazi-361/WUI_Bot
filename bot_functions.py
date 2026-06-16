@@ -111,11 +111,11 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
 async def test(message: Message, command: CommandObject) -> None:
     if not command.args \
     or len(args := command.args.split()) != 2 \
-    or len(lang := args[0]) not in {2, 4} \
-    or len(title_id := args[1]) not in {4, 6}:
+    or len(lang := args[0].upper()) not in {2, 4} \
+    or len(title_id := args[1].upper()) not in {4, 6}:
         await message.reply("Inserisci la lingua e l'ID del titolo. Es: IT ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
         return
-    
+
     from utils.get_title_page import get_title_page
     import traceback
     
