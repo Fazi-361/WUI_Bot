@@ -37,6 +37,21 @@ async def get_title_page(
     markdown: str = ""
     
     with sqlite3.connect("./data/database.db") as conn:
+        if results := conn.execute(
+            f"""SELECT g.Type, g.Developer, {'c.Name' if is_full_title_id else 'p.Publisher'}
+            FROM Game g
+            JOIN GamePublisher p
+            ON g.MiniID = p.MiniID AND g.Type = p.Type
+            {'LEFT JOIN Company c ON p.PublisherID = c.Code' if is_full_title_id else ''}
+            WHERE g.MiniID = ? and p.Region = ?
+            AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL
+            LIMIT 1""",
+            [title_mini_id, title_region]
+        ).fetchone():
+            title_type, title_developer, title_publisher = results
+        else:
+            raise
+        
         # Aggiungi fallback alle lingue per titolo e sinossi,
         # cambiando il valore del parametro lang e title_region
         result_title = result_synopsis = None
@@ -57,7 +72,7 @@ async def get_title_page(
         if results := conn.execute(
             """SELECT DISTINCT Lang, MiniID || Region || COALESCE(PublisherID, '')
             FROM GameLocalePublisher
-            WHERE MiniID = ?
+            WHERE MiniID = ? AND Type = ?
             AND (Lang != 'JA' OR Region IN ('A', 'J'))
             AND ((Lang != 'EN' AND Lang != 'US') OR Region IN ('A', 'P', 'E', 'N'))
             AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M'))
@@ -66,10 +81,9 @@ async def get_title_page(
             AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M'))
             AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
             AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
-            AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')"""
-            f" AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
-            " ORDER BY Region DESC",
-            [title_mini_id]
+            AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
+            ORDER BY Region DESC""",
+            [title_mini_id, title_type]
         ).fetchall():
             markdown += "<tg-slideshow>\n"
             # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
@@ -88,18 +102,29 @@ async def get_title_page(
 
             markdown += "</tg-slideshow>\n"
         
-        markdown += f"# {result_title}{'[^EN]' if lang == 'JA' else ''}\n"
-        markdown += f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
-        if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>\n"
+        markdown += (
+            f"# {result_title}{'[^EN]' if lang == 'JA' else ''}\n"
+            f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
+            "\n"
+            f"**Developer**: {title_developer}  \n"
+            f"**Publisher**: {title_publisher}\n\n"
+        )
+        
+        if result_synopsis:
+            markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>\n"
+
+        # if results := conn.execute(
+            
+        # ):
 
         # Ottieni il nome in tutte le altre lingue
         if results := conn.execute(
             """SELECT DISTINCT Lang, Region, Title
-            FROM GameLocalePublisher
-            WHERE MiniID = ? AND NOT (Lang = ? AND Region = ?)"""
-            f" AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
-            " ORDER BY Region DESC",
-            [title_mini_id, lang, title_region]
+            FROM GameLocale
+            WHERE MiniID = ? AND NOT (Lang = ? AND Region = ?)
+            AND Type = ?
+            ORDER BY Region DESC""",
+            [title_mini_id, lang, title_region, title_type]
         ).fetchall():
             if japanese_transliteration := [
                 x[2] for x in results
