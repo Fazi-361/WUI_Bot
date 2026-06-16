@@ -3,6 +3,26 @@ from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
 from utils.fetch_url_head import fetch_url_head
 
+LANG_FLAGS: dict[tuple[str, str], str] = {
+    ('JA', 'J'): '🇯🇵',
+    ('EN', 'P'): '🇬🇧',
+    ('US', 'E'): '🇺🇸',
+    ('DE', 'D'): '🇩🇪',
+    ('DE', 'P'): '🇩🇪',
+    ('FR', 'F'): '🇫🇷',
+    ('FR', 'P'): '🇫🇷',
+    ('IT', 'I'): '🇮🇹',
+    ('IT', 'P'): '🇮🇹',
+    ('ES', 'S'): '🇪🇸',
+    ('ES', 'P'): '🇪🇸',
+    ('KO', 'K'): '🇰🇷',
+    ('SE', 'V'): '🇸🇪',
+    ('SE', 'W'): '🇸🇪',
+    ('FI', 'V'): '🇫🇮',
+    ('ZHCN', 'W'): '🇨🇳',
+    ('ZHTW', 'W'): '🇹🇼'
+}
+
 
 @alru_cache()
 async def get_title_page(
@@ -12,6 +32,7 @@ async def get_title_page(
     title_id_len: int = len(title_id)
     is_full_title_id: bool = title_id_len == 6
     title_mini_id: str = title_id[:3]
+    title_region: str = title_id[3]
     title_titleIDs: list[str] = [title_id]
     markdown: str = ""
     
@@ -58,29 +79,49 @@ async def get_title_page(
             markdown += f"![]({cover_url})"
         else:
             markdown += "</tg-slideshow>\n\n"
-    
-        # Aggiungi fallback alle lingue. Prova l'inglese come seconda opzione, poi il giapponese
-        result_title, result_synopsis = None, None
-        for test_lang in (lang, 'EN', 'US', 'JA'):
-            try:
-                result_title, result_synopsis = conn.execute(
+        
+        # Aggiungi fallback alle lingue per titolo e sinossi
+        for test_lang, test_region in ((lang, title_region), ('US', 'E'), ('EN', 'P'), ('JA', 'J')):
+            try: result_title, result_synopsis = conn.execute(
                     """SELECT l.Title, l.Synopsis
-                    FROM Game g
-                    LEFT JOIN GameLocale l
-                    ON l.MiniID = g.MiniID AND l.Type = g.Type
+                    FROM GameLocale l
                     LEFT JOIN GamePublisher p
-                    ON g.MiniID = p.MiniID AND g.Type = p.Type AND l.Region = p.Region
-                    WHERE l.Lang = ? AND l.MiniID = ?"""
-                    f" AND p.PublisherID IS {' NOT' if is_full_title_id else ''} NULL"
-                    " ORDER BY l.Region DESC",
-                    [test_lang, title_mini_id]
+                    ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
+                    WHERE l.Lang = ? AND l.MiniID = ? AND l.Region = ?"""
+                    f" AND p.PublisherID IS {' NOT' if is_full_title_id else ''} NULL",
+                    [test_lang, title_mini_id, test_region]
                 ).fetchone()
             except: continue
-            else: break
-        
-        markdown += f"# {result_title}\n"
-        markdown += f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
-        if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>"
+            else:
+                markdown += f"# {result_title}\n"
+                markdown += f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
+                if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>\n"
+                
+                # Ottieni il nome in tutte le altre lingue
+                results = conn.execute(
+                    """SELECT DISTINCT l.Lang, l.Region, l.Title
+                    FROM GameLocale l
+                    LEFT JOIN GamePublisher p
+                    ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region
+                    WHERE l.MiniID = ? AND NOT (l.Lang = ? AND l.Region = ?)"""
+                    f" AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL"
+                    " ORDER BY l.Region DESC",
+                    [title_mini_id, test_lang, test_region]
+                ).fetchall()
+
+                # Presumibilmente EN-J viene prima di JA, per questo il ORDER BY Region DESC
+                japanese_transliteration: str | None = None
+                if results: markdown += f"<details><summary>Name in other languages</summary>\n"
+                for result_lang, result_region, result_title in results:
+                    if result_lang == 'EN' and result_region == 'J':
+                        japanese_transliteration = result_title
+                    if not (result_flag := LANG_FLAGS.get((result_lang, result_region))):
+                        continue
+                    
+                    markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' and japanese_transliteration else ''}\n\n"
+                else: markdown += f"{f'[^EN]: {japanese_transliteration}' if japanese_transliteration else ''}</details>\n"
+                
+                break
     
     # TODO: continue
     

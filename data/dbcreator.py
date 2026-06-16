@@ -45,7 +45,7 @@ else:
     CURSOR.executescript(
         """CREATE TABLE IF NOT EXISTS Game (
             MiniID TEXT NOT NULL,
-            Type TEXT DEFAULT `Wii`,
+            Type TEXT NOT NULL,
             Developer TEXT,
             
             PRIMARY KEY (MiniID, Type)
@@ -53,7 +53,7 @@ else:
 
         CREATE TABLE IF NOT EXISTS GamePublisher (
             MiniID TEXT NOT NULL,
-            Type TEXT DEFAULT `Wii`,
+            Type TEXT NOT NULL,
             Region TEXT NOT NULL,
             PublisherID TEXT,
             Publisher TEXT,
@@ -77,7 +77,7 @@ else:
             Title TEXT NOT NULL,
             Synopsis TEXT,
             MiniID TEXT NOT NULL,
-            Type TEXT DEFAULT `Wii`,
+            Type TEXT NOT NULL,
             Region TEXT NOT NULL,
             
             PRIMARY KEY (Lang, MiniID, Type, Region),
@@ -88,7 +88,7 @@ else:
         
         CREATE TABLE IF NOT EXISTS GameRelease (
             MiniID TEXT NOT NULL,
-            Type TEXT DEFAULT `Wii`,
+            Type TEXT NOT NULL,
             Region TEXT NOT NULL,
             Date TEXT NOT NULL,
             
@@ -100,7 +100,7 @@ else:
         
         CREATE TABLE IF NOT EXISTS GameROM (
             MiniID TEXT NOT NULL,
-            Type TEXT DEFAULT `Wii`,
+            Type TEXT NOT NULL,
             Region TEXT NOT NULL,
             Version TEXT NOT NULL,
             CRC TEXT,
