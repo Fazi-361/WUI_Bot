@@ -87,6 +87,32 @@ async def startup_func(*args) -> None:
         except: pass
 
 
+def main_webhook() -> None:
+    from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+    from aiohttp import web
+    from uuid import uuid4
+
+    app = web.Application()
+    secret: str = str(uuid4())
+    path: str = os.getenv("WEB_PATH") or ''
+
+    SimpleRequestHandler(
+        dispatcher= dp,
+        bot= bot,
+        secret_token= secret,
+    ).register(app, path=path)
+
+    setup_application(app, dp, bot=bot)
+
+    run(bot.set_webhook(
+        url= f"{HOST}{path}",
+        drop_pending_updates= True,
+        secret_token= secret
+    ))
+
+    web.run_app(app, host=os.getenv("IP"), port=int(os.getenv("PORT"))) # type: ignore
+
+
 async def main_polling() -> None:
     await bot.delete_webhook(
         drop_pending_updates= True
@@ -113,5 +139,7 @@ if __name__ == "__main__":
 
     dp.error.register(error_handler)
 
-    # Long Polling
-    run(main_polling())
+    if (HOST := os.getenv("WEB_HOST")):
+        main_webhook()
+    else:
+        run(main_polling())
