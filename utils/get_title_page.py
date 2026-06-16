@@ -126,7 +126,7 @@ async def get_title_page(
             [title_mini_id, title_type, title_region]
         ):
             markdown += (
-                "<details><summary>ROMs</summary>\n"
+                "<details><summary>ISO versions</summary>\n"
                 "| Version | CRC | MD5 | SHA1 |\n"
                 "| :-: | - | - | - |\n"
             )
