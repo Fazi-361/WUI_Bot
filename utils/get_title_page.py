@@ -1,7 +1,7 @@
 import sqlite3
 from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
-from utils.fetch_url_head import fetch_url_head
+from utils.fetch_url_head import fetch_cover_head
 
 LANG_FLAGS: dict[tuple[str, str], str] = {
     ('JA', 'J'): '🇯🇵',
@@ -40,7 +40,7 @@ async def get_title_page(
         # Aggiungi fallback alle lingue per titolo e sinossi,
         # cambiando il valore del parametro lang e title_region
         result_title = result_synopsis = None
-        for lang, title_region in ((lang, title_region), ('US', 'E'), ('EN', 'P'), ('JA', 'J')):
+        for lang, title_region in ((lang, title_region), ('US', 'E'), ('EN', 'P'), ('JA', 'J')): #? Forse ottimizzabile
             if results := conn.execute(
                 """SELECT Title, Synopsis
                 FROM GameLocalePublisher
@@ -81,11 +81,10 @@ async def get_title_page(
                     title_titleIDs.append(result_titleID)
                 
                 # Controlla che tutte le copertine esistano, controllando l'head dell'url
-                cover_url = f"https://art.gametdb.com/wii/coverfullHQ/{result_lang}/{result_titleID}.png"
-                if not await fetch_url_head(cover_url):
+                if not await fetch_cover_head(resource := f"{result_lang}/{result_titleID}"):
                     continue
                 
-                markdown += f"![]({cover_url})"
+                markdown += f"![](https://art.gametdb.com/wii/coverfullHQ/{resource}.png)"
 
             markdown += "</tg-slideshow>\n"
         
