@@ -86,7 +86,7 @@ async def get_title_page(
                 ).fetchone()
             except: continue
             else:
-                markdown += f"# {result_title}\n"
+                markdown += f"# {result_title}{'[^EN]' if test_lang == 'JA' else ''}\n"
                 markdown += f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
                 if result_synopsis: markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>\n"
                 
@@ -109,7 +109,7 @@ async def get_title_page(
                     if not (result_flag := LANG_FLAGS.get((result_lang, result_region))):
                         continue
                     
-                    markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' and japanese_transliteration else ''}\n\n"
+                    markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' else ''}\n\n"
                 else: markdown += f"{f'[^EN]: {japanese_transliteration}' if japanese_transliteration else ''}</details>\n"
                 
                 break
