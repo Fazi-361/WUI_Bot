@@ -81,17 +81,42 @@ async def error_handler(event: ErrorEvent) -> bool:
 
 @dp.startup()
 async def startup_func(*args) -> None:
+    if HOST and PATH:
+        await bot.set_webhook(
+            url= f"{HOST}{PATH}",
+            drop_pending_updates= True,
+            secret_token= SECRET
+        )
+    else:
+        await bot.delete_webhook(
+            drop_pending_updates= True
+        )
+    
     print("Bot started.")
     for admin in BOT_ADMINS:
         try: await bot.send_message(admin, "Bot online!")
-        except: pass
+        except: print(f"Admin {admin} suffers from skill issue.")
+
+
+def main_webhook() -> None:
+    from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+    from aiohttp import web
+
+    app = web.Application()
+    path: str = os.getenv("WEB_PATH") or ''
+
+    SimpleRequestHandler(
+        dispatcher= dp,
+        bot= bot,
+        secret_token= SECRET,
+    ).register(app, path=path)
+
+    setup_application(app, dp, bot=bot)
+
+    web.run_app(app, host=os.getenv("IP"), port=int(os.getenv("PORT"))) # type: ignore
 
 
 async def main_polling() -> None:
-    await bot.delete_webhook(
-        drop_pending_updates= True
-    )
-    
     await dp.start_polling(bot)
 
 
@@ -113,5 +138,9 @@ if __name__ == "__main__":
 
     dp.error.register(error_handler)
 
-    # Long Polling
-    run(main_polling())
+    if (HOST := os.getenv("WEB_HOST")) and (PATH := os.getenv("WEB_PATH")):
+        from uuid import uuid4
+        SECRET: str = str(uuid4())
+        main_webhook()
+    else:
+        run(main_polling())

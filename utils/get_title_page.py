@@ -1,4 +1,5 @@
 import sqlite3
+# from timeit import default_timer as timer
 from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
 from utils.fetch_url_head import fetch_cover_head
@@ -29,6 +30,7 @@ async def get_title_page(
     lang: str = 'IT',
     title_id: str = 'ST7P01'
 ) -> InputRichMessage:
+    # timer_start: float = timer()
     title_id_len: int = len(title_id)
     is_full_title_id: bool = title_id_len == 6
     title_mini_id: str = title_id[:3]
@@ -87,6 +89,7 @@ async def get_title_page(
             [title_mini_id, title_type]
         ).fetchall():
             markdown += "<tg-slideshow>\n"
+
             # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
             cover_lang: str = "JA" if english_japanese else lang
             if result_userlang := next((x for x in results if x[0] == cover_lang), None):
@@ -114,11 +117,24 @@ async def get_title_page(
         )
         
         if result_synopsis:
-            markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n>')}</details>\n"
+            markdown += f"<details><summary>Synopsis</summary>\n> {result_synopsis.replace('\n', '\n> ')}</details>\n"
 
-        # if results := conn.execute(
+        if results := conn.execute(
+            """SELECT Version, CRC, MD5, SHA1
+            FROM GameROM
+            WHERE MiniID = ? AND Type = ? AND Region = ?""",
+            [title_mini_id, title_type, title_region]
+        ):
+            markdown += (
+                "<details><summary>ROMs</summary>\n"
+                "| Version | CRC | MD5 | SHA1 |\n"
+                "| :-: | - | - | - |\n"
+            )
             
-        # ):
+            for result_version, result_crc, result_md5, result_sha1 in results:
+                markdown += f"| `{result_version}` | `{result_crc or '—'}` | `{result_md5 or '—'}` | `{result_sha1 or '—'}` |" 
+            
+            markdown += "</details>\n"
 
         # Ottieni il nome in tutte le altre lingue
         if results := conn.execute(
@@ -139,14 +155,16 @@ async def get_title_page(
                 x + (flag,) for x in results
                 if (flag := LANG_FLAGS.get((x[0], x[1])))
             ]:
-                markdown += f"<details><summary>Name in other languages</summary>\n"
+                markdown += "<details><summary>Name in other languages</summary>\n"
                 
                 for result_lang, _, result_title, result_flag in results:
                     markdown += f"{result_flag} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
                 
-                markdown += f"</details>\n"
+                markdown += "</details>\n"
     
     # TODO: continue
+    
+    # markdown += f"<sub>*generato in {timer() - timer_start:.3f} secondi*</sub>"
     
     return InputRichMessage(
         markdown=markdown,
