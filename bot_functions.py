@@ -36,24 +36,10 @@ async def deid(message: Message, command: CommandObject) -> None:
         await message.reply("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
         return
 
-    game_names: list[str] = []
 
-    with sqlite3.connect("./data/database.db") as connection:
-        cursor = connection.cursor()
-        for arg in command.args.split():
-            id = arg.upper().strip()
-            game_name = cursor.execute(
-                """SELECT gl.Title
-                FROM GameLocale gl
-                JOIN GamePublisher gp
-                ON gl.MiniID = gp.MiniID
-                AND gl.Type = gp.Type
-                WHERE (gl.MiniID || gl.Region || COALESCE(gp.PublisherID, '')) = ?
-                LIMIT 1""",
-                [id]
-            ).fetchone()
-            
-            game_names.append(f"{id} non orato" if game_name is None else game_name[0])
+    from utils.get_titles_by_ids import get_titles_by_ids
+
+    game_names: list[str] = get_titles_by_ids(command.args.split())
 
     response = "\n".join(game_names)
     await message.reply(response)
@@ -67,6 +53,7 @@ async def id(message: Message, command: CommandObject) -> None:
     if not command.args:
         await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
         return
+    
     
     # if len(command.args) < 2:
     #     await message.reply("Inserire regione e nome del gioco dopo lo /. \nEsempio: /id PAL Super Smash. Bros Brawl")
