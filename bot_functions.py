@@ -2,7 +2,6 @@ import sqlite3
 
 from aiogram.types import Message
 from aiogram.filters import CommandObject
-from jellyfish import jaro_winkler_similarity
 
 
 async def start(message: Message) -> None:
@@ -67,6 +66,7 @@ async def id(message: Message, command: CommandObject) -> None:
 
     if not command.args:
         await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
+        return
     
     # if len(command.args) < 2:
     #     await message.reply("Inserire regione e nome del gioco dopo lo /. \nEsempio: /id PAL Super Smash. Bros Brawl")
