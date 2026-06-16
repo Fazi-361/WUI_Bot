@@ -106,7 +106,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
         
 
-async def test(message: Message, command: CommandObject) -> None:
+async def info(message: Message, command: CommandObject) -> None:
     if not command.args \
     or len(args := command.args.split()) != 2 \
     or len(lang := args[0].upper()) not in {2, 4} \

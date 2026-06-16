@@ -97,7 +97,7 @@ async def main_polling() -> None:
 
 if __name__ == "__main__":
     # Comandi
-    dp.message.register(test, CustomCommand('test'))
+    dp.message.register(info, CustomCommand('info'))
     dp.message.register(start, CustomCommand('start'))
     dp.message.register(help, CustomCommand('help'))
     dp.message.register(echo, CustomCommand('echo'))
