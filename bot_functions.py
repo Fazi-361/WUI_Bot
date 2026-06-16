@@ -25,7 +25,7 @@ async def echo(message: Message, command: CommandObject) -> None:
     """Ripete la frase data come argomento."""
 
     await message.reply(
-        " ".join(command.args)
+        command.args
         if command.args
         else "Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti"
     )
