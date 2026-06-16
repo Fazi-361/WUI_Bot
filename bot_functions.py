@@ -63,28 +63,26 @@ async def deid(message: Message, command: CommandObject) -> None:
 async def id(message: Message, command: CommandObject) -> None:
     """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
 
+    #TODO: Dare la possibilità di cercare la regione del gioco (pal, ntsc-u, ntsc-j). Per ora il predefinito è PAL. 
+
     if not command.args:
-        await message.reply("Scrivere il nome del gioco da cercare dopo lo /. \nEsempio: /id La via della fortuna")
-        return
+        await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
+    
+    # if len(command.args) < 2:
+    #     await message.reply("Inserire regione e nome del gioco dopo lo /. \nEsempio: /id PAL Super Smash. Bros Brawl")
 
-    game_name = command.args.strip().lower()
+    #region = command.args[0]
+    title = command.args
 
-    best_similarity: float = 0
-    best_id: str = ""    
-    with open("wiitdb.txt", "r", encoding="utf-8") as database:
-        for line in database:
-            is_wiiware = True if line[5] == "=" else False
-            line_game_name = line[7:].lower().strip() if is_wiiware else line[9:].lower().strip()
-            similarity = jaro_winkler_similarity(game_name, line_game_name)
-            if similarity > best_similarity:
-                best_similarity = similarity
-                best_id = line[:4] if is_wiiware else line[:6]
-    response: str = ""
-    if best_similarity > 0.8:
-        response = best_id
-    else:
+    from utils.get_ids_by_title import get_ids_by_title
+
+    ids = get_ids_by_title(title, "PAL", 0.9)
+    
+    if ids == []:
         response = "Gioco non trovato"
-        
+    else:
+        response = ids[0]
+
     await message.reply(response)
 
 async def copertina_id(message: Message, command: CommandObject) -> None:
