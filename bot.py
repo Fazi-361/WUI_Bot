@@ -97,8 +97,8 @@ async def startup_func(*args) -> None:
     C.BOT_USERNAME = (await bot.get_me()).username
     print(f"Bot @{C.BOT_USERNAME} started.")
     
-    from json import loads
-    for admin in loads(os.getenv("BOT_ADMIN") or "[]"):
+    from ast import literal_eval as eval
+    for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
         try: await bot.send_message(admin, "Bot online!")
         except: print(f"Admin {admin} suffers from skill issue.")
 
