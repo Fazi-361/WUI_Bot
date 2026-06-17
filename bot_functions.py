@@ -1,5 +1,3 @@
-import sqlite3
-
 from aiogram.types import Message
 from aiogram.filters import CommandObject
 
@@ -28,6 +26,7 @@ async def echo(message: Message, command: CommandObject) -> None:
         if command.args
         else "Scrivi qualcosa dopo /echo! Es: /echo ciao a tutti"
     )
+
 
 async def deid(message: Message, command: CommandObject) -> None:
     """Data la lista di ID di giochi WII / GC, trova i nomi dei giochi corrispondenti."""
@@ -71,6 +70,7 @@ async def id(message: Message, command: CommandObject) -> None:
         response = ids[0]
 
     await message.reply(response)
+
 
 async def copertina_id(message: Message, command: CommandObject) -> None:
     if not command.args:

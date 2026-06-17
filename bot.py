@@ -1,5 +1,9 @@
-import os
+from dotenv import load_dotenv
+load_dotenv()
+from constants import init_constants
+init_constants()
 
+import os, constants as C
 from traceback import format_exception
 from asyncio import run
 from aiogram import Bot, Dispatcher, F
@@ -8,11 +12,8 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters.command import CommandPatternType
-from dotenv import load_dotenv
-
 from bot_functions import *
 
-load_dotenv()
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
 dp: Dispatcher = Dispatcher()
 bot: Bot = Bot(
@@ -23,9 +24,6 @@ bot: Bot = Bot(
         allow_sending_without_reply=True
     )
 )
-BOT_USERNAME = "@tayx361_test_bot"
-BOT_ADMINS: set[int] = {6028722644, 463844793}
-#                       Tayx        Laxan3000
 
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
@@ -44,7 +42,6 @@ class CustomCommand(Command):
         )
 
 
-
 # Risposte
 def handle_responses(text: str) -> str:
     return "Non ho capito cos'hai scritto..." # ?
@@ -55,8 +52,8 @@ async def handle_message(message: Message) -> None:
     text: str = message.text or ''
 
     if message_type == 'group':
-        if BOT_USERNAME in text:
-            new_text: str = text.replace(BOT_USERNAME, "").strip()
+        if f"@{C.BOT_USERNAME}" in text:
+            new_text: str = text.replace(f"@{C.BOT_USERNAME}", "").strip()
             response: str = handle_responses(new_text)
         else:
             return
@@ -92,10 +89,15 @@ async def startup_func(*args) -> None:
             drop_pending_updates= True
         )
     
-    print("Bot started.")
-    for admin in BOT_ADMINS:
+    C.BOT_USERNAME = (await bot.get_me()).username
+    print(C.BOT_USERNAME)
+    
+    from json import loads
+    for admin in loads(os.getenv("BOT_ADMIN") or "[]"):
         try: await bot.send_message(admin, "Bot online!")
         except: print(f"Admin {admin} suffers from skill issue.")
+        
+    print("Bot started.")
 
 
 def main_webhook() -> None:
@@ -103,13 +105,12 @@ def main_webhook() -> None:
     from aiohttp import web
 
     app = web.Application()
-    path: str = os.getenv("WEB_PATH") or ''
 
     SimpleRequestHandler(
         dispatcher= dp,
         bot= bot,
         secret_token= SECRET,
-    ).register(app, path=path)
+    ).register(app, path=PATH) # type: ignore
 
     setup_application(app, dp, bot=bot)
 
