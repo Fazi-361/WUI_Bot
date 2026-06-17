@@ -12,13 +12,18 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters.command import CommandPatternType
+from aiogram.fsm.strategy import FSMStrategy
 from bot_functions import *
+from utils.fsm import BotState, SQLiteStorage
 
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
-dp: Dispatcher = Dispatcher()
+dp: Dispatcher = Dispatcher(
+    storage=SQLiteStorage(),
+    fsm_strategy=FSMStrategy.CHAT
+)
 bot: Bot = Bot(
-    token= BOT_TOKEN,
-    default= DefaultBotProperties(
+    token=BOT_TOKEN,
+    default=DefaultBotProperties(
         parse_mode=ParseMode.HTML,
         disable_notification=True,
         allow_sending_without_reply=True
@@ -90,14 +95,12 @@ async def startup_func(*args) -> None:
         )
     
     C.BOT_USERNAME = (await bot.get_me()).username
-    print(C.BOT_USERNAME)
+    print(f"Bot @{C.BOT_USERNAME} started.")
     
     from json import loads
     for admin in loads(os.getenv("BOT_ADMIN") or "[]"):
         try: await bot.send_message(admin, "Bot online!")
         except: print(f"Admin {admin} suffers from skill issue.")
-        
-    print("Bot started.")
 
 
 def main_webhook() -> None:
@@ -130,6 +133,8 @@ if __name__ == "__main__":
     dp.message.register(deid, CustomCommand('deid'))
     dp.message.register(id, CustomCommand('id'))
     dp.message.register(copertina_id, CustomCommand('copertina_id'))
+    dp.message.register(lingua, CustomCommand('lingua'))
+    dp.callback_query.register(set_language, BotState.language)
 
     # Messagi estranei
     dp.message.register(handle_message, 

@@ -1,10 +1,53 @@
-from aiogram.types import Message
+from utils.fsm import BotState
+from aiogram import Bot
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
+from aiogram.fsm.context import FSMContext
+
+LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="🇺🇸 US", callback_data='US'),
+        InlineKeyboardButton(text="🇬🇧 EN", callback_data='EN'),
+        InlineKeyboardButton(text="🇩🇪 DE", callback_data='DE'),
+        InlineKeyboardButton(text="🇫🇷 FR", callback_data='FR'),
+    ],   
+    [
+        InlineKeyboardButton(text="🇪🇸 ES", callback_data='ES'),
+        InlineKeyboardButton(text="🇮🇹 IT", callback_data='IT'),
+        InlineKeyboardButton(text="🇯🇵 JA", callback_data='JA'),
+        InlineKeyboardButton(text="🇰🇷 KO", callback_data='KO'),
+    ],   
+])
 
 
-async def start(message: Message) -> None:
+async def start(message: Message, state: FSMContext) -> None:
     """Avvia il bot"""
-    await message.reply('Bot ancora in beta! Ritorna più tardi :)')
+    
+    if not await state.get_value("language"):
+        await state.set_state(BotState.language)
+        await message.reply(
+            "🇺🇸 Hello, Welcome to the bot! Select a default language to continue.\n\n"
+            "🇮🇹 Ciao, benvenuti al bot! Seleziona una lingua predefinita per continuare.",
+            reply_markup=LANGUAGE_OPTIONS
+        )
+    else:
+        # TODO: rispondi nella linagua dell'utente [per il futuro con i18n?]
+        await message.reply("Ciao! :)\nSe vuoi le impostazioni sulla lingua, digita /lingua")
+    
+
+async def lingua(message: Message, state: FSMContext) -> None:
+    await message.reply(
+        "🇺🇸 Select a default language to continue.\n\n"
+        "🇮🇹 Seleziona una lingua predefinita per continuare.",
+        reply_markup=LANGUAGE_OPTIONS
+    )
+
+
+async def set_language(query: CallbackQuery, state: FSMContext, bot: Bot) -> None:
+    await state.update_data({"language": query.data})
+    await query.answer("Lingua impostata!")
+    try: await query.message.edit_text("Lingua impostata! :)") # type: ignore
+    except: pass
 
 
 async def help(message: Message) -> None:
