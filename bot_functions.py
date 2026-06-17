@@ -23,7 +23,7 @@ LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
 async def start(message: Message, state: FSMContext) -> None:
     """Avvia il bot"""
     
-    if not await state.get_value("language"):
+    if not await state.get_value("lang"):
         await state.set_state(BotState.language)
         await message.reply(
             "🇺🇸 Hello, Welcome to the bot! Select a default language to continue.\n\n"
@@ -44,7 +44,7 @@ async def lingua(message: Message, state: FSMContext) -> None:
 
 
 async def set_language(query: CallbackQuery, state: FSMContext, bot: Bot) -> None:
-    await state.update_data({"language": query.data})
+    await state.update_data({"lang": query.data})
     await query.answer("Lingua impostata!")
     try: await query.message.edit_text("Lingua impostata! :)") # type: ignore
     except: pass
@@ -136,12 +136,10 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
         
 
-async def info(message: Message, command: CommandObject) -> None:
+async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
     if not command.args \
-    or len(args := command.args.split()) != 2 \
-    or len(lang := args[0].upper()) not in {2, 4} \
-    or len(title_id := args[1].upper()) not in {4, 6}:
-        await message.reply("Inserisci la lingua e l'ID del titolo. Es: IT ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
+    or len(title_id := command.args.upper()) not in {4, 6}:
+        await message.reply("Inserisci l'ID del titolo. Es: ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
         return
 
     from utils.get_title_page import get_title_page
@@ -149,7 +147,7 @@ async def info(message: Message, command: CommandObject) -> None:
     
     reply: Message = await message.reply("Generando le informazioni...")
     try:
-        await reply.edit_text(rich_message= await get_title_page(lang, title_id))
+        await reply.edit_text(rich_message= await get_title_page((await state.get_value("lang")) or 'IT', title_id))
     except Exception:
         print(traceback.format_exc())
         await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")
