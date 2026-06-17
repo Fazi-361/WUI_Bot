@@ -10,7 +10,7 @@ class BotState(StatesGroup):
 
 class SQLiteStorage(BaseStorage):
     def __init__(self) -> None:
-        self.conn = sqlite3.connect("./data/.userdb.db")
+        self.conn = sqlite3.connect("./data/userdata.db")
         self.conn.execute(
             """CREATE TABLE IF NOT EXISTS FSM (
                 Key TEXT PRIMARY KEY,
