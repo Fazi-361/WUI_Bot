@@ -1,8 +1,12 @@
+import traceback, re, constants as C
 from utils.fsm import BotState
+from utils.strim import strim
+from utils.database import get_id_by_title
 from aiogram import Bot
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
 from aiogram.fsm.context import FSMContext
+from utils.get_title_page import get_title_page
 
 LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -137,17 +141,22 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         
 
 async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
-    if not command.args \
-    or len(title_id := command.args.upper()) not in {4, 6}:
-        await message.reply("Inserisci l'ID del titolo. Es: ST7P01\nNota: i WiiWare non hanno bisogno delle due lettere finali")
+    if not (args := command.args) or not (args := strim(args).upper()):
+        await message.reply(
+            "Inserisci l'ID del titolo o il suo nome. Es:\n"
+            "<pre>/info ST7P01</pre>\n"
+            "<pre>/info Super Mario Galaxy</pre>\n"
+            "Nota: i WiiWare non hanno bisogno delle due lettere finali"
+        )
         return
-
-    from utils.get_title_page import get_title_page
-    import traceback
     
+    title_id = args \
+        if (morphable_lang := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
+        else get_id_by_title(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
+
     reply: Message = await message.reply("Generando le informazioni...")
     try:
-        await reply.edit_text(rich_message= await get_title_page((await state.get_value("lang")) or 'IT', title_id))
+        await reply.edit_text(rich_message= await get_title_page((await state.get_value("lang")) or 'IT', title_id, morphable_lang))
     except Exception:
         print(traceback.format_exc())
         await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")

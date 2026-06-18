@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 from constants import init_constants
 init_constants()
+from utils.database import init_database, close_database
+init_database()
 
 import os, constants as C
 from traceback import format_exception
@@ -101,6 +103,11 @@ async def startup_func(*args) -> None:
     for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
         try: await bot.send_message(admin, "Bot online!")
         except: print(f"Admin {admin} suffers from skill issue.")
+
+
+@dp.shutdown()
+async def shutdown_func(*args) -> None:
+    close_database()
 
 
 def main_webhook() -> None:
