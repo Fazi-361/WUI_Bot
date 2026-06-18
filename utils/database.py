@@ -25,7 +25,7 @@ def get_id_by_title(
         OR NOT 'P' IN Regions AND Region = 'J'
         OR NOT 'J' IN Regions
         LIMIT 1""",
-        [input, len(input.split()) - .5, region, region]
+        [input, (input_len := len(input.split())) - input_len/10, region, region]
     ).fetchone()
     
     if data and (data := data[0]):
@@ -56,22 +56,24 @@ def get_cursor() -> sqlite3.Cursor:
 def init_database() -> None:
     global CONNECTION
     CONNECTION = sqlite3.connect("./data/database.db")
-    
-    
+
     from jellyfish import jaro_winkler_similarity
     from functools import lru_cache
-    
+
     @lru_cache 
     def similarity(str1: str, str2: str) -> float:
         str1_split: list[str] = str1.split()
         str2_split: list[str] = str2.split()
-        return sum([
-            word_similarity
-            if (word_similarity := jaro_winkler_similarity(word1, word2)) >= .8
-            else 0
-            for word2 in str2_split
-            for word1 in str1_split
-        ])
+        
+        similarity: float = 0
+        for word1 in str1_split:
+            for word2 in str2_split:
+                if (word_similarity := jaro_winkler_similarity(word1, word2)) >= .9:
+                    str2_split.remove(word2)
+                    similarity += word_similarity
+                    break
+        
+        return similarity
 
     CONNECTION.create_function("SIMILARITY", 2, similarity)
 
