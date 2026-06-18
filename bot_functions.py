@@ -151,6 +151,9 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
         if (morphable_lang := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
         else get_id_by_title(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
 
+    if isinstance(title_id, list):
+        return # TODO
+
     reply: Message = await message.reply("Generando le informazioni...")
     try:
         await reply.edit_text(rich_message= await get_title_page((await state.get_value("lang")) or 'IT', title_id, morphable_lang))
