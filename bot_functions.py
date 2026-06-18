@@ -93,28 +93,25 @@ async def deid(message: Message, command: CommandObject) -> None:
 
 async def id(message: Message, command: CommandObject) -> None:
     """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
-
     #TODO: Dare la possibilità di cercare la regione del gioco (pal, ntsc-u, ntsc-j). Per ora il predefinito è PAL. 
 
     if not command.args:
         await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
         return
-    
-    
-    # if len(command.args) < 2:
-    #     await message.reply("Inserire regione e nome del gioco dopo lo /. \nEsempio: /id PAL Super Smash. Bros Brawl")
 
-    #region = command.args[0]
     title = command.args
 
     from utils.get_ids_by_title import get_ids_by_title
 
-    ids = get_ids_by_title(title, "PAL", 0.9)
+    games = get_ids_by_title(title, "PAL", 0.9)
     
-    if ids == []:
-        response = "Gioco non trovato"
+    if games == []:
+        response = "Non è stato trovato nessun gioco con questo nome"
+    elif max(game.similarity for game in games) > 0.99:
+        response = max(games, key=lambda game: game.similarity).id
     else:
-        response = ids[0]
+        possible_games = "\n".join(f"{game.title} - {game.id}" for game in games)
+        response = f"ID possibili:\n{possible_games}"
 
     await message.reply(response)
 
