@@ -125,7 +125,7 @@ async def get_title_page(
         FROM GameROM
         WHERE MiniID = ? AND Type = ? AND Region = ?""",
         [title_mini_id, title_type, title_region]
-    ):
+    ).fetchall():
         markdown += (
             "<details><summary>ISO versions</summary>\n"
             "| Version | CRC | MD5 | SHA1 |\n"
