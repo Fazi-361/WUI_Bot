@@ -37,7 +37,7 @@ class SQLiteStorage(BaseStorage):
 
     async def get_state(self, key: StorageKey) -> str | None:
         return data[0] if (data := self.conn.execute(
-            "SELECT State FROM FSM WHERE Key = ?",
+            "SELECT State FROM FSM WHERE Key = ? LIMIT 1",
             [str(key)]
         ).fetchone()) else None
 
@@ -52,7 +52,7 @@ class SQLiteStorage(BaseStorage):
 
     async def get_data(self, key: StorageKey) -> dict[str, Any]:
         return eval(data) if (data := self.conn.execute(
-            "SELECT Data FROM FSM WHERE Key = ?",
+            "SELECT Data FROM FSM WHERE Key = ? LIMIT 1",
             [str(key)]
         ).fetchone()) and (data := data[0]) else {}
 
