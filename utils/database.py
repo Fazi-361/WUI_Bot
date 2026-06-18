@@ -1,6 +1,8 @@
 import sqlite3
+from functools import lru_cache
 
 
+@lru_cache
 def get_id_by_title(
     input: str,
     region: str = 'P'
@@ -58,7 +60,6 @@ def init_database() -> None:
     CONNECTION = sqlite3.connect("./data/database.db")
 
     from jellyfish import jaro_winkler_similarity
-    from functools import lru_cache
 
     @lru_cache 
     def similarity(str1: str, str2: str) -> float:
