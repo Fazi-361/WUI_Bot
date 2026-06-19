@@ -18,6 +18,10 @@ LANG_FLAGS: dict[str, str] = {
     'FI': '🇫🇮',
     'NL': '🇳🇱',
     'DK': '🇩🇰',
+    'PT': '🇵🇹',
+    'NO': '🇳🇴',
+    'RU': '🇷🇺',
+    'TR': '🇹🇷',
     'ZHCN': '🇨🇳',
     'ZHTW': '🇹🇼'
 }
@@ -149,7 +153,7 @@ async def get_title_page(
         markdown += "<details><summary>Name in other languages</summary>\n"
         
         for result_lang, result_title in title_other_names.items():
-            markdown += f"{LANG_FLAGS[result_lang]} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
+            markdown += f"{LANG_FLAGS.get(result_lang)} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
         
         markdown += "</details>\n"
     
