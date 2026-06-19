@@ -72,7 +72,7 @@ def init_database() -> None:
         similarity: float = 0
         for word1 in str1_split:
             for word2 in str2_split:
-                if (word_similarity := jaro_winkler_similarity(word1, word2)) >= .9:
+                if (word_similarity := jaro_winkler_similarity(word1, word2)) >= .8:
                     str2_split.remove(word2)
                     similarity += word_similarity
                     break
