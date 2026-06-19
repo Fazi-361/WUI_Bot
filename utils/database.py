@@ -3,10 +3,7 @@ from functools import lru_cache
 
 
 @lru_cache
-def get_id_by_title(
-    input: str,
-    region: str = 'P'
-) -> str | list[tuple[str, str]]:
+def get_id_by_title(input: str, region: str = 'P') -> str | None:
     cursor = get_cursor()
     
     data = cursor.execute(
@@ -33,25 +30,8 @@ def get_id_by_title(
         [input, (input_len := len(input.split())) - input_len/10, region, region]
     ).fetchone()
     
-    if data and (data := data[0]):
-        cursor.close()
-        return data
-
-    # data = cursor.execute(
-    #     """SELECT Title, Key, SIMILARITY(UPPER(Title), UPPER(?)) c
-    #     FROM (
-    #         SELECT DISTINCT Title, MiniID || '-' || Type Key
-    #         FROM GameLocalePublisher
-    #     )
-    #     ORDER BY c DESC
-    #     LIMIT 3""",
-    #     [input]
-    # ).fetchall()
-    
-    # print(data)
-    
     cursor.close()
-    return data
+    return data[0] if data else None
 
 
 def get_cursor() -> sqlite3.Cursor:
