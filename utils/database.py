@@ -11,11 +11,14 @@ def get_id_by_title(
     
     data = cursor.execute(
         """WITH Codes AS (
-            SELECT DISTINCT 
-                MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), UPPER(?)) Similarity
-            FROM GameLocalePublisher
-            WHERE Similarity >= ?
-            ORDER BY Similarity DESC
+            WITH c AS (
+                SELECT MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), UPPER(?)) Similarity
+                FROM GameLocalePublisher
+                WHERE Similarity >= ?
+            )
+            SELECT DISTINCT MiniID, Region, PublisherID
+            FROM c
+            WHERE Similarity = (SELECT MAX(Similarity) FROM c)
         ), Regions AS (
             Select Region FROM Codes
         )
