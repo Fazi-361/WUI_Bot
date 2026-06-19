@@ -35,7 +35,7 @@ async def get_title_page(
 ) -> InputRichMessage:
     # timer_start: float = timer()
     is_full_title_id: bool = len(title_id) == 6
-    title_titleIDs: list[str] = []
+    title_other_titleIDs: list[str] = []
     title_other_names: dict[str, str] = {}
     markdown: str = ""
 
@@ -51,7 +51,6 @@ async def get_title_page(
             [lang, title_id[:3]] + ([title_id[3]] if morphable_lang else [])
         ).fetchone():
             title_title, title_synopsis, title_mini_id, title_region, title_id = results
-            title_titleIDs.append(title_id)
             english_japanese = morphable_lang and lang == 'EN' and title_region == 'J'
             break
     else:
@@ -100,8 +99,8 @@ async def get_title_page(
 
         markdown += "<tg-slideshow>\n"
         for result_lang, result_region, result_title, result_titleID in results:
-            if not result_titleID in title_titleIDs:
-                title_titleIDs.append(result_titleID)
+            if not result_titleID in title_other_titleIDs:
+                title_other_titleIDs.append(result_titleID)
 
             if result_lang == 'EN' and result_region == 'J':
                 japanese_transliteration = result_title
@@ -116,9 +115,10 @@ async def get_title_page(
 
         markdown += "</tg-slideshow>\n"
     
+    title_other_titleIDs.sort()
     markdown += (
         f"# {title_title}{'[^EN]' if lang == 'JA' else ''}\n"
-        f"<sup>[{', '.join(f'=={x}==' if x == title_id else x for x in title_titleIDs)}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
+        f"<sup>[=={title_id}=={f", {', '.join(title_other_titleIDs)}" if title_other_titleIDs else ''}](https://wiki.dolphin-emu.org/index.php?title={title_id})</sup>\n"
         "\n"
         f"**Developer**: {title_developer}  \n"
         f"**Publisher**: {title_publisher}  \n"
@@ -153,7 +153,7 @@ async def get_title_page(
         markdown += "<details><summary>Name in other languages</summary>\n"
         
         for result_lang, result_title in title_other_names.items():
-            markdown += f"{LANG_FLAGS.get(result_lang)} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
+            markdown += f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}\n\n"
         
         markdown += "</details>\n"
     
