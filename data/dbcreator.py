@@ -13,35 +13,30 @@ CURSOR: sqlite3.Cursor         = CONNECTION.cursor()
 
 CURSOR.execute("PRAGMA foreign_keys = ON")
 
-with open(PATH/"wiitdb.xml", "r") as f:
-    tree = ET.parse(f)
-    root = tree.getroot()
-
-
-if (companies := root.find('companies')) is None:
-    print("Companies do not exist")
-else:
+def gen(tree, root, gtype) -> None:
     CURSOR.execute(
         """CREATE TABLE IF NOT EXISTS Company (
-            Code TEXT PRIMARY KEY,
-            Name TEXT NOT NULL
+            Console TEXT,
+            Code TEXT,
+            Name TEXT NOT NULL,
+            
+            PRIMARY KEY (Console, Code)
         ) STRICT, WITHOUT ROWID"""
     )
-    
-    CURSOR.executemany(
-        "INSERT OR REPLACE INTO Company VALUES (?, ?)",
-        [
-            (company.attrib["code"].upper(), company.attrib["name"])
-            for company in companies.iter('company')
-        ] + [('00', "Nintendo")]
-    )
 
-    print("Companies have been inserted")
-    
+    if (companies := root.find('companies')) is None:
+        print(f"{gtype}: Companies do not exist")
+    else:
+        CURSOR.executemany(
+            "INSERT OR REPLACE INTO Company VALUES (?, ?, ?)",
+            [
+                (gtype, company.attrib["code"].upper(), company.attrib["name"])
+                for company in companies.iter('company')
+            ] + [(gtype, '00', "Nintendo")]
+        )
 
-if (games := root.iter('game')) is None:
-    print("Games do not exist")
-else:
+        print(f"{gtype}: Companies have been inserted")
+
     CURSOR.executescript(
         """CREATE TABLE IF NOT EXISTS Game (
             MiniID TEXT NOT NULL,
@@ -55,15 +50,13 @@ else:
             MiniID TEXT NOT NULL,
             Type TEXT NOT NULL,
             Region TEXT NOT NULL,
+            Console TEXT NOT NULL,
             PublisherID TEXT,
             Publisher TEXT,
 
             UNIQUE (MiniID, Type, Region, PublisherID, Publisher),
             FOREIGN KEY (MiniID, Type)
                 REFERENCES Game(MiniID, Type)
-                ON DELETE CASCADE,
-            FOREIGN KEY (PublisherID)
-                REFERENCES Company(Code)
                 ON DELETE CASCADE,
             CHECK(
                 (PublisherID ISNULL AND Publisher NOTNULL)
@@ -115,114 +108,130 @@ else:
         
         CREATE VIEW IF NOT EXISTS GameLocalePublisher AS
         SELECT
-            p.MiniID, p.Type, p.Region, p.PublisherID, p.Publisher,
+            p.MiniID, p.Type, p.Region, p.Console, p.PublisherID, p.Publisher,
             l.Lang, l.Title, l.Synopsis
         FROM GameLocale l
         LEFT JOIN GamePublisher p
         ON l.MiniID = p.MiniID AND l.Type = p.Type AND l.Region = p.Region"""
     )
-    
-    for game in games:
-        # Removes custom games and homebrews
-        if (game_type := game.find("type")) is not None and bool(game_type := game_type.text) and game_type.casefold() in {"custom", "homebrew"}:
-            continue
-        
-        # Filter out games that don't meet certain criteria. For each game, log who it is
-        if ((game_id := game.find("id")) is None or (game_id := game_id.text) is None or len(game_id) not in {4, 6}) \
-        or ((game_date := game.find("date")) is None or not {"year", "month", "day"}.issubset(game_date.attrib)) \
-        or len(game_locales := game.findall("locale")) < 1 \
-        or len(game_roms := game.findall("rom")) < 1:
-            print(f"{game.attrib["name"]} has been skipped.")
-            continue
 
-        if not game_type: game_type = "Wii"
-        game_id = game_id.upper()
-        game_mini_id: str | None      = game_id[:3] or None
-        game_region: str              = game_id[3]
-        game_publisher_id: str | None = game_id[4:] or None
-        game_year: str  = game_date.attrib["year"].rjust(4, '0')
-        game_month: str = game_date.attrib["month"].rjust(2, '0')
-        game_day: str   = game_date.attrib["day"].rjust(2, '0')
+    if (games := root.iter('game')) is None:
+        print(f"{gtype}: Games do not exist")
+    else:
+        for game in games:
+            # Removes custom games and homebrews
+            if (game_type := game.find("type")) is not None and bool(game_type := game_type.text) and game_type.casefold() in {"custom", "homebrew"}:
+                continue
+            
+            # Filter out games that don't meet certain criteria. For each game, log who it is
+            if ((game_id := game.find("id")) is None or (game_id := game_id.text) is None or len(game_id) not in {4, 6}) \
+            or ((game_date := game.find("date")) is None or not {"year", "month", "day"}.issubset(game_date.attrib)) \
+            or len(game_locales := game.findall("locale")) < 1 \
+            or len(game_roms := game.findall("rom")) < 1:
+                print(f"{game.attrib["name"]} has been skipped.")
+                continue
 
-        CURSOR.execute(
-            "INSERT OR IGNORE INTO Game VALUES (?, ?, ?)",
-            [
-                game_mini_id,
-                game_type,
-                game_developer.text
-                    if (game_developer := game.find("developer")) is not None
+            if not game_type: game_type = gtype
+            game_id = game_id.upper()
+            game_mini_id: str | None      = game_id[:3] or None
+            game_region: str              = game_id[3]
+            game_publisher_id: str | None = game_id[4:] or None
+            game_year: str  = game_date.attrib["year"].rjust(4, '0')
+            game_month: str = game_date.attrib["month"].rjust(2, '0')
+            game_day: str   = game_date.attrib["day"].rjust(2, '0')
+
+            CURSOR.execute(
+                "INSERT OR IGNORE INTO Game VALUES (?, ?, ?)",
+                [
+                    game_mini_id,
+                    game_type,
+                    game_developer.text
+                        if (game_developer := game.find("developer")) is not None
+                        else None
+                ]
+            )
+            
+            game_publisher = None
+            if game_publisher_id \
+            or ((game_publisher := game.find("publisher")) is not None
+            and (game_publisher := game_publisher.text)):
+                CURSOR.execute(
+                    "INSERT OR REPLACE INTO GamePublisher VALUES (?, ?, ?, ?, ?, ?)",
+                    [
+                        game_mini_id,
+                        game_type,
+                        game_region,
+                        gtype,
+                        game_publisher_id or None,
+                        game_publisher
+                    ]
+                )
+
+            for game_locale in game_locales:
+                if (game_title := game_locale.find("title")) is None:
+                    continue
+                
+                game_synopsis = game_synopsis.text \
+                    if (game_synopsis := game_locale.find("synopsis")) is not None \
                     else None
-            ]
-        )
-        
-        game_publisher = None
-        if game_publisher_id \
-        or ((game_publisher := game.find("publisher")) is not None
-        and (game_publisher := game_publisher.text)):
+                
+                game_locale_name: str = game_locale.attrib["lang"].upper()
+                if game_locale_name == "EN" and game_region == "E":
+                    game_locale_name = "US"
+                
+                CURSOR.execute(
+                    "INSERT OR REPLACE INTO GameLocale VALUES (?, ?, ?, ?, ?, ?)",
+                    [
+                        game_locale_name,
+                        game_title.text,
+                        game_synopsis,
+                        game_mini_id,
+                        game_type,
+                        game_region,
+                    ]
+                )
+            
             CURSOR.execute(
-                "INSERT OR REPLACE INTO GamePublisher VALUES (?, ?, ?, ?, ?)",
+                "INSERT OR REPLACE INTO GameRelease VALUES (?, ?, ?, ?)",
                 [
                     game_mini_id,
                     game_type,
                     game_region,
-                    game_publisher_id or None,
-                    game_publisher
+                    "-".join([game_year, game_month, game_day])
                 ]
             )
+            
+            for game_rom in game_roms:
+                if not (game_rom_version := game_rom.attrib["version"]):
+                    continue
 
-        for game_locale in game_locales:
-            if (game_title := game_locale.find("title")) is None:
-                continue
-            
-            game_synopsis = game_synopsis.text \
-                if (game_synopsis := game_locale.find("synopsis")) is not None \
-                else None
-            
-            game_locale_name: str = game_locale.attrib["lang"].upper()
-            if game_locale_name == "EN" and game_region == "E":
-                game_locale_name = "US"
-            
-            CURSOR.execute(
-                "INSERT OR REPLACE INTO GameLocale VALUES (?, ?, ?, ?, ?, ?)",
-                [
-                    game_locale_name,
-                    game_title.text,
-                    game_synopsis,
-                    game_mini_id,
-                    game_type,
-                    game_region,
-                ]
-            )
+                CURSOR.execute(
+                    "INSERT OR IGNORE INTO GameROM VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    [
+                        game_mini_id,
+                        game_type,
+                        game_region,
+                        game_rom_version,
+                        game_rom.attrib.get("crc"),
+                        game_rom.attrib.get("md5"),
+                        game_rom.attrib.get("sha1")
+                    ]
+                )
         
-        CURSOR.execute(
-            "INSERT OR REPLACE INTO GameRelease VALUES (?, ?, ?, ?)",
-            [
-                game_mini_id,
-                game_type,
-                game_region,
-                "-".join([game_year, game_month, game_day])
-            ]
-        )
-        
-        for game_rom in game_roms:
-            if not (game_rom_version := game_rom.attrib["version"]):
-                continue
+        print(f"{gtype}: Games have been inserted")
 
-            CURSOR.execute(
-                "INSERT OR IGNORE INTO GameROM VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [
-                    game_mini_id,
-                    game_type,
-                    game_region,
-                    game_rom_version,
-                    game_rom.attrib.get("crc"),
-                    game_rom.attrib.get("md5"),
-                    game_rom.attrib.get("sha1")
-                ]
-            )
-    
-    print("Games have been inserted")
-        
+
+for db, gtype in (
+    ("dstdb.xml", "DS"),
+    ("wiitdb.xml", "Wii"),
+    ("3dstdb.xml", "3DS"),
+    ("wiiutdb.xml", "WiiU")
+):
+    with open(PATH/db, "r") as f:
+        tree = ET.parse(f)
+        root = tree.getroot()
+        gen(tree, root, gtype)
+
 
 print("Saving...")
 CONNECTION.commit()

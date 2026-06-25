@@ -1,7 +1,7 @@
 import traceback, re, constants as C
 from utils.fsm import BotState
 from utils.strim import strim
-from utils.database import get_id_by_title
+from utils.database import get_title_by_name
 from aiogram import Bot
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
@@ -138,7 +138,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         
 
 async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
-    if not (args := command.args) or not (args := strim(args).upper()):
+    if not (args := command.args) or not (args := strim(args)):
         await message.reply(
             "Inserisci l'ID del titolo o il suo nome. Es:\n"
             "<pre>/info ST7P01</pre>\n"
@@ -147,14 +147,20 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
         )
         return
     
-    title_id = args \
-        if (morphable_lang := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
-        else get_id_by_title(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
+    title_id = args.upper() \
+        if (is_full_title_id := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
+        else get_title_by_name(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
 
     reply: Message = await message.reply("Generando le informazioni...")
     try:
         assert title_id
-        await reply.edit_text(rich_message= await get_title_page((await state.get_value("lang")) or 'IT', title_id, morphable_lang))
+
+        await reply.edit_text(rich_message= await get_title_page((
+            await state.get_value("lang")) or 'EN',
+            title_id[1] if not is_full_title_id else title_id,
+            title_id[0] if not is_full_title_id else 'Wii',
+            is_full_title_id
+        ))
     except Exception:
         print(traceback.format_exc())
         await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")

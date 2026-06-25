@@ -3,23 +3,23 @@ from functools import lru_cache
 
 
 @lru_cache
-def get_id_by_title(input: str, region: str = 'P') -> str | None:
+def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str] | None:
     cursor = get_cursor()
     
     data = cursor.execute(
         """WITH Codes AS (
             WITH c AS (
-                SELECT MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), UPPER(?)) Similarity
+                SELECT Console, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), UPPER(?)) Similarity
                 FROM GameLocalePublisher
                 WHERE Similarity >= ?
             )
-            SELECT DISTINCT MiniID, Region, PublisherID
+            SELECT DISTINCT Console, MiniID, Region, PublisherID
             FROM c
             WHERE Similarity = (SELECT MAX(Similarity) FROM c)
         ), Regions AS (
             Select Region FROM Codes
         )
-        SELECT MiniID || Region || COALESCE(PublisherID, '')
+        SELECT Console, MiniID || Region || COALESCE(PublisherID, '')
         FROM Codes
         WHERE Region = ?
         OR NOT ? IN Regions AND Region = 'E'
@@ -31,7 +31,7 @@ def get_id_by_title(input: str, region: str = 'P') -> str | None:
     ).fetchone()
     
     cursor.close()
-    return data[0] if data else None
+    return data or None
 
 
 def get_cursor() -> sqlite3.Cursor:
@@ -68,4 +68,4 @@ def close_database() -> None:
 
 if __name__ == "__main__":
     init_database()
-    print(get_id_by_title('itadaki street wii'))
+    print(get_title_by_name('itadaki street wii'))
