@@ -109,6 +109,7 @@ async def get_title_page(
                 title_other_names[result_lang] = result_title
 
             # Controlla che tutte le copertine esistano, controllando l'head dell'url
+            #* Il controllo degli URL è la parte più lenta di questa funzione!
             title_artworks.extend([
                 f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{resource}.{atype[1]})"
                 for atype in {('coverfullHQ', 'png'), ('coverHQ', 'jpg')}
