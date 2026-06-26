@@ -9,7 +9,7 @@ def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str] | None:
     data = cursor.execute(
         """WITH Codes AS (
             WITH c AS (
-                SELECT Console, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), UPPER(?)) Similarity
+                SELECT Console, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title), ?) Similarity
                 FROM GameLocalePublisher
                 WHERE Similarity >= ?
             )
@@ -27,7 +27,7 @@ def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str] | None:
         OR NOT 'P' IN Regions AND Region = 'J'
         OR NOT 'J' IN Regions
         LIMIT 1""",
-        [input, (input_len := len(input.split())) - input_len/10, region, region]
+        [input.upper(), (input_len := len(input.split())) - input_len/10, region, region]
     ).fetchone()
     
     cursor.close()
