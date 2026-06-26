@@ -9,6 +9,7 @@ async-lru==2.3.0
 attrs==26.1.0
 certifi==2026.5.20
 charset-normalizer==3.4.7
+dnspython==2.8.0
 dotenv==0.9.9
 frozenlist==1.8.0
 h11==0.16.0
@@ -27,5 +28,6 @@ requests-async==0.2.4
 socksio==1.0.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
+Unidecode==1.4.0
 urllib3==2.7.0
 yarl==1.24.2

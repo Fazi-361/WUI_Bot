@@ -94,11 +94,10 @@ async def get_title_page(
         [title_mini_id, title_type, console]
     ).fetchall():
         # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
-        cover_lang: str = "JA" if english_japanese else lang
-        if result_userlang := next((x for x in results if x[0] == cover_lang), None):
+        if result_userlang := next((x for x in results if x[0] == ("JA" if english_japanese else lang)), None):
             results.insert(0, results.pop(results.index(result_userlang)))
 
-        markdown += "<tg-slideshow>\n"
+        title_artworks: list[str] = []
         for result_lang, result_region, result_title, result_console, result_titleID in results:
             if result_titleID != title_id and result_titleID not in title_other_titleIDs:
                 title_other_titleIDs.append(result_titleID)
@@ -113,23 +112,29 @@ async def get_title_page(
                 if not await fetch_cover_head(result_console, resource := f"{result_lang}/{result_titleID}", atype):
                     continue
 
-                markdown += f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{resource}.{atype[1]})"
+                title_artworks.append(f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{resource}.{atype[1]})")
 
-        markdown += "</tg-slideshow>\n"
-    
+        if title_artworks:
+            markdown += f"<tg-slideshow>{''.join(title_artworks)}</tg-slideshow>\n"
+
     title_other_titleIDs.sort()
     markdown += (
         f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(lang)} {title_title}{'[^EN]' if lang == 'JA' else ''}\n"
         f"<sup>=={title_id}=={f", {', '.join(title_other_titleIDs)}" if title_other_titleIDs else ''}</sup>\n"
         "\n"
-        f"{f'**Developer**: {title_developer}  \n' if title_developer else ''}"
-        f"**Publisher**: {title_publisher}  \n"
-        f"**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n"
     )
-    
+
+    if title_developer:
+        markdown += f'**Developer**: {title_developer}  \n'
+
+    markdown += f"**Publisher**: {title_publisher}  \n"
+
+    if title_release_unix:
+        markdown += f"**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n"
+
     if japanese_transliteration:
         markdown += f"[^EN]: {japanese_transliteration}\n"
-    
+
     if title_synopsis:
         markdown += f"<details><summary>Synopsis</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n"
 
@@ -160,7 +165,7 @@ async def get_title_page(
         markdown += "</details>\n"
     
     # markdown += f"<sub>*generato in {timer() - timer_start:.3f} secondi*</sub>"
-    
+
     cursor.close()
     return InputRichMessage(
         markdown=markdown,
