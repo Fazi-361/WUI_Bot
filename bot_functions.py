@@ -155,10 +155,10 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
     try:
         assert title_id
 
-        await reply.edit_text(rich_message= await get_title_page((
-            await state.get_value("lang")) or 'EN',
-            title_id[1] if not is_full_title_id else title_id,
+        await reply.edit_text(rich_message= await get_title_page(
+            (await state.get_value("lang")) or C.DEFAULT_ANSWER_LANG,
             title_id[0] if not is_full_title_id else 'Wii',
+            title_id[1] if not is_full_title_id else title_id,
             is_full_title_id
         ))
     except Exception:

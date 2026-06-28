@@ -29,8 +29,8 @@ LANG_FLAGS: dict[str, str] = {
 @alru_cache()
 async def get_title_page(
     lang: str = 'IT',
+    title_console: str = 'Wii',
     title_id: str = 'ST7P01',
-    console: str = 'Wii',
     morphable_lang: bool = True,
 ) -> InputRichMessage:
     is_full_title_id: bool = len(title_id) == 6
@@ -47,9 +47,9 @@ async def get_title_page(
             FROM GameLocalePublisher
             WHERE Lang = ? AND MiniID = ? AND Console = ? {'AND Region = ?' if morphable_lang else ''}
             AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL""",
-            [lang, title_id[:3], console, title_id[3]]
+            [lang, title_id[:3], title_console, title_id[3]]
             if morphable_lang else
-            [lang, title_id[:3], console]
+            [lang, title_id[:3], title_console]
         ).fetchone():
             title_title, title_synopsis, title_mini_id, title_region, title_id = results
             english_japanese: bool = morphable_lang and lang == 'EN' and title_region == 'J'
@@ -70,7 +70,7 @@ async def get_title_page(
         AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL
         AND p.Console = ?
         LIMIT 1""",
-        [title_mini_id, title_region, console]
+        [title_mini_id, title_region, title_console]
     ).fetchone():
         title_type, title_developer, title_publisher, title_release_date, title_release_unix = results
     else:
@@ -93,7 +93,7 @@ async def get_title_page(
         AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
         AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
         ORDER BY Region DESC""",
-        [title_mini_id, title_type, console]
+        [title_mini_id, title_type, title_console]
     ).fetchall():
         # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
         if result_userlang := next((x for x in results if x[0] == ("JA" if english_japanese else lang)), None):
@@ -111,9 +111,9 @@ async def get_title_page(
             # Controlla che tutte le copertine esistano, controllando l'head dell'url
             #* Il controllo degli URL è la parte più lenta di questa funzione!
             title_artworks.extend([
-                f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{resource}.{atype[1]})"
+                f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]})"
                 for atype in {('coverfullHQ', 'png'), ('coverHQ', 'jpg')}
-                if await fetch_cover_head(result_console, resource := f"{result_lang}/{result_titleID}", atype)
+                if await fetch_cover_head(result_console, f"{result_lang}/{result_titleID}", atype)
             ])
 
     markdown: str = (
@@ -122,7 +122,7 @@ async def get_title_page(
             if title_artworks else ''
         }"
         
-        f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(lang)} {title_title}{'[^EN]' if lang == 'JA' else ''}\n"
+        f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(lang, '❔')} {title_title}{'[^EN]' if lang == 'JA' else ''}\n"
         f"<sup>=={title_id}=={f", {', '.join(sorted(title_other_titleIDs))}" if title_other_titleIDs else ''}</sup>\n\n"
 
         f"{
@@ -173,5 +173,22 @@ async def get_title_page(
     cursor.close()
     return InputRichMessage(
         markdown=markdown,
+        skip_entity_detection=True
+    )
+    
+
+async def append_artworks(
+    links_to_check: list[tuple[str, str, tuple[str, str]]],
+    previous_rich: InputRichMessage,
+) -> InputRichMessage:
+    return InputRichMessage(
+        markdown=(
+            f"<tg-slideshow>{''.join([
+                f"![](https://art.gametdb.com/{console}/{atype[0]}/{resource}.{atype[1]})"
+                for console, resource, atype in links_to_check
+                if await fetch_cover_head(console, resource, atype)
+            ])}</tg-slideshow>\n"
+            f"{previous_rich.markdown}"
+        ),
         skip_entity_detection=True
     )
