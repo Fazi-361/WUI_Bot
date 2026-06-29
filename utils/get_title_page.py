@@ -111,9 +111,9 @@ async def get_title_page(
             # Controlla che tutte le copertine esistano, controllando l'head dell'url
             #* Il controllo degli URL è la parte più lenta di questa funzione!
             title_artworks.extend([
-                f"![](https://art.gametdb.com/{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]})"
+                f"![](https://art.gametdb.com/{resource})"
                 for atype in {('coverfullHQ', 'png'), ('coverHQ', 'jpg')}
-                if await fetch_cover_head(result_console, f"{result_lang}/{result_titleID}", atype)
+                if await fetch_cover_head(resource := f"{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}")
             ])
 
     markdown: str = (
