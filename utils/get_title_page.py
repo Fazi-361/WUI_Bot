@@ -1,7 +1,7 @@
 from .database import get_cursor
 from aiogram.types.input_rich_message import InputRichMessage
 from async_lru import alru_cache
-from utils.fetch_url_head import fetch_cover_head
+from utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
     'JA': '🇯🇵',
@@ -95,10 +95,6 @@ async def get_title_page(
         ORDER BY Region DESC""",
         [title_mini_id, title_type, title_console]
     ).fetchall():
-        # Metti la copertina della lingua del gioco cercato come prima opzione, se presente
-        if result_userlang := next((x for x in results if x[0] == ("JA" if english_japanese else lang)), None):
-            results.insert(0, results.pop(results.index(result_userlang)))
-
         for result_lang, result_region, result_title, result_console, result_titleID in results:
             if result_titleID != title_id and result_titleID not in title_other_titleIDs:
                 title_other_titleIDs.append(result_titleID)
@@ -108,13 +104,27 @@ async def get_title_page(
             elif result_lang != lang:
                 title_other_names[result_lang] = result_title
 
-            # Controlla che tutte le copertine esistano, controllando l'head dell'url
-            #* Il controllo degli URL è la parte più lenta di questa funzione!
-            title_artworks.extend([
-                f"![](https://art.gametdb.com/{resource})"
+            title_artworks.extend(
+                f"{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}"
                 for atype in {('coverfullHQ', 'png'), ('coverHQ', 'jpg')}
-                if await fetch_cover_head(resource := f"{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}")
-            ])
+            )
+        else:
+            # Controlla che tutte le copertine esistano, controllando l'head degli url
+            #* Il controllo degli URL è la parte più lenta di questa funzione!
+            title_artworks = [
+                f"![](https://art.gametdb.com/{resource})"
+                for resource in
+                    await filter_covers(frozenset(title_artworks))
+            ]
+
+            # Sposta la copertina della lingua del gioco cercato come prima opzione, se presente
+            filter_lang: str = "JA" if english_japanese else lang
+            if artwork_userlang := next(
+                (_ for _ in title_artworks if _[(i := _.rfind('/')) - 2:i] == filter_lang),
+                None
+            ):
+                title_artworks.remove(artwork_userlang)
+                title_artworks.insert(0, artwork_userlang)
 
     markdown: str = (
         f"{
@@ -173,22 +183,5 @@ async def get_title_page(
     cursor.close()
     return InputRichMessage(
         markdown=markdown,
-        skip_entity_detection=True
-    )
-    
-
-async def append_artworks(
-    links_to_check: list[tuple[str, str, tuple[str, str]]],
-    previous_rich: InputRichMessage,
-) -> InputRichMessage:
-    return InputRichMessage(
-        markdown=(
-            f"<tg-slideshow>{''.join([
-                f"![](https://art.gametdb.com/{console}/{atype[0]}/{resource}.{atype[1]})"
-                for console, resource, atype in links_to_check
-                if await fetch_cover_head(console, resource, atype)
-            ])}</tg-slideshow>\n"
-            f"{previous_rich.markdown}"
-        ),
         skip_entity_detection=True
     )
