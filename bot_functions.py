@@ -146,12 +146,13 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
             "Nota: i WiiWare non hanno bisogno delle due lettere finali"
         )
         return
-    
+
+    reply: Message = await message.reply("Generando le informazioni...")
+
     title_id = args.upper() \
         if (is_full_title_id := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
         else get_title_by_name(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
 
-    reply: Message = await message.reply("Generando le informazioni...")
     try:
         assert title_id
 
