@@ -35,10 +35,9 @@ async def get_title_page(
     morphable_lang: bool = True,
 ) -> InputRichMessage:
     if not title_type:
-        title_type = 'Wii' if len(title_id) == 6 else "WiiWare"
+        title_type = 'Wii' if len(title_id) == 6 else "Channel"
 
     title_mini_id: str = title_id[:3]
-    title_publisher: str | None = None
     title_artworks: list[str] = []
     title_other_titleIDs: list[str] = []
     title_other_names: dict[str, str] = {}
@@ -63,26 +62,26 @@ async def get_title_page(
             AND GameType = ?
             AND MiniID = ?
             AND Lang = ?
-            {'AND Region = ?' if morphable_lang else ''}""",
+            {'AND Region = ?' if morphable_lang else ''}
+            LIMIT 1""",
             [title_console, title_type, title_mini_id, lang, title_id[3]]
             if morphable_lang else
             [title_console, title_type, title_mini_id, lang]
         ).fetchone():
             title_title, title_synopsis, title_region, title_id, \
                 title_developer, title_release_date, title_release_unix, \
-                title_publisher_id, title_publisher_name = results
+                title_publisher_id, title_publisher = results
 
-            if not title_publisher_name \
+            if not title_publisher \
             and (results := cursor.execute(
                 """SELECT CompanyName
                 FROM Company
                 WHERE Console = ?
-                AND CompanyCode = ?""",
+                AND CompanyCode = ?
+                LIMIT 1""",
                 [title_console, title_publisher_id]
             ).fetchone()):
                 title_publisher = results[0]
-            else:
-                title_publisher = title_publisher_name or None
             
             english_japanese: bool = morphable_lang and lang == 'EN' and title_region == 'J'
             break
@@ -127,7 +126,7 @@ async def get_title_page(
             title_artworks = [
                 f"![](https://art.gametdb.com/{resource})"
                 for resource in
-                    await filter_covers(frozenset(title_artworks))
+                await filter_covers(frozenset(title_artworks))
             ]
 
             # Sposta la copertina della lingua del gioco cercato come prima opzione
@@ -163,21 +162,16 @@ async def get_title_page(
         }"
 
         f"{
-            f'[^EN]: {japanese_transliteration}\n'
-            if japanese_transliteration else ''
-        }"
-
-        f"{
             f'<details><summary>Synopsis</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n'
             if title_synopsis else ''
         }"
 
         f"{
             '<details><summary>ROM versions</summary>\n'
-            '|Version|CRC|MD5|SHA1|\n'
-            '|:-:|-|-|-|\n'
+            'Version|CRC|MD5|SHA1\n'
+            '::|-|-|-\n'
             f'{'\n'.join(
-                f"| `{result_version}` | `{result_crc or '—'}` | `{result_md5 or '—'}` | `{result_sha1 or '—'}` |"
+                f"`{result_version}`|`{result_crc or '—'}`|`{result_md5 or '—'}`|`{result_sha1 or '—'}`"
                 for result_version, result_crc, result_md5, result_sha1 in results
             )}\n</details>\n'
             if (results := cursor.execute(
@@ -194,6 +188,11 @@ async def get_title_page(
                 for result_lang, result_title in title_other_names.items()
             )}</details>\n'
             if title_other_names else ''
+        }"
+        
+        f"{
+            f'[^EN]: {japanese_transliteration}\n'
+            if japanese_transliteration else ''
         }"
     )
 
