@@ -28,12 +28,17 @@ LANG_FLAGS: dict[str, str] = {
 
 @alru_cache()
 async def get_title_page(
-    lang: str = 'IT',
     title_console: str = 'Wii',
+    title_type: str | None = None,
     title_id: str = 'ST7P01',
+    lang: str = 'IT',
     morphable_lang: bool = True,
 ) -> InputRichMessage:
-    is_full_title_id: bool = len(title_id) == 6
+    if not title_type:
+        title_type = 'Wii' if len(title_id) == 6 else "WiiWare"
+
+    title_mini_id: str = title_id[:3]
+    title_publisher: str | None = None
     title_artworks: list[str] = []
     title_other_titleIDs: list[str] = []
     title_other_names: dict[str, str] = {}
@@ -43,36 +48,44 @@ async def get_title_page(
     # cambiando il valore del parametro lang e title_region
     for lang in (lang, 'US', 'EN', 'JA'):
         if results := cursor.execute(
-            f"""SELECT Title, Synopsis, MiniID, Region, MiniID || Region || COALESCE(PublisherID, '')
-            FROM GameLocalePublisher
-            WHERE Lang = ? AND MiniID = ? AND Console = ? {'AND Region = ?' if morphable_lang else ''}
-            AND PublisherID IS{' NOT' if is_full_title_id else ''} NULL""",
-            [lang, title_id[:3], title_console, title_id[3]]
+            f"""SELECT 
+                Title,
+                Synopsis,
+                Region,
+                MiniID || Region || COALESCE(PublisherID, ''),
+                Developer,
+                PublishDate,
+                UNIXEPOCH(PublishDate),
+                PublisherID,
+                PublisherName
+            FROM BaseGameLocale
+            WHERE Console = ?
+            AND GameType = ?
+            AND MiniID = ?
+            AND Lang = ?
+            {'AND Region = ?' if morphable_lang else ''}""",
+            [title_console, title_type, title_mini_id, lang, title_id[3]]
             if morphable_lang else
-            [lang, title_id[:3], title_console]
+            [title_console, title_type, title_mini_id, lang]
         ).fetchone():
-            title_title, title_synopsis, title_mini_id, title_region, title_id = results
+            title_title, title_synopsis, title_region, title_id, \
+                title_developer, title_release_date, title_release_unix, \
+                title_publisher_id, title_publisher_name = results
+
+            if not title_publisher_name \
+            and (results := cursor.execute(
+                """SELECT CompanyName
+                FROM Company
+                WHERE Console = ?
+                AND CompanyCode = ?""",
+                [title_console, title_publisher_id]
+            ).fetchone()):
+                title_publisher = results[0]
+            else:
+                title_publisher = title_publisher_name or None
+            
             english_japanese: bool = morphable_lang and lang == 'EN' and title_region == 'J'
             break
-    else:
-        raise
-    
-    # Ottieni altre informazioni essenziali sul titolo
-    if results := cursor.execute(
-        f"""SELECT g.Type, g.Developer, {'c.Name' if is_full_title_id else 'p.Publisher'}, r.Date, UNIXEPOCH(r.Date)
-        FROM Game g
-        JOIN GamePublisher p
-        ON g.MiniID = p.MiniID AND g.Type = p.Type
-        JOIN GameRelease r
-        ON g.MiniID = r.MiniID AND g.Type = r.Type and r.Region = p.Region
-        {'LEFT JOIN Company c ON p.PublisherID = c.Code AND p.Console = c.Console' if is_full_title_id else ''}
-        WHERE g.MiniID = ? AND p.Region = ? 
-        AND p.PublisherID IS{' NOT' if is_full_title_id else ''} NULL
-        AND p.Console = ?
-        LIMIT 1""",
-        [title_mini_id, title_region, title_console]
-    ).fetchone():
-        title_type, title_developer, title_publisher, title_release_date, title_release_unix = results
     else:
         raise
 
@@ -80,8 +93,8 @@ async def get_title_page(
     japanese_transliteration: str = ""
     if results := cursor.execute(
         """SELECT DISTINCT Lang, Region, Title, LOWER(Console), MiniID || Region || COALESCE(PublisherID, '')
-        FROM GameLocalePublisher
-        WHERE MiniID = ? AND Type = ? AND Console = ?
+        FROM BaseGameLocale
+        WHERE Console = ? AND GameType = ? AND MiniID = ?
         AND (Lang != 'JA' OR Region IN ('A', 'J'))
         AND (Lang != 'US' OR Region IN ('A', 'E', 'N', 'X', 'Y', 'Z'))
         AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'X', 'Y', 'Z', 'J'))
@@ -93,7 +106,7 @@ async def get_title_page(
         AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
         AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
         ORDER BY Region DESC""",
-        [title_mini_id, title_type, title_console]
+        [title_console, title_type, title_mini_id]
     ).fetchall():
         for result_lang, result_region, result_title, result_console, result_titleID in results:
             if result_titleID != title_id and result_titleID not in title_other_titleIDs:
@@ -117,14 +130,15 @@ async def get_title_page(
                     await filter_covers(frozenset(title_artworks))
             ]
 
-            # Sposta la copertina della lingua del gioco cercato come prima opzione, se presente
-            filter_lang: str = "JA" if english_japanese else lang
-            if artwork_userlang := next(
-                (_ for _ in title_artworks if _[(i := _.rfind('/')) - 2:i] == filter_lang),
-                None
-            ):
-                title_artworks.remove(artwork_userlang)
-                title_artworks.insert(0, artwork_userlang)
+            # Sposta la copertina della lingua del gioco cercato come prima opzione
+            for filter_lang in ("JA" if english_japanese else lang, 'US', 'EN', 'JA'):
+                if artwork_userlang := next(
+                    (_ for _ in title_artworks if _[(i := _.rfind('/')) - 2:i] == filter_lang),
+                    None
+                ):
+                    title_artworks.remove(artwork_userlang)
+                    title_artworks.insert(0, artwork_userlang)
+                    break
 
     markdown: str = (
         f"{
@@ -139,9 +153,12 @@ async def get_title_page(
             f'**Developer**: {title_developer}  \n'
             if title_developer else ''
         }"
-        f"**Publisher**: {title_publisher}"
         f"{
-            f'  \n**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
+            f'**Publisher**: {title_publisher}  \n'
+            if title_publisher else ''
+        }"
+        f"{
+            f'**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
             if title_release_unix else "\n\n"
         }"
 
@@ -164,10 +181,10 @@ async def get_title_page(
                 for result_version, result_crc, result_md5, result_sha1 in results
             )}\n</details>\n'
             if (results := cursor.execute(
-                """SELECT Version, CRC, MD5, SHA1
+                """SELECT ROMVersion, CRC, MD5, SHA1
                 FROM GameROM
-                WHERE MiniID = ? AND Type = ? AND Region = ?""",
-                [title_mini_id, title_type, title_region]
+                WHERE GameType = ? AND MiniID = ? AND Region = ?""",
+                [title_type, title_mini_id, title_region]
             ).fetchall()) else ''
         }"
 

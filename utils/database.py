@@ -5,7 +5,7 @@ from jellyfish import jaro_winkler_similarity
 
 
 @lru_cache
-def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str] | None:
+def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str, str] | None:
     input = re.sub(r'[^\w\s]', '', unidecode(input.upper()))
     input_split: list[str] = input.split()
 
@@ -31,17 +31,17 @@ def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str] | None:
     data = cursor.execute(
         """WITH Codes AS (
             WITH c AS (
-                SELECT Console, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title)) Similarity
-                FROM GameLocalePublisher
+                SELECT Console, GameType, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title)) Similarity
+                FROM BaseGameLocale
                 WHERE Similarity >= ?
             )
-            SELECT DISTINCT Console, MiniID, Region, PublisherID
+            SELECT DISTINCT Console, GameType, MiniID, Region, PublisherID
             FROM c
             WHERE Similarity = (SELECT MAX(Similarity) FROM c)
         ), Regions AS (
             Select Region FROM Codes
         )
-        SELECT Console, MiniID || Region || COALESCE(PublisherID, '')
+        SELECT Console, GameType, MiniID || Region || COALESCE(PublisherID, '')
         FROM Codes
         WHERE Region = ?
         OR NOT ? IN Regions AND Region = 'E'
