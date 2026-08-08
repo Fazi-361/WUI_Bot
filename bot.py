@@ -18,6 +18,7 @@ from aiogram.fsm.strategy import FSMStrategy
 from bot_functions import *
 from utils.fsm import BotState, SQLiteStorage
 
+
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
 dp: Dispatcher = Dispatcher(
     storage=SQLiteStorage(),
@@ -32,6 +33,7 @@ bot: Bot = Bot(
     )
 )
 
+
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
 class CustomCommand(Command):
@@ -42,40 +44,23 @@ class CustomCommand(Command):
     ):
         super().__init__(
             *values,
-            commands= commands,
-            prefix= '/!.,;?',
-            ignore_case= True,
-            ignore_mention= False,
+            commands=commands,
+            prefix='/!.,;?',
+            ignore_case=True,
+            ignore_mention=False,
         )
 
 
-# Risposte
-def handle_responses(text: str) -> str:
-    return "Non ho capito cos'hai scritto..." # ?
-
-
 async def handle_message(message: Message) -> None:
-    message_type: str = message.chat.type
-    text: str = message.text or ''
-
-    if message_type == 'group':
-        if f"@{C.BOT_USERNAME}" in text:
-            new_text: str = text.replace(f"@{C.BOT_USERNAME}", "").strip()
-            response: str = handle_responses(new_text)
-        else:
-            return
-    else:
-        response = handle_responses(text)
-
-    await message.reply(response)
+    await message.reply("Non ho capito cos'hai scritto...")
 
 
 async def error_handler(event: ErrorEvent) -> bool:
     try:
         print(''.join(format_exception(
             type(event.exception),
-            value= event.exception,
-            tb= event.exception.__traceback__
+            value=event.exception,
+            tb=event.exception.__traceback__
         )))
     except:
         return False
@@ -87,18 +72,18 @@ async def error_handler(event: ErrorEvent) -> bool:
 async def startup_func(*args) -> None:
     if HOST and PATH:
         await bot.set_webhook(
-            url= f"{HOST}{PATH}",
-            drop_pending_updates= True,
-            secret_token= SECRET
+            url=f"{HOST}{PATH}",
+            drop_pending_updates=True,
+            secret_token=SECRET
         )
     else:
         await bot.delete_webhook(
-            drop_pending_updates= True
+            drop_pending_updates=True
         )
-    
+
     C.BOT_USERNAME = (await bot.get_me()).username
     print(f"Bot @{C.BOT_USERNAME} started.")
-    
+
     from ast import literal_eval as eval
     for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
         try: await bot.send_message(admin, "Bot online!")
@@ -117,9 +102,9 @@ def main_webhook() -> None:
     app = web.Application()
 
     SimpleRequestHandler(
-        dispatcher= dp,
-        bot= bot,
-        secret_token= SECRET,
+        dispatcher=dp,
+        bot=bot,
+        secret_token=SECRET,
     ).register(app, path=PATH) # type: ignore
 
     setup_application(app, dp, bot=bot)

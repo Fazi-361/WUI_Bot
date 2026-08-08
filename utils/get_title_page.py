@@ -170,15 +170,14 @@ async def get_title_page(
             '<details><summary>ROM versions</summary>\n'
             'Version|CRC|MD5|SHA1\n'
             '::|-|-|-\n'
-            f'{'\n'.join(
-                f"`{result_version}`|`{result_crc or '—'}`|`{result_md5 or '—'}`|`{result_sha1 or '—'}`"
+            f'{''.join(
+                f"`{result_version}`|`{result_crc or '—'}`|`{result_md5 or '—'}`|`{result_sha1 or '—'}`\n"
                 for result_version, result_crc, result_md5, result_sha1 in results
-            )}\n</details>\n'
-            if (results := cursor.execute(
+            )}</details>\n' if (results := cursor.execute(
                 """SELECT ROMVersion, CRC, MD5, SHA1
                 FROM GameROM
-                WHERE GameType = ? AND MiniID = ? AND Region = ?""",
-                [title_type, title_mini_id, title_region]
+                WHERE Console = ? AND GameType = ? AND MiniID = ? AND Region = ?""",
+                [title_console, title_type, title_mini_id, title_region]
             ).fetchall()) else ''
         }"
 
