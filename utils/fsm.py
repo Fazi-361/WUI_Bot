@@ -1,16 +1,18 @@
-import sqlite3
-from ast import literal_eval as eval
+from sqlite3 import connect
+from json import dumps, loads
 from typing import Any, Mapping
 from aiogram.filters.state import StateType
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.base import BaseStorage, StorageKey
 
+
 class BotState(StatesGroup):
     language = State()
 
+
 class SQLiteStorage(BaseStorage):
     def __init__(self) -> None:
-        self.conn = sqlite3.connect("./data/userdata.db")
+        self.conn = connect("./data/userdata.db")
         self.conn.execute(
             """CREATE TABLE IF NOT EXISTS FSM (
                 Key TEXT PRIMARY KEY,
@@ -42,7 +44,7 @@ class SQLiteStorage(BaseStorage):
         ).fetchone()) else None
 
     async def set_data(self, key: StorageKey, data: Mapping[str, Any]) -> None:
-        str_data = str(data)
+        str_data = dumps(data)
         self.conn.execute(
             """INSERT INTO FSM (Key, Data) VALUES (?, ?)
             ON CONFLICT DO UPDATE SET Data = ?""",
@@ -51,7 +53,7 @@ class SQLiteStorage(BaseStorage):
         self.conn.commit()
 
     async def get_data(self, key: StorageKey) -> dict[str, Any]:
-        return eval(data) if (data := self.conn.execute(
+        return loads(data) if (data := self.conn.execute(
             "SELECT Data FROM FSM WHERE Key = ? LIMIT 1",
             [str(key)]
         ).fetchone()) and (data := data[0]) else {}
