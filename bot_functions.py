@@ -149,18 +149,18 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
 
     reply: Message = await message.reply("Generando le informazioni...")
 
-    title_id = args.upper() \
-        if (is_full_title_id := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args))) \
-        else get_title_by_name(args, C.LANG_REGIONS.get(await state.get_value("lang") or 'IT') or 'P')
-
     try:
-        assert title_id
+        user_lang: str = (await state.get_value("lang")) or C.DEFAULT_LANG
+        
+        assert (title_id := args.upper()
+            if (is_full_title_id := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args)))
+            else get_title_by_name(args, C.LANG_REGIONS.get(user_lang)))
 
         await reply.edit_text(rich_message= await get_title_page(
             title_id[0] if not is_full_title_id else 'Wii',
             title_id[1] if not is_full_title_id else None,
             title_id[2] if not is_full_title_id else title_id,
-            (await state.get_value("lang")) or C.DEFAULT_ANSWER_LANG,
+            user_lang,
             is_full_title_id
         ))
     except Exception:

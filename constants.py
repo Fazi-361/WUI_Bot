@@ -2,12 +2,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     BOT_USERNAME: str
     LANG_REGIONS: dict[str, str]
-    DEFAULT_ANSWER_LANG: str
+    DEFAULT_LANG: str
+
 
 def init_constants() -> None:
     global BOT_USERNAME, \
            LANG_REGIONS, \
-           DEFAULT_ANSWER_LANG
+           DEFAULT_LANG
     
     BOT_USERNAME = "" # filled in later by bot.py on start
     LANG_REGIONS = {
@@ -20,4 +21,4 @@ def init_constants() -> None:
         "JA": "J",
         "KO": "K"
     }
-    DEFAULT_ANSWER_LANG = "EN"
+    DEFAULT_LANG = "EN"
