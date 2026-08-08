@@ -51,8 +51,9 @@ class CustomCommand(Command):
         )
 
 
-async def handle_message(message: Message) -> None:
-    await message.reply("Non ho capito cos'hai scritto...")
+async def handle_message(message: Message, state: FSMContext) -> None:
+    await info(message, CommandObject(args=message.text), state)
+    # await message.reply("Non ho capito cos'hai scritto...")
 
 
 async def error_handler(event: ErrorEvent) -> bool:
