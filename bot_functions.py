@@ -1,6 +1,6 @@
 import traceback, re, constants as C
 from utils.fsm import BotState
-from utils.strim import strim
+from utils.text import strim, text_type, TextType as T
 from utils.database import get_title_by_name
 from aiogram import Bot
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -135,7 +135,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply_photo(f"https://art.gametdb.com/wii/coverfullHQ/{lang_code}/{id}.png")
     except:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
-        
+
 
 async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
     if not (args := command.args) or not (args := strim(args)):
@@ -143,7 +143,7 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
             "Inserisci l'ID del titolo o il suo nome. Es:\n"
             "<pre>/info ST7P01</pre>\n"
             "<pre>/info Super Mario Galaxy</pre>\n"
-            "Nota: i WiiWare non hanno bisogno delle due lettere finali"
+            "Nota: i canali non hanno bisogno delle due lettere finali"
         )
         return
 
@@ -151,9 +151,9 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
 
     try:
         user_lang: str = (await state.get_value("lang")) or C.DEFAULT_LANG
-        
+
         assert (title_id := args.upper()
-            if (is_full_title_id := bool(re.match(r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$", args)))
+            if (is_full_title_id := text_type(args) is T.GAME_ID)
             else get_title_by_name(args, C.LANG_REGIONS.get(user_lang)))
 
         await reply.edit_text(rich_message= await get_title_page(

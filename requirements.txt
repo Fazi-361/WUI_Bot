@@ -23,6 +23,7 @@ propcache==0.5.2
 pydantic==2.13.4
 pydantic_core==2.46.4
 python-dotenv==1.2.2
+regex-spm==1.0.0
 requests==2.34.2
 socksio==1.0.0
 typing-inspection==0.4.2
