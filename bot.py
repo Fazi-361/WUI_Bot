@@ -9,7 +9,7 @@ import os, constants as C
 from traceback import format_exception
 from asyncio import run
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import Message, ErrorEvent
+from aiogram.types import ErrorEvent
 from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
 from aiogram.enums.parse_mode import ParseMode
@@ -49,11 +49,6 @@ class CustomCommand(Command):
             ignore_case=True,
             ignore_mention=False,
         )
-
-
-async def handle_message(message: Message, state: FSMContext) -> None:
-    await info(message, CommandObject(args=message.text), state)
-    # await message.reply("Non ho capito cos'hai scritto...")
 
 
 async def error_handler(event: ErrorEvent) -> bool:
@@ -130,7 +125,7 @@ if __name__ == "__main__":
     dp.callback_query.register(set_language, BotState.language)
 
     # Messagi estranei
-    dp.message.register(handle_message, 
+    dp.message.register(handle_private_message, 
         F.text,
         F.chat.type == "private"
     )
