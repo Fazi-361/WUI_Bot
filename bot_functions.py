@@ -1,12 +1,13 @@
-import traceback, re, constants as C
+import traceback, constants as C
 from utils.fsm import BotState
-from utils.text import strim, text_type, TextType as T
-from utils.database import get_title_by_name
+from utils.text import strim, text_type, TextTypes as T
 from aiogram import Bot
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
 from aiogram.fsm.context import FSMContext
 from utils.get_title_page import get_title_page
+from utils.get_title_by_name import get_title_by_name
+from utils.get_title_by_hash import get_title_by_hash
 
 LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -140,10 +141,11 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
 async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
     if not (args := command.args) or not (args := strim(args)):
         await message.reply(
-            "Inserisci l'ID del titolo o il suo nome. Es:\n"
+            "Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1). Es:\n"
             "<pre>/info ST7P01</pre>\n"
             "<pre>/info Super Mario Galaxy</pre>\n"
-            "Nota: i canali non hanno bisogno delle due lettere finali"
+            "<pre>/info fb84bfc5</pre>\n"
+            "Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
         )
         return
 
@@ -152,17 +154,37 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
     try:
         user_lang: str = (await state.get_value("lang")) or C.DEFAULT_LANG
 
-        assert (title_id := args.upper()
-            if (is_full_title_id := text_type(args) is T.GAME_ID)
-            else get_title_by_name(args, C.LANG_REGIONS.get(user_lang)))
+        result: str | tuple[str, str, str] | None = ""
+        match text_type(args):
+            case T.QUERY:
+                result = get_title_by_name(args, C.LANG_REGIONS.get(user_lang))
+                morph_lang: bool = False
+            case T.GAME_ID:
+                result = args.upper()
+                morph_lang = True
+            case T.HASH:
+                result = get_title_by_hash(args)
+                morph_lang = True
+            case _: raise
 
-        await reply.edit_text(rich_message= await get_title_page(
-            title_id[0] if not is_full_title_id else 'Wii',
-            title_id[1] if not is_full_title_id else None,
-            title_id[2] if not is_full_title_id else title_id,
+        assert result
+        results_list: bool = isinstance(result, tuple)
+
+        await reply.edit_text(rich_message=await get_title_page(
+            result[0] if results_list else 'Wii',
+            result[1] if results_list else None,
+            result[2] if results_list else result,
             user_lang,
-            is_full_title_id
+            morph_lang
         ))
     except Exception:
         print(traceback.format_exc())
         await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")
+
+
+async def handle_private_message(message: Message, state: FSMContext) -> None:
+    match text_type(strim(message.text)):
+        case T.QUERY | T.GAME_ID | T.HASH:
+            await info(message, CommandObject(args=message.text), state)
+        case _:
+            await message.reply("Non ho capito cos'hai scritto...")
