@@ -106,6 +106,10 @@ def gen(tree, root, console) -> None:
                 ON DELETE CASCADE,
             PRIMARY KEY (Console, GameType, MiniID, Region, ROMVersion)
         ) STRICT;
+        
+        CREATE VIEW IF NOT EXISTS BaseGameROM AS
+        SELECT *
+        FROM BaseGame NATURAL JOIN GameROM;
         """
     )
 
