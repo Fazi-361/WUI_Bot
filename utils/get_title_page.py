@@ -159,7 +159,7 @@ async def get_title_page(
             if title_publisher else ''
         }"
         f"{
-            f'**Released**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
+            f'{LANG_FLAGS.get("JA" if english_japanese else lang, '❔')} **Release**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
             if title_release_unix else "\n\n"
         }"
 
