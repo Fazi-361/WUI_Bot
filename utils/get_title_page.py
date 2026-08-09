@@ -45,7 +45,7 @@ async def get_title_page(
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
     # cambiando il valore del parametro lang e title_region
-    for lang in (lang, 'US', 'EN', 'JA'):
+    for lang in (lang, 'US', 'EN', 'JA', ''):
         if results := cursor.execute(
             f"""SELECT 
                 Title,
@@ -61,12 +61,14 @@ async def get_title_page(
             WHERE Console = ?
             AND GameType = ?
             AND MiniID = ?
-            AND Lang = ?
+            {'AND Lang = ?' if lang else ''}
             {'AND Region = ?' if morphable_lang else ''}
             LIMIT 1""",
             [title_console, title_type, title_mini_id, lang, title_id[3]]
-            if morphable_lang else
+            if lang and morphable_lang else
             [title_console, title_type, title_mini_id, lang]
+            if lang else 
+            [title_console, title_type, title_mini_id]
         ).fetchone():
             title_title, title_synopsis, title_region, title_id, \
                 title_developer, title_release_date, title_release_unix, \
