@@ -21,7 +21,7 @@ class TextTypes(Enum):
 
 @lru_cache()
 def text_type(text: str) -> TextTypes | None:
-    if len(text) < 3:
+    if len(text) < 2:
         return None
 
     match fullmatch_in(text):
