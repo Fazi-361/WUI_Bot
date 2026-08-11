@@ -1,10 +1,10 @@
 import traceback, constants as C
 from utils.fsm import BotState
 from utils.text import strim, text_type, TextTypes as T
-from aiogram import Bot
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
 from aiogram.fsm.context import FSMContext
+from aiogram.utils.i18n import I18n, FSMI18nMiddleware, gettext as _
 from utils.get_title_page import get_title_page
 from utils.get_title_by_name import get_title_by_name
 from utils.get_title_by_hash import get_title_by_hash
@@ -27,32 +27,34 @@ LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
 
 async def start(message: Message, state: FSMContext) -> None:
     """Avvia il bot"""
-    
-    if not await state.get_value("lang"):
-        await state.set_state(BotState.language)
-        await message.reply(
-            "🇺🇸 Hello, Welcome to the bot! Select a default language to continue.\n\n"
-            "🇮🇹 Ciao, benvenuti al bot! Seleziona una lingua predefinita per continuare.",
-            reply_markup=LANGUAGE_OPTIONS
-        )
+
+    if not await state.get_value("locale"):
+        await language(message, state)
     else:
-        # TODO: rispondi nella linagua dell'utente [per il futuro con i18n?]
-        await message.reply("Ciao! :)\nSe vuoi le impostazioni sulla lingua, digita /lingua")
+        await message.reply(f"{_("start.hello")}\n\n🇺🇸 To change language, use /language")
     
 
-async def lingua(message: Message, state: FSMContext) -> None:
+async def language(message: Message, state: FSMContext) -> None:
+    await state.set_state(BotState.language)
     await message.reply(
-        "🇺🇸 Select a default language to continue.\n\n"
-        "🇮🇹 Seleziona una lingua predefinita per continuare.",
+        "🇺🇸 Select a language to continue.\n"
+        "🇩🇪 Wählen Sie eine Sprache aus, um fortzufahren.\n"
+        "🇫🇷 Sélectionnez une langue pour continuer.\n"
+        "🇪🇸 Selecciona un idioma para continuar.\n"
+        "🇮🇹 Seleziona una lingua per continuare.\n"
+        "🇯🇵 続行するには、言語を選択してください。\n"
+        "🇰🇷 계속하려면 언어를 선택하세요.",
         reply_markup=LANGUAGE_OPTIONS
     )
 
 
-async def set_language(query: CallbackQuery, state: FSMContext, bot: Bot) -> None:
-    await state.update_data({"lang": query.data})
-    await query.answer("Lingua impostata!")
-    try: await query.message.edit_text("Lingua impostata! :)") # type: ignore
-    except: pass
+async def set_language(query: CallbackQuery, state: FSMContext, i18n_middleware: FSMI18nMiddleware) -> None:
+    if data := query.data:
+        await state.clear()
+        await i18n_middleware.set_locale(state, data)
+        await query.answer(_("language.set.answer"))
+        try: await query.message.edit_text(_("language.set.message")) # type: ignore
+        except: pass
 
 
 async def help(message: Message) -> None:
@@ -138,7 +140,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
         await message.reply("Apparentemente non esiste una copertina di questo gioco su GameTDB nella lingua specificata..")
 
 
-async def info(message: Message, command: CommandObject, state: FSMContext) -> None:
+async def info(message: Message, command: CommandObject, i18n: I18n) -> None:
     if not (args := command.args) or not (args := strim(args)):
         await message.reply(
             "Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1). Es:\n"
@@ -149,11 +151,12 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
         )
         return
 
-    reply: Message = await message.reply("Generando le informazioni...")
+    reply: Message = await message.reply(_("info.generating"))
 
     try:
-        user_lang: str = (await state.get_value("lang")) or C.DEFAULT_LANG
-
+        user_lang: str = i18n.current_locale
+        print(user_lang)
+        
         result: str | tuple[str, str, str] | None = ""
         match text_type(args):
             case T.QUERY:
@@ -179,12 +182,12 @@ async def info(message: Message, command: CommandObject, state: FSMContext) -> N
         ))
     except Exception:
         print(traceback.format_exc())
-        await reply.edit_text("Titolo non trovato o errore nella generazione della pagina.")
+        await reply.edit_text(_("info.generation_error"))
 
 
-async def handle_private_message(message: Message, state: FSMContext) -> None:
+async def handle_private_message(message: Message, i18n: I18n) -> None:
     match text_type(strim(message.text)):
         case T.QUERY | T.GAME_ID | T.HASH:
-            await info(message, CommandObject(args=message.text), state)
+            await info(message, CommandObject(args=message.text), i18n)
         case _:
-            await message.reply("Non ho capito cos'hai scritto...")
+            await message.reply(_("query.unknown"))

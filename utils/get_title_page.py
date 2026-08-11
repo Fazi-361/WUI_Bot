@@ -1,5 +1,6 @@
 from .database import get_cursor
 from aiogram.types.input_rich_message import InputRichMessage
+from aiogram.utils.i18n import gettext as _
 from async_lru import alru_cache
 from utils.fetch_url_head import filter_covers
 
@@ -31,7 +32,7 @@ async def get_title_page(
     title_console: str = 'Wii',
     title_type: str | None = None,
     title_id: str = 'ST7P01',
-    lang: str = 'IT',
+    user_lang: str = 'IT',
     morphable_lang: bool = True,
 ) -> InputRichMessage:
     if not title_type:
@@ -45,7 +46,7 @@ async def get_title_page(
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
     # cambiando il valore del parametro lang e title_region
-    for lang in (lang, 'US', 'EN', 'JA', ''):
+    for user_lang in (user_lang, 'US', 'EN', 'JA', ''):
         if results := cursor.execute(
             f"""SELECT
                 Lang,
@@ -62,16 +63,17 @@ async def get_title_page(
             WHERE Console = ?
             AND GameType = ?
             AND MiniID = ?
-            {'AND Lang = ?' if lang else ''}
+            {'AND Lang = ?' if user_lang else ''}
             {'AND Region = ?' if morphable_lang else ''}
+            ORDER BY REGION DESC
             LIMIT 1""",
-            [title_console, title_type, title_mini_id, lang, title_id[3]]
-            if lang and morphable_lang else
-            [title_console, title_type, title_mini_id, lang]
-            if lang else 
+            [title_console, title_type, title_mini_id, user_lang, title_id[3]]
+            if user_lang and morphable_lang else
+            [title_console, title_type, title_mini_id, user_lang]
+            if user_lang else 
             [title_console, title_type, title_mini_id]
         ).fetchone():
-            lang, title_title, title_synopsis, title_region, title_id, \
+            user_lang, title_title, title_synopsis, title_region, title_id, \
             title_developer, title_release_date, title_release_unix, \
             title_publisher_id, title_publisher = results
 
@@ -86,7 +88,7 @@ async def get_title_page(
             ).fetchone()):
                 title_publisher = results[0]
             
-            english_japanese: bool = morphable_lang and lang == 'EN' and title_region == 'J'
+            english_japanese: bool = morphable_lang and user_lang == 'EN' and title_region == 'J'
             break
     else:
         raise
@@ -116,7 +118,7 @@ async def get_title_page(
 
             if result_lang == 'EN' and result_region == 'J':
                 japanese_transliteration = result_title
-            elif result_lang != lang:
+            elif result_lang != user_lang:
                 title_other_names[result_lang] = result_title
 
             title_artworks.extend(
@@ -133,7 +135,7 @@ async def get_title_page(
             ]
 
             # Sposta la copertina della lingua del gioco cercato come prima opzione
-            for filter_lang in ("JA" if english_japanese else lang, 'US', 'EN', 'JA'):
+            for filter_lang in ("JA" if english_japanese else user_lang, 'US', 'EN', 'JA'):
                 if artwork_userlang := next(
                     (_ for _ in title_artworks if _[(i := _.rfind('/')) - 2:i] == filter_lang),
                     None
@@ -148,30 +150,30 @@ async def get_title_page(
             if title_artworks else ''
         }"
         
-        f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(lang, '❔')} {title_title}{'[^EN]' if lang == 'JA' else ''}\n"
+        f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(user_lang, '❔')} {title_title}{'[^EN]' if user_lang == 'JA' else ''}\n"
         f"<sup>=={title_id}=={f", {', '.join(sorted(title_other_titleIDs))}" if title_other_titleIDs else ''}</sup>\n\n"
 
         f"{
-            f'**Developer**: {title_developer}  \n'
+            f'**{_("info.developer")}**: {title_developer}  \n'
             if title_developer else ''
         }"
         f"{
-            f'**Publisher**: {title_publisher}  \n'
+            f'**{_("info.publisher")}**: {title_publisher}  \n'
             if title_publisher else ''
         }"
         f"{
-            f'{LANG_FLAGS.get("JA" if english_japanese else lang, '❔')} **Release**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
+            f'{LANG_FLAGS.get("JA" if english_japanese else user_lang, '❔')} **{_("info.release_date")}**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
             if title_release_unix else "\n\n"
         }"
 
         f"{
-            f'<details><summary>Synopsis</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n'
+            f'<details><summary>{_("info.synopsis")}</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n'
             if title_synopsis else ''
         }"
 
         f"{
-            '<details><summary>ROM versions</summary>\n'
-            'Version|CRC|MD5|SHA1\n'
+            f'<details><summary>{_("info.revisions")}</summary>\n'
+            f'{_("info.revision.version")}|CRC|MD5|SHA1\n'
             '::|-|-|-\n'
             f'{''.join(
                 f"`{result_version}`|`{result_crc or '—'}`|`{result_md5 or '—'}`|`{result_sha1 or '—'}`\n"
@@ -185,7 +187,7 @@ async def get_title_page(
         }"
 
         f"{
-            f'<details><summary>Name in other languages</summary>\n{'  \n'.join(
+            f'<details><summary>{_("info.name_in_other_languages")}</summary>\n{'  \n'.join(
                 f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}"
                 for result_lang, result_title in title_other_names.items()
             )}</details>\n'

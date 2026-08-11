@@ -1,0 +1,60 @@
+# French translations for WiiWiiUBot.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the WiiWiiUBot project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WiiWiiUBot VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-11 17:32+0200\n"
+"PO-Revision-Date: 2026-08-11 15:55+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+# HELP REQUIRED!
+msgid "start.hello"
+msgstr "Salut ! :)"
+
+msgid "language.set.answer"
+msgstr "Langue sélectionnée !"
+
+msgid "language.set.message"
+msgstr "Langue sélectionnée ! :)"
+
+msgid "info.generating"
+msgstr "Génération des informations..."
+
+msgid "info.generation_error"
+msgstr ""
+
+msgid "query.unknown"
+msgstr ""
+
+msgid "info.developer"
+msgstr "Développeur"
+
+msgid "info.publisher"
+msgstr "Éditeur"
+
+msgid "info.release_date"
+msgstr "Date"
+
+msgid "info.synopsis"
+msgstr "Synopsis"
+
+msgid "info.revisions"
+msgstr "Révisions"
+
+msgid "info.revision.version"
+msgstr "Version"
+
+msgid "info.name_in_other_languages"
+msgstr "Nom dans d'autres langues"
+

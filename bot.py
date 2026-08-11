@@ -15,6 +15,7 @@ from aiogram.filters import Command
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters.command import CommandPatternType
 from aiogram.fsm.strategy import FSMStrategy
+from aiogram.utils.i18n import I18n, FSMI18nMiddleware
 from bot_functions import *
 from utils.fsm import BotState, SQLiteStorage
 
@@ -32,7 +33,6 @@ bot: Bot = Bot(
         allow_sending_without_reply=True
     )
 )
-
 
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
@@ -113,6 +113,9 @@ async def main_polling() -> None:
 
 
 if __name__ == "__main__":
+    # Middleware
+    FSMI18nMiddleware(I18n(path="locales", default_locale="EN")).setup(dp)
+
     # Comandi
     dp.message.register(info, CustomCommand('info'))
     dp.message.register(start, CustomCommand('start'))
@@ -121,7 +124,7 @@ if __name__ == "__main__":
     dp.message.register(deid, CustomCommand('deid'))
     dp.message.register(id, CustomCommand('id'))
     dp.message.register(copertina_id, CustomCommand('copertina_id'))
-    dp.message.register(lingua, CustomCommand('lingua'))
+    dp.message.register(language, CustomCommand('language'))
     dp.callback_query.register(set_language, BotState.language)
 
     # Messagi estranei

@@ -1,0 +1,60 @@
+# Japanese translations for WiiWiiUBot.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the WiiWiiUBot project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WiiWiiUBot VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-11 17:32+0200\n"
+"PO-Revision-Date: 2026-08-11 15:55+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+# HELP REQUIRED!
+msgid "start.hello"
+msgstr "こんにちは！ :)"
+
+msgid "language.set.answer"
+msgstr "言語設定完了！"
+
+msgid "language.set.message"
+msgstr "言語設定完了！ :)"
+
+msgid "info.generating"
+msgstr "情報を生成中..."
+
+msgid "info.generation_error"
+msgstr ""
+
+msgid "query.unknown"
+msgstr ""
+
+msgid "info.developer"
+msgstr "開発元"
+
+msgid "info.publisher"
+msgstr "発売元"
+
+msgid "info.release_date"
+msgstr "発売日"
+
+msgid "info.synopsis"
+msgstr "あらすじ"
+
+msgid "info.revisions"
+msgstr "改訂"
+
+msgid "info.revision.version"
+msgstr "バージョン"
+
+msgid "info.name_in_other_languages"
+msgstr "他の言語での名称"
+

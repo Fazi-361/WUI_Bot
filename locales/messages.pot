@@ -1,0 +1,58 @@
+# Translations template for WiiWiiUBot.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the WiiWiiUBot project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WiiWiiUBot VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-11 17:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "start.hello"
+msgstr ""
+
+msgid "language.set.answer"
+msgstr ""
+
+msgid "language.set.message"
+msgstr ""
+
+msgid "info.generating"
+msgstr ""
+
+msgid "info.generation_error"
+msgstr ""
+
+msgid "query.unknown"
+msgstr ""
+
+msgid "info.developer"
+msgstr ""
+
+msgid "info.publisher"
+msgstr ""
+
+msgid "info.release_date"
+msgstr ""
+
+msgid "info.synopsis"
+msgstr ""
+
+msgid "info.revisions"
+msgstr ""
+
+msgid "info.revision.version"
+msgstr ""
+
+msgid "info.name_in_other_languages"
+msgstr ""
+
