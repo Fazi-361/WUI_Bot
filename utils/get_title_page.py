@@ -47,7 +47,8 @@ async def get_title_page(
     # cambiando il valore del parametro lang e title_region
     for lang in (lang, 'US', 'EN', 'JA', ''):
         if results := cursor.execute(
-            f"""SELECT 
+            f"""SELECT
+                Lang,
                 Title,
                 Synopsis,
                 Region,
@@ -70,9 +71,9 @@ async def get_title_page(
             if lang else 
             [title_console, title_type, title_mini_id]
         ).fetchone():
-            title_title, title_synopsis, title_region, title_id, \
-                title_developer, title_release_date, title_release_unix, \
-                title_publisher_id, title_publisher = results
+            lang, title_title, title_synopsis, title_region, title_id, \
+            title_developer, title_release_date, title_release_unix, \
+            title_publisher_id, title_publisher = results
 
             if not title_publisher \
             and (results := cursor.execute(
