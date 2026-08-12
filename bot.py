@@ -12,7 +12,7 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.types import ErrorEvent
 from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
-from aiogram.enums.parse_mode import ParseMode
+from aiogram.enums import ChatType, ParseMode
 from aiogram.filters.command import CommandPatternType
 from aiogram.fsm.strategy import FSMStrategy
 from aiogram.utils.i18n import I18n, FSMI18nMiddleware
@@ -37,6 +37,8 @@ bot: Bot = Bot(
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
 class CustomCommand(Command):
+    prefix: str = '/!.,;?'
+
     def __init__(
         self,
         *values: CommandPatternType,
@@ -45,7 +47,7 @@ class CustomCommand(Command):
         super().__init__(
             *values,
             commands=commands,
-            prefix='/!.,;?',
+            prefix=self.prefix,
             ignore_case=True,
             ignore_mention=False,
         )
@@ -129,8 +131,8 @@ if __name__ == "__main__":
 
     # Messagi estranei
     dp.message.register(handle_private_message, 
-        F.text,
-        F.chat.type == "private"
+        F.chat.type == ChatType.PRIVATE,
+        F.text[0].not_in(CustomCommand.prefix),
     )
 
     dp.error.register(error_handler)
