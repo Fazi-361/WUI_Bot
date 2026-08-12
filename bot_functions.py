@@ -155,7 +155,6 @@ async def info(message: Message, command: CommandObject, i18n: I18n) -> None:
 
     try:
         user_lang: str = i18n.current_locale
-        print(user_lang)
         
         result: str | tuple[str, str, str] | None = ""
         match text_type(args):
