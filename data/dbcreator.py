@@ -87,6 +87,10 @@ def gen(tree, root, console) -> None:
             PRIMARY KEY (Console, GameType, MiniID, Region, Lang)
         ) STRICT;
         
+        CREATE VIEW IF NOT EXISTS DistinctTitles AS
+        SELECT DISTINCT Title
+        FROM GameLocale;
+        
         CREATE VIEW IF NOT EXISTS BaseGameLocale AS
         SELECT *
         FROM BaseGame NATURAL JOIN GameLocale;

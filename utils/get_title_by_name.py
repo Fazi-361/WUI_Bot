@@ -10,7 +10,6 @@ def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str, str] | N
     input = re.sub(r'[^\w\s]', '', unidecode(input.upper()))
     input_split: list[str] = input.split()
 
-    @lru_cache 
     def similarity(str1: str) -> float:
         str1 = re.sub(r'[^\w\s]', '', unidecode(str1))
         str1_split: list[str] = str1.split()
@@ -31,16 +30,20 @@ def get_title_by_name(input: str, region: str = 'P') -> tuple[str, str, str] | N
 
     data = cursor.execute(
         """WITH Codes AS (
-            WITH c AS (
-                SELECT Console, GameType, MiniID, Region, PublisherID, SIMILARITY(UPPER(Title)) Similarity
-                FROM BaseGameLocale
-                WHERE Similarity >= ?
-            )
             SELECT DISTINCT Console, GameType, MiniID, Region, PublisherID
-            FROM c
-            WHERE Similarity = (SELECT MAX(Similarity) FROM c)
+            FROM BaseGameLocale
+            WHERE Title = (
+                SELECT Title
+                FROM (
+                    SELECT Title, SIMILARITY(UPPER(Title)) Similarity
+                    FROM DistinctTitles
+                    WHERE Similarity >= ?
+                    ORDER BY Similarity DESC
+                ) _
+                LIMIT 1
+            )
         ), Regions AS (
-            Select Region FROM Codes
+            Select DISTINCT Region FROM Codes
         )
         SELECT Console, GameType, MiniID || Region || COALESCE(PublisherID, '')
         FROM Codes
