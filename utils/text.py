@@ -26,7 +26,7 @@ def text_type(text: str) -> TextTypes | None:
 
     match fullmatch_in(text):
         #            System               Title      Region                   Publisher
-        case r"(?i)^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$":
+        case r"^[0-9CDEFGHJLMNPQRSWX][0-9A-Z]{2}[ABDEFHIJKLMNPQRSTUVWXYZ](?:[0-9A-Z]{2})?$":
             return TextTypes.GAME_ID
         #               crc         md5          sha1
         case r"(?i)^(?:[0-9A-F]{8}|[0-9A-F]{32}|[0-9A-F]{40})$":
