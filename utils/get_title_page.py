@@ -67,11 +67,9 @@ async def get_title_page(
             {'AND Region = ?' if morphable_lang else ''}
             ORDER BY REGION DESC
             LIMIT 1""",
-            [title_console, title_type, title_mini_id, user_lang, title_id[3]]
-            if user_lang and morphable_lang else
-            [title_console, title_type, title_mini_id, user_lang]
-            if user_lang else 
             [title_console, title_type, title_mini_id]
+            + [user_lang] if user_lang else []
+            + [title_id[3]] if morphable_lang else []
         ).fetchone():
             user_lang, title_title, title_synopsis, title_region, title_id, \
             title_developer, title_release_date, title_release_unix, \
