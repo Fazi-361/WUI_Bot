@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 17:12+0200\n"
+"POT-Creation-Date: 2026-08-17 23:56+0200\n"
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -21,32 +21,10 @@ msgstr ""
 msgid "command.help.description"
 msgstr ""
 
-msgid "command.language.description"
+msgid "command.settings.description"
 msgstr ""
 
 msgid "command.info.description"
-msgstr ""
-
-# HELP REQUIRED!
-msgid "start.hello"
-msgstr "こんにちは！ :)"
-
-msgid "language.set.answer"
-msgstr "言語設定完了！"
-
-msgid "language.set.message"
-msgstr "言語設定完了！ :)"
-
-msgid "command.info.usage"
-msgstr ""
-
-msgid "info.generating"
-msgstr "情報を生成中..."
-
-msgid "info.generation_error"
-msgstr ""
-
-msgid "query.unknown"
 msgstr ""
 
 msgid "info.developer"
@@ -70,6 +48,37 @@ msgstr "バージョン"
 msgid "info.name_in_other_languages"
 msgstr "他の言語での名称"
 
+msgid "help.header"
+msgstr ""
+
+msgid "command.start.description"
+msgstr ""
+
+msgid "command.info.usage"
+msgstr ""
+
+msgid "info.generating"
+msgstr "情報を生成中..."
+
+msgid "info.generation_error"
+msgstr ""
+
+msgid "query.unknown"
+msgstr ""
+
+msgid "language.set.answer"
+msgstr "言語設定完了！"
+
+msgid "language.set.message"
+msgstr "言語設定完了！ :)"
+
+# HELP REQUIRED!
+msgid "start.hello"
+msgstr "こんにちは！ :)"
+
 #~ msgid "info.no_args"
+#~ msgstr ""
+
+#~ msgid "command.language.description"
 #~ msgstr ""
 

@@ -1,4 +1,3 @@
-
 import sqlite3
 
 def get_titles_by_ids(ids: list[str]) -> list[str]:

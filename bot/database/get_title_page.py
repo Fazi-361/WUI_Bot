@@ -1,8 +1,8 @@
-from .database import get_cursor
+from . import get_cursor
 from aiogram.types.input_rich_message import InputRichMessage
 from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
-from utils.fetch_url_head import filter_covers
+from ..utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
     'JA': '🇯🇵',

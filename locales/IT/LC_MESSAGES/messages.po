@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 17:12+0200\n"
+"POT-Creation-Date: 2026-08-17 23:56+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -21,38 +21,11 @@ msgstr ""
 msgid "command.help.description"
 msgstr "Mostra la lista di comandi disponibili"
 
-msgid "command.language.description"
-msgstr "Imposta la lingua del bot"
+msgid "command.settings.description"
+msgstr "Imposta il bot"
 
 msgid "command.info.description"
 msgstr "Ricevi informazioni su un titolo"
-
-msgid "start.hello"
-msgstr "Ciao! :)"
-
-msgid "language.set.answer"
-msgstr "Lingua impostata!"
-
-msgid "language.set.message"
-msgstr "Lingua impostata! :)"
-
-msgid "command.info.usage"
-msgstr ""
-"Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1)"
-" dopo il comando. Es:\n"
-"<pre>/info ST7P01</pre>\n"
-"<pre>/info Super Mario Galaxy</pre>\n"
-"<pre>/info fb84bfc5</pre>\n"
-"Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
-
-msgid "info.generating"
-msgstr "Generando le informazioni..."
-
-msgid "info.generation_error"
-msgstr "Titolo non trovato o errore nella generazione della pagina."
-
-msgid "query.unknown"
-msgstr "Non ho capito cos'hai scritto..."
 
 msgid "info.developer"
 msgstr "Sviluppo"
@@ -74,4 +47,37 @@ msgstr "Versione"
 
 msgid "info.name_in_other_languages"
 msgstr "Nome in altre lingue"
+
+msgid "help.header"
+msgstr "Ecco una lista dei comandi:"
+
+msgid "command.start.description"
+msgstr "Avvia il bot"
+
+msgid "command.info.usage"
+msgstr ""
+"Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1)"
+" dopo il comando. Es:\n"
+"<pre>/info ST7P01</pre>\n"
+"<pre>/info Super Mario Galaxy</pre>\n"
+"<pre>/info fb84bfc5</pre>\n"
+"Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
+
+msgid "info.generating"
+msgstr "Generando le informazioni..."
+
+msgid "info.generation_error"
+msgstr "Titolo non trovato o errore nella generazione della pagina."
+
+msgid "query.unknown"
+msgstr "Non ho capito cos'hai scritto..."
+
+msgid "language.set.answer"
+msgstr "Lingua impostata!"
+
+msgid "language.set.message"
+msgstr "Lingua impostata! :)"
+
+msgid "start.hello"
+msgstr "Ciao! :)"
 

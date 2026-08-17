@@ -1,0 +1,67 @@
+from aiogram import F, Router
+from aiogram.enums import ChatType
+from aiogram.filters import CommandObject
+from aiogram.types import Message
+from aiogram.utils.i18n import I18n
+
+from ..database.get_title_by_hash import get_title_by_hash
+from ..database.get_title_by_name import get_title_by_name
+from ..database.get_title_page import get_title_page
+from ..filters.command import CustomCommand
+from ..filters.message import MessageType, TextType as T, strim, text_type
+from ..utils import constants as C
+
+info_router: Router = Router()
+
+
+@info_router.message(CustomCommand("info"))
+async def info_command(message: Message, command: CommandObject, i18n: I18n) -> None:
+    await info(message, command.args or message.text, i18n)
+
+
+@info_router.message(
+    F.chat.type == ChatType.PRIVATE, MessageType(T.QUERY, T.GAME_ID, T.HASH)
+)
+async def private_message(message: Message, i18n: I18n) -> None:
+    await info(message, message.text, i18n)
+
+
+async def info(message: Message, args: str | None, i18n: I18n) -> None:
+    _ = i18n.gettext
+    if not (args and (args := strim(args))):
+        await message.reply(_("command.info.usage"))
+        return
+
+    reply: Message = await message.reply(_("info.generating"))
+
+    try:
+        user_lang: str = i18n.current_locale
+
+        result: str | tuple[str, str, str] | None = ""
+        match text_type(args):
+            case T.QUERY:
+                result = get_title_by_name(args, C.LANG_REGIONS.get(user_lang))
+                morph_lang: bool = False
+            case T.GAME_ID:
+                result = args.upper()
+                morph_lang = True
+            case T.HASH:
+                result = get_title_by_hash(args)
+                morph_lang = True
+            case _:
+                raise
+
+        assert result
+        results_list: bool = isinstance(result, tuple)
+
+        await reply.edit_text(
+            rich_message=await get_title_page(
+                result[0] if results_list else "Wii",
+                result[1] if results_list else None,
+                result[2] if results_list else result,
+                user_lang,
+                morph_lang,
+            )
+        )
+    except Exception:
+        await reply.edit_text(_("info.generation_error"))

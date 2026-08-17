@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 17:12+0200\n"
+"POT-Creation-Date: 2026-08-17 23:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,31 +20,10 @@ msgstr ""
 msgid "command.help.description"
 msgstr ""
 
-msgid "command.language.description"
+msgid "command.settings.description"
 msgstr ""
 
 msgid "command.info.description"
-msgstr ""
-
-msgid "start.hello"
-msgstr ""
-
-msgid "language.set.answer"
-msgstr ""
-
-msgid "language.set.message"
-msgstr ""
-
-msgid "command.info.usage"
-msgstr ""
-
-msgid "info.generating"
-msgstr ""
-
-msgid "info.generation_error"
-msgstr ""
-
-msgid "query.unknown"
 msgstr ""
 
 msgid "info.developer"
@@ -66,5 +45,32 @@ msgid "info.revision.version"
 msgstr ""
 
 msgid "info.name_in_other_languages"
+msgstr ""
+
+msgid "help.header"
+msgstr ""
+
+msgid "command.start.description"
+msgstr ""
+
+msgid "command.info.usage"
+msgstr ""
+
+msgid "info.generating"
+msgstr ""
+
+msgid "info.generation_error"
+msgstr ""
+
+msgid "query.unknown"
+msgstr ""
+
+msgid "language.set.answer"
+msgstr ""
+
+msgid "language.set.message"
+msgstr ""
+
+msgid "start.hello"
 msgstr ""
 

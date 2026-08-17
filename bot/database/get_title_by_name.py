@@ -1,5 +1,5 @@
 import re
-from .database import CONNECTION
+from . import CONNECTION
 from unidecode import unidecode
 from functools import lru_cache
 from jellyfish import jaro_winkler_similarity

@@ -1,23 +1,22 @@
 from dotenv import load_dotenv
 load_dotenv()
-from constants import init_constants
+from bot.utils.constants import init_constants
 init_constants()
-from utils.database import init_database, close_database
-init_database()
+from bot.database import close_database
 
-import os, constants as C
+import os, bot.utils.constants as C
 from traceback import format_exception
 from asyncio import run
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import BotCommand, ErrorEvent
+from aiogram.types import BotCommand, BotCommandScopeAllChatAdministrators, BotCommandScopeAllPrivateChats, ErrorEvent
 from aiogram.client.default import DefaultBotProperties
-from aiogram.filters import Command
-from aiogram.enums import ChatType, ParseMode
-from aiogram.filters.command import CommandPatternType
+from aiogram.enums import ParseMode
 from aiogram.fsm.strategy import FSMStrategy
 from aiogram.utils.i18n import I18n, FSMI18nMiddleware
-from bot_functions import *
-from utils.fsm import BotState, SQLiteStorage
+from bot.bot_functions import *
+from bot.handlers import ROUTERS
+from bot.utils.fsm import SQLiteStorage
+from bot.filters.command import CustomCommand
 
 
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
@@ -33,24 +32,6 @@ bot: Bot = Bot(
         allow_sending_without_reply=True
     )
 )
-
-# Classe Command personalizzata per impostare i prefissi
-# e le impostazioni di base per ogni comando predefinito
-class CustomCommand(Command):
-    prefix: str = '/!.,;?'
-
-    def __init__(
-        self,
-        *values: CommandPatternType,
-        commands: tuple[CommandPatternType, ...] | CommandPatternType | None = None
-    ):
-        super().__init__(
-            *values,
-            commands=commands,
-            prefix=self.prefix,
-            ignore_case=True,
-            ignore_mention=False,
-        )
 
 
 async def error_handler(event: ErrorEvent) -> bool:
@@ -105,23 +86,43 @@ async def startup_func(*args) -> None:
             drop_pending_updates=True
         )
 
-    if not os.getenv("TESTING"):
+    C.BOT_USERNAME = (await bot.get_me()).username
+
+    if not os.getenv("TESTING") or True:
+        await bot.delete_my_commands()
+
         _ = i18n.gettext
         for locale in i18n.available_locales:
             if locale == "EN":
                 continue
             
             __ = lambda singular: _(singular, locale=locale)
-            await bot.set_my_commands(
-                [
-                    BotCommand(command="help", description=__("command.help.description"), is_ephemeral=True),
-                    BotCommand(command="language", description=__("command.language.description")),
-                    BotCommand(command="info", description=__("command.info.description")),
+            language_code: str | None = None if locale == "US" else locale.lower()
+
+            # start_command = ...
+            help_command = BotCommand(command="help", description=__("command.help.description"), is_ephemeral=True)
+            settings_command = BotCommand(command="settings", description=__("command.settings.description"))
+            info_command = BotCommand(command="info", description=__("command.info.description"))
+
+            await bot.set_my_commands([
+                    info_command,
                 ],
-                language_code=None if locale == "US" else locale.lower()
+                language_code=language_code
             )
 
-    C.BOT_USERNAME = (await bot.get_me()).username
+            for scope in {
+                BotCommandScopeAllChatAdministrators,
+                BotCommandScopeAllPrivateChats
+            }:
+                await bot.set_my_commands([
+                        help_command,
+                        settings_command,
+                        info_command,
+                    ],
+                    scope=scope(),
+                    language_code=language_code
+                )
+
     print(f"Bot @{C.BOT_USERNAME} started.")
 
     from ast import literal_eval as eval
@@ -135,23 +136,15 @@ if __name__ == "__main__":
     FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
 
     # Comandi
-    dp.message.register(info, CustomCommand('info'))
-    dp.message.register(start, CustomCommand('start'))
-    dp.message.register(help, CustomCommand('help'))
     dp.message.register(echo, CustomCommand('echo'))
     dp.message.register(deid, CustomCommand('deid'))
     dp.message.register(id, CustomCommand('id'))
     dp.message.register(copertina_id, CustomCommand('copertina_id'))
-    dp.message.register(language, CustomCommand('language'))
-    dp.callback_query.register(set_language, BotState.language)
-
-    # Messagi estranei
-    dp.message.register(handle_private_message, 
-        F.chat.type == ChatType.PRIVATE,
-        F.text[0].not_in(CustomCommand.prefix),
-    )
 
     dp.error.register(error_handler)
+
+    # Router
+    dp.include_routers(*ROUTERS)
 
     if (HOST := os.getenv("WEB_HOST")) and (PATH := os.getenv("WEB_PATH")):
         from uuid import uuid4

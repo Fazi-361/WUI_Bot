@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 17:12+0200\n"
+"POT-Creation-Date: 2026-08-17 23:56+0200\n"
 "PO-Revision-Date: 2026-08-11 16:01+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -21,38 +21,11 @@ msgstr ""
 msgid "command.help.description"
 msgstr "Show the list of available commands"
 
-msgid "command.language.description"
-msgstr "Set the language of the bot"
+msgid "command.settings.description"
+msgstr "Set up the bot"
 
 msgid "command.info.description"
 msgstr "Get info about the desired title"
-
-msgid "start.hello"
-msgstr "Hi there! :)"
-
-msgid "language.set.answer"
-msgstr "Language set!"
-
-msgid "language.set.message"
-msgstr "Language set! :)"
-
-msgid "command.info.usage"
-msgstr ""
-"Insert the title's ID, name or checksum (crc, md5, sha1) after the "
-"commmand. E.g.:\n"
-"<pre>/info ST7E01</pre>\n"
-"<pre>/info Super Mario Galaxy</pre>\n"
-"<pre>/info fb84bfc5</pre>\n"
-"Note: channels do not need the final two characters"
-
-msgid "info.generating"
-msgstr "Generating info..."
-
-msgid "info.generation_error"
-msgstr "Title not found or error while generating the page."
-
-msgid "query.unknown"
-msgstr "I couldn't understand what you typed..."
 
 msgid "info.developer"
 msgstr "Developer"
@@ -74,4 +47,37 @@ msgstr "Version"
 
 msgid "info.name_in_other_languages"
 msgstr "Name in other languages"
+
+msgid "help.header"
+msgstr "Here's a list of commands:"
+
+msgid "command.start.description"
+msgstr "Starts the bot"
+
+msgid "command.info.usage"
+msgstr ""
+"Insert the title's ID, name or checksum (crc, md5, sha1) after the "
+"commmand. E.g.:\n"
+"<pre>/info ST7E01</pre>\n"
+"<pre>/info Super Mario Galaxy</pre>\n"
+"<pre>/info fb84bfc5</pre>\n"
+"Note: channels do not need the final two characters"
+
+msgid "info.generating"
+msgstr "Generating info..."
+
+msgid "info.generation_error"
+msgstr "Title not found or error while generating the page."
+
+msgid "query.unknown"
+msgstr "I couldn't understand what you typed..."
+
+msgid "language.set.answer"
+msgstr "Language set!"
+
+msgid "language.set.message"
+msgstr "Language set! :)"
+
+msgid "start.hello"
+msgstr "Hi there! :)"
 
