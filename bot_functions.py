@@ -15,13 +15,13 @@ LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="🇬🇧 EN", callback_data='EN'),
         InlineKeyboardButton(text="🇩🇪 DE", callback_data='DE'),
         InlineKeyboardButton(text="🇫🇷 FR", callback_data='FR'),
-    ],   
+    ],
     [
         InlineKeyboardButton(text="🇪🇸 ES", callback_data='ES'),
         InlineKeyboardButton(text="🇮🇹 IT", callback_data='IT'),
         InlineKeyboardButton(text="🇯🇵 JA", callback_data='JA'),
         InlineKeyboardButton(text="🇰🇷 KO", callback_data='KO'),
-    ],   
+    ],
 ])
 
 
@@ -32,7 +32,7 @@ async def start(message: Message, state: FSMContext) -> None:
         await language(message, state)
     else:
         await message.reply(f"{_("start.hello")}\n\n🇺🇸 To change language, use /language")
-    
+
 
 async def language(message: Message, state: FSMContext) -> None:
     await state.set_state(BotState.language)
@@ -84,7 +84,6 @@ async def deid(message: Message, command: CommandObject) -> None:
     if not command.args:
         await message.reply("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
         return
-
 
     from utils.get_titles_by_ids import get_titles_by_ids
 
@@ -142,13 +141,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
 
 async def info(message: Message, command: CommandObject, i18n: I18n) -> None:
     if not (args := command.args) or not (args := strim(args)):
-        await message.reply(
-            "Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1). Es:\n"
-            "<pre>/info ST7P01</pre>\n"
-            "<pre>/info Super Mario Galaxy</pre>\n"
-            "<pre>/info fb84bfc5</pre>\n"
-            "Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
-        )
+        await message.reply(_("command.info.usage"))
         return
 
     reply: Message = await message.reply(_("info.generating"))

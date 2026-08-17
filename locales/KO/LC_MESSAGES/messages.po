@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-11 17:32+0200\n"
+"POT-Creation-Date: 2026-08-17 15:53+0200\n"
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -27,6 +27,9 @@ msgstr "언어 설정 완료!"
 
 msgid "language.set.message"
 msgstr "언어 설정 완료! :)"
+
+msgid "command.info.usage"
+msgstr ""
 
 msgid "info.generating"
 msgstr "정보 생성 중..."
@@ -57,4 +60,7 @@ msgstr "버전"
 
 msgid "info.name_in_other_languages"
 msgstr "다른 언어로 된 이름"
+
+#~ msgid "info.no_args"
+#~ msgstr ""
 
