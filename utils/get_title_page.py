@@ -1,6 +1,6 @@
 from .database import get_cursor
 from aiogram.types.input_rich_message import InputRichMessage
-from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
 from utils.fetch_url_head import filter_covers
 
@@ -35,6 +35,7 @@ async def get_title_page(
     user_lang: str = 'IT',
     morphable_lang: bool = True,
 ) -> InputRichMessage:
+    _ = get_i18n().gettext
     if not title_type:
         title_type = 'Wii' if len(title_id) == 6 else "Channel"
 

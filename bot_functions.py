@@ -1,10 +1,11 @@
 import traceback, constants as C
+
 from utils.fsm import BotState
 from utils.text import strim, text_type, TextTypes as T
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from aiogram.filters import CommandObject
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.i18n import I18n, FSMI18nMiddleware, gettext as _
+from aiogram.utils.i18n import I18n, FSMI18nMiddleware
 from utils.get_title_page import get_title_page
 from utils.get_title_by_name import get_title_by_name
 from utils.get_title_by_hash import get_title_by_hash
@@ -25,13 +26,13 @@ LANGUAGE_OPTIONS = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-async def start(message: Message, state: FSMContext) -> None:
+async def start(message: Message, state: FSMContext, i18n: I18n) -> None:
     """Avvia il bot"""
 
     if not await state.get_value("locale"):
         await language(message, state)
     else:
-        await message.reply(f"{_("start.hello")}\n\n🇺🇸 To change language, use /language")
+        await message.reply(f"{i18n.gettext("start.hello")}\n\n🇺🇸 To change language, use /language")
 
 
 async def language(message: Message, state: FSMContext) -> None:
@@ -48,8 +49,14 @@ async def language(message: Message, state: FSMContext) -> None:
     )
 
 
-async def set_language(query: CallbackQuery, state: FSMContext, i18n_middleware: FSMI18nMiddleware) -> None:
+async def set_language(
+    query: CallbackQuery,
+    state: FSMContext,
+    i18n_middleware: FSMI18nMiddleware, 
+    i18n: I18n
+) -> None:
     if data := query.data:
+        _ = i18n.gettext
         await state.clear()
         await i18n_middleware.set_locale(state, data)
         await query.answer(_("language.set.answer"))
@@ -140,6 +147,7 @@ async def copertina_id(message: Message, command: CommandObject) -> None:
 
 
 async def info(message: Message, command: CommandObject, i18n: I18n) -> None:
+    _ = i18n.gettext
     if not (args := command.args) or not (args := strim(args)):
         await message.reply(_("command.info.usage"))
         return
@@ -182,4 +190,4 @@ async def handle_private_message(message: Message, i18n: I18n) -> None:
         case T.QUERY | T.GAME_ID | T.HASH:
             await info(message, CommandObject(args=message.text), i18n)
         case _:
-            await message.reply(_("query.unknown"))
+            await message.reply(i18n.gettext("query.unknown"))
