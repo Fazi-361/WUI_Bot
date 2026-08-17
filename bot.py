@@ -9,7 +9,7 @@ import os, constants as C
 from traceback import format_exception
 from asyncio import run
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import ErrorEvent
+from aiogram.types import BotCommand, ErrorEvent
 from aiogram.client.default import DefaultBotProperties
 from aiogram.filters import Command
 from aiogram.enums import ChatType, ParseMode
@@ -66,33 +66,6 @@ async def error_handler(event: ErrorEvent) -> bool:
         return True
 
 
-@dp.startup()
-async def startup_func(*args) -> None:
-    if HOST and PATH:
-        await bot.set_webhook(
-            url=f"{HOST}{PATH}",
-            drop_pending_updates=True,
-            secret_token=SECRET
-        )
-    else:
-        await bot.delete_webhook(
-            drop_pending_updates=True
-        )
-
-    C.BOT_USERNAME = (await bot.get_me()).username
-    print(f"Bot @{C.BOT_USERNAME} started.")
-
-    from ast import literal_eval as eval
-    for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
-        try: await bot.send_message(admin, "Bot online!")
-        except: print(f"Admin {admin} suffers from skill issue.")
-
-
-@dp.shutdown()
-async def shutdown_func(*args) -> None:
-    close_database()
-
-
 def main_webhook() -> None:
     from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
     from aiohttp import web
@@ -114,9 +87,52 @@ async def main_polling() -> None:
     await dp.start_polling(bot)
 
 
+@dp.shutdown()
+async def shutdown_func(*args) -> None:
+    close_database()
+
+
+@dp.startup()
+async def startup_func(*args) -> None:
+    if HOST and PATH:
+        await bot.set_webhook(
+            url=f"{HOST}{PATH}",
+            drop_pending_updates=True,
+            secret_token=SECRET
+        )
+    else:
+        await bot.delete_webhook(
+            drop_pending_updates=True
+        )
+
+    if not os.getenv("TESTING"):
+        _ = i18n.gettext
+        for locale in i18n.available_locales:
+            if locale == "EN":
+                continue
+            
+            __ = lambda singular: _(singular, locale=locale)
+            await bot.set_my_commands(
+                [
+                    BotCommand(command="help", description=__("command.help.description"), is_ephemeral=True),
+                    BotCommand(command="language", description=__("command.language.description")),
+                    BotCommand(command="info", description=__("command.info.description")),
+                ],
+                language_code=None if locale == "US" else locale.lower()
+            )
+
+    C.BOT_USERNAME = (await bot.get_me()).username
+    print(f"Bot @{C.BOT_USERNAME} started.")
+
+    from ast import literal_eval as eval
+    for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
+        try: await bot.send_message(admin, "Bot online!")
+        except: print(f"Admin {admin} suffers from skill issue.")
+
+
 if __name__ == "__main__":
     # Middleware
-    FSMI18nMiddleware(I18n(path="locales", default_locale="EN")).setup(dp)
+    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
 
     # Comandi
     dp.message.register(info, CustomCommand('info'))
