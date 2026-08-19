@@ -2,12 +2,12 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
-from bot.filters.command import CustomCommand
+from bot.filters import CCommand
 
 help_router: Router = Router()
 
 
-@help_router.message(CustomCommand("help"))
+@help_router.message(CCommand("help"))
 async def help(message: Message, i18n: I18n) -> None:
     _ = i18n.gettext
     await message.reply(

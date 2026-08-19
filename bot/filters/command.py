@@ -5,7 +5,7 @@ from ..utils import constants as C
 
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
-class CustomCommand(Command):
+class CCommand(Command):
     prefix: str = C.COMMAND_PREFIX
 
     def __init__(

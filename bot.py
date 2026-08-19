@@ -16,7 +16,7 @@ from aiogram.utils.i18n import I18n, FSMI18nMiddleware
 from bot.bot_functions import *
 from bot.handlers import ROUTERS
 from bot.utils.fsm import SQLiteStorage
-from bot.filters.command import CustomCommand
+from bot.filters import CCommand
 
 
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
@@ -136,10 +136,10 @@ if __name__ == "__main__":
     FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
 
     # Comandi
-    dp.message.register(echo, CustomCommand('echo'))
-    dp.message.register(deid, CustomCommand('deid'))
-    dp.message.register(id, CustomCommand('id'))
-    dp.message.register(copertina_id, CustomCommand('copertina_id'))
+    dp.message.register(echo, CCommand('echo'))
+    dp.message.register(deid, CCommand('deid'))
+    dp.message.register(id, CCommand('id'))
+    dp.message.register(copertina_id, CCommand('copertina_id'))
 
     dp.error.register(error_handler)
 

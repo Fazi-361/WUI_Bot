@@ -5,7 +5,7 @@ from aiogram.filters import BaseFilter
 from aiogram.types import Message
 from regex_spm import fullmatch_in
 
-from ..utils import constants as C
+from . import CCommand
 from ..utils.text import strim
 
 
@@ -20,7 +20,7 @@ class TextType(Enum):
 def text_type(text: str | None) -> TextType | None:
     if not text or len(text) < 2:
         return None
-    elif text[0] in C.COMMAND_PREFIX:
+    elif text[0] in CCommand.prefix:
         return TextType.COMMAND
 
     match fullmatch_in(text):
