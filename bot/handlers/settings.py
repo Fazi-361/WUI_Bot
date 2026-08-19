@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 
-from bot.filters import CCommand
+from bot.filters import CCommand, settings_botcommand
 from bot.keyboards.inline import LANGUAGE_OPTIONS
 
 from ..utils.fsm import BotState
@@ -11,7 +11,7 @@ from ..utils.fsm import BotState
 settings_router: Router = Router()
 
 
-@settings_router.message(CCommand("settings"))
+@settings_router.message(CCommand(settings_botcommand))
 async def settings(message: Message, state: FSMContext) -> None:
     await state.set_state(BotState.language)
     await message.reply(

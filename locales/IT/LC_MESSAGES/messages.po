@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 23:56+0200\n"
+"POT-Creation-Date: 2026-08-19 16:47+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -17,15 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-
-msgid "command.help.description"
-msgstr "Mostra la lista di comandi disponibili"
-
-msgid "command.settings.description"
-msgstr "Imposta il bot"
-
-msgid "command.info.description"
-msgstr "Ricevi informazioni su un titolo"
 
 msgid "info.developer"
 msgstr "Sviluppo"
@@ -54,6 +45,15 @@ msgstr "Ecco una lista dei comandi:"
 msgid "command.start.description"
 msgstr "Avvia il bot"
 
+msgid "command.help.description"
+msgstr "Mostra la lista di comandi disponibili"
+
+msgid "command.settings.description"
+msgstr "Imposta il bot"
+
+msgid "command.info.description"
+msgstr "Ricevi informazioni su un titolo"
+
 msgid "command.info.usage"
 msgstr ""
 "Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1)"
@@ -68,6 +68,9 @@ msgstr "Generando le informazioni..."
 
 msgid "info.generation_error"
 msgstr "Titolo non trovato o errore nella generazione della pagina."
+
+msgid "command.unknown"
+msgstr "Comando sconosciuto"
 
 msgid "query.unknown"
 msgstr "Non ho capito cos'hai scritto..."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-17 23:56+0200\n"
+"POT-Creation-Date: 2026-08-19 16:47+0200\n"
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -17,15 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
-
-msgid "command.help.description"
-msgstr ""
-
-msgid "command.settings.description"
-msgstr ""
-
-msgid "command.info.description"
-msgstr ""
 
 msgid "info.developer"
 msgstr "Développeur"
@@ -54,6 +45,15 @@ msgstr ""
 msgid "command.start.description"
 msgstr ""
 
+msgid "command.help.description"
+msgstr ""
+
+msgid "command.settings.description"
+msgstr ""
+
+msgid "command.info.description"
+msgstr ""
+
 msgid "command.info.usage"
 msgstr ""
 
@@ -61,6 +61,9 @@ msgid "info.generating"
 msgstr "Génération des informations..."
 
 msgid "info.generation_error"
+msgstr ""
+
+msgid "command.unknown"
 msgstr ""
 
 msgid "query.unknown"

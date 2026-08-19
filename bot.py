@@ -1,22 +1,22 @@
-from dotenv import load_dotenv
-load_dotenv()
-from bot.utils.constants import init_constants
-init_constants()
-from bot.database import close_database
-
-import os, bot.utils.constants as C
-from traceback import format_exception
 from asyncio import run
-from aiogram import Bot, Dispatcher, F
-from aiogram.types import BotCommand, BotCommandScopeAllChatAdministrators, BotCommandScopeAllPrivateChats, ErrorEvent
+import os
+from traceback import format_exception
+
+from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.strategy import FSMStrategy
-from aiogram.utils.i18n import I18n, FSMI18nMiddleware
+from aiogram.types import ErrorEvent
+from aiogram.utils.i18n import FSMI18nMiddleware, I18n
+from dotenv import load_dotenv
+
 from bot.bot_functions import *
-from bot.handlers import ROUTERS
-from bot.utils.fsm import SQLiteStorage
+from bot.database import close_database
 from bot.filters import CCommand
+from bot.handlers import ROUTERS
+from bot.utils import constants as C, set_my_commands
+from bot.utils.fsm import SQLiteStorage
+load_dotenv()
 
 
 if not (BOT_TOKEN := os.getenv("BOT_TOKEN")): exit()
@@ -74,7 +74,7 @@ async def shutdown_func(*args) -> None:
 
 
 @dp.startup()
-async def startup_func(*args) -> None:
+async def startup_func() -> None:
     if HOST and PATH:
         await bot.set_webhook(
             url=f"{HOST}{PATH}",
@@ -89,39 +89,7 @@ async def startup_func(*args) -> None:
     C.BOT_USERNAME = (await bot.get_me()).username
 
     if not os.getenv("TESTING") or True:
-        await bot.delete_my_commands()
-
-        _ = i18n.gettext
-        for locale in i18n.available_locales:
-            if locale == "EN":
-                continue
-            
-            __ = lambda singular: _(singular, locale=locale)
-            language_code: str | None = None if locale == "US" else locale.lower()
-
-            # start_command = ...
-            help_command = BotCommand(command="help", description=__("command.help.description"), is_ephemeral=True)
-            settings_command = BotCommand(command="settings", description=__("command.settings.description"))
-            info_command = BotCommand(command="info", description=__("command.info.description"))
-
-            await bot.set_my_commands([
-                    info_command,
-                ],
-                language_code=language_code
-            )
-
-            for scope in {
-                BotCommandScopeAllChatAdministrators,
-                BotCommandScopeAllPrivateChats
-            }:
-                await bot.set_my_commands([
-                        help_command,
-                        settings_command,
-                        info_command,
-                    ],
-                    scope=scope(),
-                    language_code=language_code
-                )
+        await set_my_commands(bot, i18n)
 
     print(f"Bot @{C.BOT_USERNAME} started.")
 

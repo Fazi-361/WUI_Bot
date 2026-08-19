@@ -1,12 +1,17 @@
 from aiogram.filters import Command
 from aiogram.filters.command import CommandPatternType
-from ..utils import constants as C
+from aiogram.types import BotCommand
+
+start_botcommand = BotCommand(command="start", description="")
+help_botcommand = BotCommand(command="help", description="")
+settings_botcommand = BotCommand(command="settings", description="")
+info_botcommand = BotCommand(command="info", description="")
 
 
 # Classe Command personalizzata per impostare i prefissi
 # e le impostazioni di base per ogni comando predefinito
 class CCommand(Command):
-    prefix: str = C.COMMAND_PREFIX
+    prefix: str = "/!.,;?"
 
     def __init__(
         self,

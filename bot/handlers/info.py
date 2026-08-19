@@ -5,14 +5,14 @@ from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
 from ..database import get_title_by_hash, get_title_by_name, get_title_page
-from ..filters import CCommand, MessageType, TextType as T, text_type
+from ..filters import CCommand, MessageType, TextType as T, info_botcommand, text_type
 from ..utils import constants as C
 from ..utils.text import strim
 
 info_router: Router = Router()
 
 
-@info_router.message(CCommand("info"))
+@info_router.message(CCommand(info_botcommand))
 async def info_command(message: Message, command: CommandObject, i18n: I18n) -> None:
     await info(message, command.args or message.text, i18n)
 

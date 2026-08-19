@@ -3,9 +3,17 @@ from aiogram.enums import ChatType
 from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
+from ..filters import MessageType, TextType as T
+
 message_router: Router = Router()
+message_router.message.filter(F.chat.type == ChatType.PRIVATE)
 
 
-@message_router.message(F.chat.type == ChatType.PRIVATE)
+@message_router.message(MessageType(T.COMMAND))
+async def handle_private_command(message: Message, i18n: I18n) -> None:
+    await message.reply(i18n.gettext("command.unknown"))
+
+
+@message_router.message()
 async def handle_private_message(message: Message, i18n: I18n) -> None:
     await message.reply(i18n.gettext("query.unknown"))
