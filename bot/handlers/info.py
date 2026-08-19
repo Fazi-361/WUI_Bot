@@ -4,12 +4,10 @@ from aiogram.filters import CommandObject
 from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
-from ..database.get_title_by_hash import get_title_by_hash
-from ..database.get_title_by_name import get_title_by_name
-from ..database.get_title_page import get_title_page
+from ..database import get_title_by_hash, get_title_by_name, get_title_page
 from ..filters import CCommand, MessageType, TextType as T, text_type
-from ..utils.text import strim
 from ..utils import constants as C
+from ..utils.text import strim
 
 info_router: Router = Router()
 

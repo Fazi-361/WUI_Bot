@@ -24,7 +24,7 @@ async def deid(message: Message, command: CommandObject) -> None:
         await message.reply("Scrivere l'ID dei giochi da cercare dopo lo /. \nesempio: /deid R8PE01 ST7P01")
         return
 
-    from bot.database.get_titles_by_ids import get_titles_by_ids
+    from .database.get_titles_by_ids import get_titles_by_ids
 
     game_names: list[str] = get_titles_by_ids(command.args.split())
 
@@ -42,7 +42,7 @@ async def id(message: Message, command: CommandObject) -> None:
 
     title = command.args
 
-    from bot.database.get_ids_by_title import get_ids_by_title
+    from .database.get_ids_by_title import get_ids_by_title
 
     games = get_ids_by_title(title, "PAL", 0.9)
     

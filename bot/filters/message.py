@@ -6,7 +6,8 @@ from aiogram.types import Message
 from regex_spm import fullmatch_in
 
 from . import CCommand
-from ..utils.text import strim
+from ..database import title_exists
+from ..utils.text import strim 
 
 
 class TextType(Enum):
@@ -26,7 +27,7 @@ def text_type(text: str | None) -> TextType | None:
     match fullmatch_in(text):
         case (
             # System
-            r"^[0-9CDEFGHJLMNPQRSWX]"
+            r"(?i)^[0-9CDEFGHJLMNPQRSWX]"
             # Title
             r"[0-9A-Z]{2}"
             # Region
@@ -34,7 +35,7 @@ def text_type(text: str | None) -> TextType | None:
             # Publisher
             r"(?:[0-9A-Z]{2})?$"
         ):
-            return TextType.GAME_ID
+            return TextType.GAME_ID if title_exists(text) else TextType.QUERY
         #               crc         md5          sha1
         case r"(?i)^(?:[0-9A-F]{8}|[0-9A-F]{32}|[0-9A-F]{40})$":
             return TextType.HASH
