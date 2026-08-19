@@ -20,6 +20,7 @@ class SQLiteStorage(BaseStorage):
                 Data TEXT
             )"""
         )
+        self.conn.commit()
 
     def resolve_state(self, value: StateType) -> str | None:
         if value is None:
@@ -59,4 +60,5 @@ class SQLiteStorage(BaseStorage):
         ).fetchone()) and (data := data[0]) else {}
 
     async def close(self) -> None:
+        self.conn.commit()
         self.conn.close()
