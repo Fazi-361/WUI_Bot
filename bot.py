@@ -14,7 +14,7 @@ from bot.bot_functions import *
 from bot.database import close_database
 from bot.filters import CCommand
 from bot.handlers import ROUTERS
-from bot.utils import constants as C, set_my_commands
+from bot.utils import constants as C, setup_bot_info
 from bot.utils.fsm import SQLiteStorage
 load_dotenv()
 
@@ -89,7 +89,7 @@ async def startup_func() -> None:
     C.BOT_USERNAME = (await bot.get_me()).username
 
     if not os.getenv("TESTING") or True:
-        await set_my_commands(bot, i18n)
+        await setup_bot_info(bot, i18n)
 
     print(f"Bot @{C.BOT_USERNAME} started.")
 

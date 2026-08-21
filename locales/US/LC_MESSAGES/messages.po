@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-19 16:47+0200\n"
+"POT-Creation-Date: 2026-08-21 15:53+0200\n"
 "PO-Revision-Date: 2026-08-11 16:01+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -83,4 +83,18 @@ msgstr "Language set! :)"
 
 msgid "start.hello"
 msgstr "Hi there! :)"
+
+msgid "bot.name"
+msgstr "Monita"
+
+msgid "bot.description"
+msgstr ""
+"This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
+"Code: github.com/Fazi-361/WUI_Bot"
+
+msgid "bot.short_description"
+msgstr ""
+"This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
+"Any issues? Report to @Tayx361 o @Laxan3000\n"
+"Want to contribute? Here's the source code: github.com/Fazi-361/WUI_Bot"
 
