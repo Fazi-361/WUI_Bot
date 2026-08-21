@@ -1,3 +1,5 @@
+from asyncio import sleep
+
 from aiogram import Bot
 from aiogram.types import (
     BotCommandScopeAllChatAdministrators,
@@ -61,3 +63,6 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
             scope=BotCommandScopeAllPrivateChats(),
             language_code=language_code,
         )
+
+        #? Rate limit ≈ 30r/s
+        await sleep(2)

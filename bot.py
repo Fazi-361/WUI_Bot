@@ -1,4 +1,4 @@
-from asyncio import run
+from asyncio import run, create_task
 import os
 from traceback import format_exception
 
@@ -88,8 +88,8 @@ async def startup_func() -> None:
 
     C.BOT_USERNAME = (await bot.get_me()).username
 
-    if not os.getenv("TESTING") or True:
-        await setup_bot_info(bot, i18n)
+    if not os.getenv("TESTING"):
+        create_task(setup_bot_info(bot, i18n))
 
     print(f"Bot @{C.BOT_USERNAME} started.")
 
