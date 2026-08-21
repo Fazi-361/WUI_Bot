@@ -104,10 +104,10 @@ if __name__ == "__main__":
     FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
 
     # Comandi
-    dp.message.register(echo, CCommand('echo'))
-    dp.message.register(deid, CCommand('deid'))
-    dp.message.register(id, CCommand('id'))
-    dp.message.register(copertina_id, CCommand('copertina_id'))
+    # dp.message.register(echo, CCommand('echo'))
+    # dp.message.register(deid, CCommand('deid'))
+    # dp.message.register(id, CCommand('id'))
+    # dp.message.register(copertina_id, CCommand('copertina_id'))
 
     dp.error.register(error_handler)
 

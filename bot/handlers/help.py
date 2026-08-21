@@ -23,7 +23,7 @@ async def help(message: Message, i18n: I18n) -> None:
         f"/{settings_botcommand.command} {_("command.settings.description")}\n"
         f"/{info_botcommand.command} {_("command.info.description")}\n"
         # TODO: da rivedere questi in basso
-        "/echo Ripete la parola data\n"
-        "/deid Restituisce il gioco della Wii o Gamecube corrispondente all'ID dato.\n"
-        "/id Restituisce l'ID di un gioco della Wii o Gamecube dato il nome.\n"
+        # "/echo Ripete la parola data\n"
+        # "/deid Restituisce il gioco della Wii o Gamecube corrispondente all'ID dato.\n"
+        # "/id Restituisce l'ID di un gioco della Wii o Gamecube dato il nome.\n"
     )
