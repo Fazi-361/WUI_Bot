@@ -3,7 +3,6 @@ from aiogram.filters import BaseFilter
 from aiogram.types import (
     CallbackQuery,
     ChatMemberAdministrator,
-    ChatMemberLeft,
     ChatMemberOwner,
     Message,
 )
@@ -23,8 +22,8 @@ class Administrator(BaseFilter):
                     return True
                 case ChatMemberAdministrator():
                     return member.can_manage_chat
-                case ChatMemberLeft():
-                    return member.user.id == 1087968824  # GroupAnonymousBot
+            
+            return member.user.id == 1087968824  # GroupAnonymousBot
         except:
             pass
 
