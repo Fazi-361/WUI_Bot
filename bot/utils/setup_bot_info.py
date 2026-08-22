@@ -33,15 +33,17 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
         info_botcommand.description = __("command.info.description")
 
         # Generici (non admin)
+        help_botcommand.is_ephemeral = True
+        settings_botcommand.is_ephemeral = True
         await bot.set_my_commands(
             commands=[
+                help_botcommand,
                 info_botcommand,
             ],
             language_code=language_code,
         )
 
         # Generici (admin)
-        help_botcommand.is_ephemeral = True
         await bot.set_my_commands(
             commands=[
                 help_botcommand,
@@ -54,6 +56,7 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
 
         # Generici (chat private)
         help_botcommand.is_ephemeral = False
+        settings_botcommand.is_ephemeral = False
         await bot.set_my_commands(
             commands=[
                 help_botcommand,

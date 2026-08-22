@@ -1,7 +1,7 @@
 from functools import cache
 
 from . import get_cursor
-from ..filters.message import TextType as T, text_type
+from ..filters import TextType as T, text_type
 
 
 @cache

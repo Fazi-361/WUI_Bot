@@ -1,4 +1,4 @@
-from .command import (
+from .commands import (
     CCommand,
     help_botcommand,
     info_botcommand,
@@ -6,7 +6,9 @@ from .command import (
     start_botcommand,
     id_botcommand
 )
-from .message import MessageType, TextType, text_type
+from .messages import MessageType, TextType, text_type
+from .states import BotState
+from .users import Administrator
 
 __all__ = [
     "CCommand",
@@ -17,4 +19,6 @@ __all__ = [
     "MessageType",
     "TextType",
     "text_type",
+    "BotState",
+    "Administrator",
 ]

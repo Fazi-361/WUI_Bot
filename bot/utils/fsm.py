@@ -1,13 +1,10 @@
-from sqlite3 import connect
 from json import dumps, loads
+from sqlite3 import connect
 from typing import Any, Mapping
+
 from aiogram.filters.state import StateType
-from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.state import State
 from aiogram.fsm.storage.base import BaseStorage, StorageKey
-
-
-class BotState(StatesGroup):
-    language = State()
 
 
 class SQLiteStorage(BaseStorage):
