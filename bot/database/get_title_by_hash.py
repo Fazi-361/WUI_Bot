@@ -1,9 +1,10 @@
-from ..filters.message import text_type, TextType as T
+from functools import cache
+
 from . import get_cursor
-from functools import lru_cache
+from ..filters.message import TextType as T, text_type
 
 
-@lru_cache()
+@cache
 def get_title_by_hash(checksum: str) -> tuple[str, str, str] | None:
     if text_type(checksum) is not T.HASH:
         return None

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-21 15:53+0200\n"
+"POT-Creation-Date: 2026-08-22 15:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,9 @@ msgid "info.revision.version"
 msgstr ""
 
 msgid "info.name_in_other_languages"
+msgstr ""
+
+msgid "info.fetching_covers"
 msgstr ""
 
 msgid "help.header"

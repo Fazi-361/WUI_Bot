@@ -1,43 +1,46 @@
-from . import get_cursor
+from functools import cache
+
 from aiogram.types.input_rich_message import InputRichMessage
 from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
+
+from . import get_cursor
 from ..utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
-    'JA': '🇯🇵',
-    'EN': '🇬🇧',
-    'US': '🇺🇸',
-    'DE': '🇩🇪',
-    'FR': '🇫🇷',
-    'FR': '🇫🇷',
-    'IT': '🇮🇹',
-    'ES': '🇪🇸',
-    'KO': '🇰🇷',
-    'SE': '🇸🇪',
-    'FI': '🇫🇮',
-    'NL': '🇳🇱',
-    'DK': '🇩🇰',
-    'PT': '🇵🇹',
-    'NO': '🇳🇴',
-    'RU': '🇷🇺',
-    'TR': '🇹🇷',
-    'ZHCN': '🇨🇳',
-    'ZHTW': '🇹🇼'
+    "JA": "🇯🇵",
+    "EN": "🇬🇧",
+    "US": "🇺🇸",
+    "DE": "🇩🇪",
+    "FR": "🇫🇷",
+    "FR": "🇫🇷",
+    "IT": "🇮🇹",
+    "ES": "🇪🇸",
+    "KO": "🇰🇷",
+    "SE": "🇸🇪",
+    "FI": "🇫🇮",
+    "NL": "🇳🇱",
+    "DK": "🇩🇰",
+    "PT": "🇵🇹",
+    "NO": "🇳🇴",
+    "RU": "🇷🇺",
+    "TR": "🇹🇷",
+    "ZHCN": "🇨🇳",
+    "ZHTW": "🇹🇼",
 }
 
 
-@alru_cache()
-async def get_title_page(
-    title_console: str = 'Wii',
-    title_type: str | None = None,
-    title_id: str = 'ST7P01',
-    user_lang: str = 'IT',
+@cache
+def get_title_info(
+    title_console: str,
+    title_type: str,
+    title_id: str,
+    user_lang: str,
     morphable_lang: bool = True,
-) -> InputRichMessage:
+) -> tuple[frozenset[str], bool, InputRichMessage]:
     _ = get_i18n().gettext
     if not title_type:
-        title_type = 'Wii' if len(title_id) == 6 else "Channel"
+        title_type = "Wii" if len(title_id) == 6 else "Channel"
 
     title_mini_id: str = title_id[:3]
     title_artworks: list[str] = []
@@ -47,7 +50,7 @@ async def get_title_page(
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
     # cambiando il valore del parametro lang e title_region
-    for user_lang in (user_lang, 'US', 'EN', 'JA', ''):
+    for user_lang in (user_lang, "US", "EN", "JA", ""):
         if results := cursor.execute(
             f"""SELECT
                 Lang,
@@ -70,24 +73,36 @@ async def get_title_page(
             LIMIT 1""",
             [title_console, title_type, title_mini_id]
             + ([user_lang] if user_lang else [])
-            + ([title_id[3]] if morphable_lang else [])
+            + ([title_id[3]] if morphable_lang else []),
         ).fetchone():
-            user_lang, title_title, title_synopsis, title_region, title_id, \
-            title_developer, title_release_date, title_release_unix, \
-            title_publisher_id, title_publisher = results
+            (
+                user_lang,
+                title_title,
+                title_synopsis,
+                title_region,
+                title_id,
+                title_developer,
+                title_release_date,
+                title_release_unix,
+                title_publisher_id,
+                title_publisher,
+            ) = results
 
-            if not title_publisher \
-            and (results := cursor.execute(
-                """SELECT CompanyName
+            if not title_publisher and (
+                results := cursor.execute(
+                    """SELECT CompanyName
                 FROM Company
                 WHERE Console = ?
                 AND CompanyCode = ?
                 LIMIT 1""",
-                [title_console, title_publisher_id]
-            ).fetchone()):
+                    [title_console, title_publisher_id],
+                ).fetchone()
+            ):
                 title_publisher = results[0]
-            
-            english_japanese: bool = morphable_lang and user_lang == 'EN' and title_region == 'J'
+
+            japanenglish: bool = (
+                morphable_lang and user_lang == "EN" and title_region == "J"
+            )
             break
     else:
         raise
@@ -109,49 +124,34 @@ async def get_title_page(
         AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
         AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
         ORDER BY Region DESC""",
-        [title_console, title_type, title_mini_id]
+        [title_console, title_type, title_mini_id],
     ).fetchall():
-        for result_lang, result_region, result_title, result_console, result_titleID in results:
-            if result_titleID != title_id and result_titleID not in title_other_titleIDs:
+        for (
+            result_lang,
+            result_region,
+            result_title,
+            result_console,
+            result_titleID,
+        ) in results:
+            if (
+                result_titleID != title_id
+                and result_titleID not in title_other_titleIDs
+            ):
                 title_other_titleIDs.append(result_titleID)
 
-            if result_lang == 'EN' and result_region == 'J':
+            if result_lang == "EN" and result_region == "J":
                 japanese_transliteration = result_title
             elif result_lang != user_lang:
                 title_other_names[result_lang] = result_title
 
             title_artworks.extend(
                 f"{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}"
-                for atype in {('coverfullHQ', 'png'), ('coverHQ', 'jpg')}
+                for atype in {("coverfullHQ", "png"), ("coverHQ", "jpg")}
             )
-        else:
-            # Controlla che tutte le copertine esistano, controllando l'head degli url
-            #* Il controllo degli URL è la parte più lenta di questa funzione!
-            title_artworks = [
-                f"![](https://art.gametdb.com/{resource})"
-                for resource in
-                await filter_covers(frozenset(title_artworks))
-            ]
-
-            # Sposta la copertina della lingua del gioco cercato come prima opzione
-            for filter_lang in ("JA" if english_japanese else user_lang, 'US', 'EN', 'JA'):
-                if artwork_userlang := next(
-                    (_ for _ in title_artworks if _[(i := _.rfind('/')) - 2:i] == filter_lang),
-                    None
-                ):
-                    title_artworks.remove(artwork_userlang)
-                    title_artworks.insert(0, artwork_userlang)
-                    break
 
     markdown: str = (
-        f"{
-            f'<tg-slideshow>{''.join(title_artworks)}</tg-slideshow>\n'
-            if title_artworks else ''
-        }"
-        
-        f"# {'🇯🇵🇬🇧' if english_japanese else LANG_FLAGS.get(user_lang, '❔')} {title_title}{'[^EN]' if user_lang == 'JA' else ''}\n"
+        f"# {'🇯🇵🇬🇧' if japanenglish else LANG_FLAGS.get(user_lang, '❔')} {title_title}{'[^EN]' if user_lang == 'JA' else ''}\n\n"
         f"<sup>=={title_id}=={f", {', '.join(sorted(title_other_titleIDs))}" if title_other_titleIDs else ''}</sup>\n\n"
-
         f"{
             f'**{_("info.developer")}**: {title_developer}  \n'
             if title_developer else ''
@@ -161,15 +161,13 @@ async def get_title_page(
             if title_publisher else ''
         }"
         f"{
-            f'{LANG_FLAGS.get("JA" if english_japanese else user_lang, '❔')} **{_("info.release_date")}**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
+            f'{LANG_FLAGS.get("JA" if japanenglish else user_lang, '❔')} **{_("info.release_date")}**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
             if title_release_unix else "\n\n"
         }"
-
         f"{
             f'<details><summary>{_("info.synopsis")}</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n'
             if title_synopsis else ''
         }"
-
         f"{
             f'<details><summary>{_("info.revisions")}</summary>\n'
             f'{_("info.revision.version")}|CRC|MD5|SHA1\n'
@@ -184,23 +182,79 @@ async def get_title_page(
                 [title_console, title_type, title_mini_id, title_region]
             ).fetchall()) else ''
         }"
-
         f"{
             f'<details><summary>{_("info.name_in_other_languages")}</summary>\n{'  \n'.join(
-                f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**{'[^EN]' if result_lang == 'JA' and not english_japanese else ''}"
+                f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**{'[^EN]' if result_lang == 'JA' and not japanenglish else ''}"
                 for result_lang, result_title in title_other_names.items()
-            )}</details>\n'
+            )}</details>\n\n'
             if title_other_names else ''
         }"
-        
         f"{
-            f'[^EN]: {japanese_transliteration}\n'
+            f'[^EN]: {japanese_transliteration}'
             if japanese_transliteration else ''
         }"
     )
 
     cursor.close()
-    return InputRichMessage(
-        markdown=markdown,
-        skip_entity_detection=True
+    return (
+        frozenset(title_artworks),
+        japanenglish,
+        InputRichMessage(markdown=markdown, skip_entity_detection=True),
     )
+
+
+@alru_cache
+async def get_title_covers(
+    resources: frozenset[str], user_lang: str, japanenglish: bool = False
+) -> str:
+    # Controlla che tutte le copertine esistano, controllando l'head degli url
+    # * Il controllo degli URL è la parte più lenta di questa funzione!
+    title_artworks = [
+        f"![](https://art.gametdb.com/{resource})"
+        for resource in await filter_covers(resources)
+    ]
+
+    # Sposta la copertina della lingua del gioco cercato come prima opzione
+    for filter_lang in ("JA" if japanenglish else user_lang, "US", "EN", "JA"):
+        if artwork_userlang := next(
+            (
+                _
+                for _ in title_artworks
+                if _[(i := _.rfind("/")) - 2 : i] == filter_lang
+            ),
+            None,
+        ):
+            title_artworks.remove(artwork_userlang)
+            title_artworks.insert(0, artwork_userlang)
+            break
+
+    return (
+        f"<tg-slideshow>{''.join(title_artworks)}</tg-slideshow>"
+        if title_artworks
+        else ""
+    )
+
+
+async def get_title_page(
+    _,
+    title_console: str = "Wii",
+    title_type: str | None = None,
+    title_id: str = "ST7P01",
+    user_lang: str = "IT",
+    morphable_lang: bool = True,
+):
+    cache_size: int = get_title_info.cache_info().currsize
+    resources, japanenglish, message = get_title_info(
+        title_console, title_type, title_id, user_lang, morphable_lang
+    )
+
+    # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
+    if get_title_info.cache_info().currsize > cache_size:
+        yield InputRichMessage(
+            markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
+        )
+
+    if prependix := await get_title_covers(resources, user_lang, japanenglish):
+        yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
+    else:
+        yield message

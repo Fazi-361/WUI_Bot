@@ -2,7 +2,7 @@ from functools import lru_cache
 import re
 
 
-@lru_cache()
+@lru_cache(maxsize=20)
 def strim(text: str) -> str:
     return re.sub(
         pattern= r"\s+", 
