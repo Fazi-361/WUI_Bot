@@ -75,6 +75,8 @@ async def shutdown_func(*args) -> None:
 
 @dp.startup()
 async def startup_func() -> None:
+    from ast import literal_eval as eval
+
     if HOST and PATH:
         await bot.set_webhook(
             url=f"{HOST}{PATH}",
@@ -87,14 +89,14 @@ async def startup_func() -> None:
         )
 
     C.BOT_USERNAME = (await bot.get_me()).username
+    C.BOT_CREATORS = eval(os.getenv("BOT_ADMIN") or "[]")
 
     if not os.getenv("TESTING"):
         create_task(setup_bot_info(bot, i18n))
 
     print(f"Bot @{C.BOT_USERNAME} started.")
 
-    from ast import literal_eval as eval
-    for admin in eval(os.getenv("BOT_ADMIN") or "[]"):
+    for admin in C.BOT_CREATORS:
         try: await bot.send_message(admin, "Bot online!")
         except: print(f"Admin {admin} suffers from skill issue.")
 
@@ -102,12 +104,6 @@ async def startup_func() -> None:
 if __name__ == "__main__":
     # Middleware
     FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
-
-    # Comandi
-    # dp.message.register(echo, CCommand('echo'))
-    # dp.message.register(deid, CCommand('deid'))
-    # dp.message.register(id, CCommand('id'))
-    # dp.message.register(copertina_id, CCommand('copertina_id'))
 
     dp.error.register(error_handler)
 
