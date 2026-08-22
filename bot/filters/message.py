@@ -1,5 +1,5 @@
 from enum import Enum
-from functools import lru_cache
+from functools import cache
 
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
@@ -17,7 +17,7 @@ class TextType(Enum):
     HASH = 4
 
 
-@lru_cache()
+@cache
 def text_type(text: str | None) -> TextType | None:
     if not text or len(text) < 2:
         return None
