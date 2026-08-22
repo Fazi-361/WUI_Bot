@@ -4,6 +4,7 @@ from .command import (
     info_botcommand,
     settings_botcommand,
     start_botcommand,
+    id_botcommand
 )
 from .message import MessageType, TextType, text_type
 

@@ -1,23 +1,28 @@
 import sqlite3
 from jellyfish import jaro_winkler_similarity
 
+
 class Game:
     """ Rappresenta un gioco con il suo titolo, ID e la somiglianza al titolo cercato.
-    
+
     Attributes:
         title (str): Il titolo del gioco
         id (str): L'ID del gioco
         similarity (float): La somiglianza del titolo del gioco con il titolo cercato
-    
+
     """
 
     def __init__(self, title: str, id: str, similarity: float) -> None:
         self.title = title
         self.id = id
         self.similarity = similarity
-    
+
     def __repr__(self) -> str:
         return f"Game(title='{self.title}', id='{self.id}', similarity={self.similarity})"
+
+    def pretty_print(self) -> str:
+        return f"{self.title} - {self.id}"
+
 
 def get_ids_by_title(title: str, region: str, similarity: float) -> list[Game]:
     """ Restituisce una lista di ID che migliori che combaciano al meglio al titolo dato in input.
@@ -29,7 +34,7 @@ def get_ids_by_title(title: str, region: str, similarity: float) -> list[Game]:
 
     Returns:
         list[Game]: Una lista di oggetti Game con i dati dei giochi trovati
-    """ 
+    """
 
     # Regioni e il loro codice rispettivo
     regions = {
@@ -37,47 +42,66 @@ def get_ids_by_title(title: str, region: str, similarity: float) -> list[Game]:
         "NTSC-U": "E",
         "NTSC-J": "J"
     }
-    
-    if region not in regions:
-        return [Game(
-            title=f"Errore: la regione '{region}' non è valida.\nRegioni valide: PAL, NTSC-U, NTSC-J", 
-            id="", 
-            similarity=0)]
-    
-    region_id = regions[region]
-    games: list[Game] = []
-    
-    with sqlite3.connect("./data/database.db") as connection:
-        similarity = min(max(0, similarity), 1)
-        cursor = connection.cursor()
-        connection.create_function("JARO_WRINKLER", 2, jaro_winkler_similarity)
 
-        # Query per selezionare il MiniID e il PublisherID in base alla simiglianza al titolo dato in input usando l'algoritmo Jaro Wrinkler
+    if region not in regions:
+        raise ValueError(
+            f"Regione '{region}' non valida. Regioni valide: {', '.join(regions)}"
+        )
+
+    region_id = regions[region]
+    similarity = min(max(0, similarity), 1)
+    games: list[Game] = []
+
+    with sqlite3.connect("./data/database.db") as connection:
+        cursor = connection.cursor()
+        connection.create_function("JARO_WINKLER", 2, jaro_winkler_similarity)
+
+        # Query per selezionare l'ID del gioco in base alla somiglianza al titolo
+        # dato in input, usando l'algoritmo Jaro-Winkler. Uno stesso gioco compare
+        # in GameLocale una volta per ogni lingua: con ROW_NUMBER() teniamo solo
+        # la riga (lingua) con la similarità più alta per ciascun GameID.
         cursor.execute("""
-            SELECT DISTINCT 
-                Title, MiniID, PublisherID, JARO_WRINKLER(LOWER(Title), ?) as Similarity
-            FROM GameLocalePublisher
-            WHERE Region = ? AND JARO_WRINKLER(LOWER(Title), ?) > ?
-            ORDER BY JARO_WRINKLER(LOWER(Title), ?) DESC
-        """, (title.lower(), region_id, title.lower(), similarity, title.lower()))
+            WITH scored AS (
+                SELECT
+                    gl.MiniID || gl.Region || COALESCE(gp.PublisherID, '') AS GameID,
+                    gl.Title,
+                    JARO_WINKLER(LOWER(gl.Title), ?) AS Similarity,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY gl.MiniID || gl.Region || COALESCE(gp.PublisherID, '')
+                        ORDER BY JARO_WINKLER(LOWER(gl.Title), ?) DESC
+                    ) AS rn
+                FROM GameLocale gl
+                JOIN GamePublisher gp
+                    ON gp.Console = gl.Console
+                   AND gp.GameType = gl.GameType
+                   AND gp.MiniID = gl.MiniID
+                   AND gp.Region = gl.Region
+                WHERE gp.Region = ?
+            )
+            SELECT GameID, Title, Similarity
+            FROM scored
+            WHERE rn = 1
+              AND Similarity > ?
+            ORDER BY Similarity DESC;
+        """, (title.lower(), title.lower(), region_id, similarity))
 
         raw_results = cursor.fetchall()
-        for raw_result in raw_results:
-            game_title, mini_id, publisher_id, sim = raw_result
-            games.append(Game(title=game_title, 
-                              id=f"{mini_id}{region_id}{publisher_id if publisher_id is not None else ''}", 
-                              similarity=sim))
+        for game_id, game_title, sim in raw_results:
+            games.append(Game(title=game_title, id=game_id, similarity=sim))
 
     return games
 
-if __name__ == "__main__":
-    games = get_ids_by_title(input("Inserire il gioco da cercare:\n"), "PAL", 0.9)
 
-    if max(game.similarity for game in games) > 0.99:
-        #print("here")
-        response = max(games, key=lambda game: game.similarity).id
+if __name__ == "__main__":
+    try:
+        games = get_ids_by_title(input("Inserire il gioco da cercare:\n"), "PAL", 0.95)
+    except ValueError as e:
+        print(f"Errore: {e}")
     else:
-        possible_ids = [game.id for game in games]
-        response = f"ID trovati:\n{possible_ids}"
-    
-    print(response)
+        if not games:
+            print("Nessun gioco trovato con quel titolo/regione.")
+        elif max(game.similarity for game in games) > 0.99:
+            response = max(games, key=lambda game: game.similarity).id
+            print(response)
+        else:
+            print(f"Possibili ID:\n{"\n".join([game.pretty_print() for game in games])}")

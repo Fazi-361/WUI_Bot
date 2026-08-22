@@ -32,29 +32,29 @@ async def deid(message: Message, command: CommandObject) -> None:
     await message.reply(response)
 
 
-async def id(message: Message, command: CommandObject) -> None:
-    """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
-    #TODO: Dare la possibilità di cercare la regione del gioco (pal, ntsc-u, ntsc-j). Per ora il predefinito è PAL. 
+# async def id(message: Message, command: CommandObject) -> None:
+#     """Dato il nome di un gioco, restituisce l'ID del gioco corrispondente"""
+#     #TODO: Dare la possibilità di cercare la regione del gioco (pal, ntsc-u, ntsc-j). Per ora il predefinito è PAL. 
 
-    if not command.args:
-        await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
-        return
+#     if not command.args:
+#         await message.reply("Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl")
+#         return
 
-    title = command.args
+#     title = command.args
 
-    from .database.get_ids_by_title import get_ids_by_title
+#     from .database.get_ids_by_title import get_ids_by_title
 
-    games = get_ids_by_title(title, "PAL", 0.9)
+#     games = get_ids_by_title(title, "PAL", 0.9)
     
-    if games == []:
-        response = "Non è stato trovato nessun gioco con questo nome"
-    elif max(game.similarity for game in games) > 0.99:
-        response = max(games, key=lambda game: game.similarity).id
-    else:
-        possible_games = "\n".join(f"{game.title} - {game.id}" for game in games)
-        response = f"ID possibili:\n{possible_games}"
+#     if games == []:
+#         response = "Non è stato trovato nessun gioco con questo nome"
+#     elif max(game.similarity for game in games) > 0.99:
+#         response = max(games, key=lambda game: game.similarity).id
+#     else:
+#         possible_games = "\n".join(f"{game.title} - {game.id}" for game in games)
+#         response = f"ID possibili:\n{possible_games}"
 
-    await message.reply(response)
+#     await message.reply(response)
 
 
 async def copertina_id(message: Message, command: CommandObject) -> None:

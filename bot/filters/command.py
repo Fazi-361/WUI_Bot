@@ -6,6 +6,7 @@ start_botcommand = BotCommand(command="start", description="")
 help_botcommand = BotCommand(command="help", description="")
 settings_botcommand = BotCommand(command="settings", description="")
 info_botcommand = BotCommand(command="info", description="")
+id_botcommand = BotCommand(command="id", description="")
 
 
 # Classe Command personalizzata per impostare i prefissi
