@@ -52,14 +52,15 @@ async def info(message: Message, args: str | None, i18n: I18n) -> None:
         assert result
         results_list: bool = isinstance(result, tuple)
 
-        await reply.edit_text(
-            rich_message=await get_title_page(
-                result[0] if results_list else "Wii",
-                result[1] if results_list else None,
-                result[2] if results_list else result,
-                user_lang,
-                morph_lang,
-            )
-        )
+        async for rich_message in get_title_page(
+            _,
+            result[0] if results_list else "Wii",
+            result[1] if results_list else None,
+            result[2] if results_list else result,
+            user_lang,
+            morph_lang,
+        ):
+            await reply.edit_text(rich_message=rich_message)
+
     except Exception:
         await reply.edit_text(_("info.generation_error"))
