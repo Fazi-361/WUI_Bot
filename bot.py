@@ -1,4 +1,4 @@
-from asyncio import run, create_task
+from asyncio import create_task, run
 import os
 from traceback import format_exception
 
@@ -10,9 +10,7 @@ from aiogram.types import ErrorEvent
 from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 from dotenv import load_dotenv
 
-from bot.bot_functions import *
 from bot.database import close_database
-from bot.filters import CCommand
 from bot.handlers import ROUTERS
 from bot.utils import constants as C, setup_bot_info
 from bot.utils.fsm import SQLiteStorage
@@ -105,6 +103,7 @@ if __name__ == "__main__":
     # Middleware
     FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
 
+    # Handler
     dp.error.register(error_handler)
 
     # Router
