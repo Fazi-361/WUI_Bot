@@ -1,15 +1,19 @@
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     BOT_USERNAME: str
+    BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
     LANG_REGIONS: dict[str, str]
 
 
 def init_constants() -> None:
     global \
         BOT_USERNAME, \
+        BOT_CREATORS, \
         LANG_REGIONS
-    
+
     BOT_USERNAME = "" # filled in later by bot.py on start
+    BOT_CREATORS = [] # filled in later by bot.py on start
     LANG_REGIONS = {
         "US": "E",
         "EN": "P",

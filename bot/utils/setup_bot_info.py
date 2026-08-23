@@ -21,7 +21,12 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
 
         # Info bot
 
-        await bot.set_my_name(__("bot.name"), language_code)
+        try:
+            if _("bot.name", locale="EN") != (new_name := __("bot.name")):
+                await bot.set_my_name(new_name, language_code)
+        except:
+            pass
+        
         await bot.set_my_description(__("bot.description"), language_code)
         await bot.set_my_short_description(__("bot.short_description"), language_code)
 

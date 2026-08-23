@@ -11,18 +11,20 @@ from aiogram.types import (
 class Administrator(BaseFilter):
     async def __call__(self, message: Message | CallbackQuery) -> bool:
         try:
-            chat = message.chat if isinstance(message, Message) else message.message.chat # type: ignore
+            chat = message.chat if isinstance(message, Message) else message.message.chat  # type: ignore
 
             if chat.type == ChatType.PRIVATE:
                 return True
-            
-            member = await chat.get_member(message.from_user.id) # type: ignore
+
+            member = await chat.get_member(message.from_user.id)  # type: ignore
             match member:
                 case ChatMemberOwner():
                     return True
                 case ChatMemberAdministrator():
                     return member.can_manage_chat
+            
+            return member.user.id == 1087968824  # GroupAnonymousBot
         except:
             pass
-            
+
         return False
