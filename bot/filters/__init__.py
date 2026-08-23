@@ -4,7 +4,8 @@ from .commands import (
     info_botcommand,
     settings_botcommand,
     start_botcommand,
-    id_botcommand
+    id_botcommand,
+    deid_botcommand
 )
 from .messages import MessageType, TextType, text_type
 from .states import BotState
@@ -16,6 +17,8 @@ __all__ = [
     "help_botcommand",
     "settings_botcommand",
     "info_botcommand",
+    "id_botcommand",
+    "deid_botcommand",
     "MessageType",
     "TextType",
     "text_type",

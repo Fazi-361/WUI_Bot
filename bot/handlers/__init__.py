@@ -3,6 +3,7 @@ from .help import help_router
 from .settings import settings_router
 from .info import info_router
 from .id import id_router
+from .deid import deid_router
 from .message import message_router
 
 ROUTERS = [
@@ -11,6 +12,7 @@ ROUTERS = [
     settings_router,
     info_router,
     id_router,
+    deid_router,
     message_router # lasciare come ultimo
 ]
 

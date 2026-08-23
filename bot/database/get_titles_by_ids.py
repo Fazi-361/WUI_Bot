@@ -22,10 +22,19 @@ def get_titles_by_ids(ids: list[str]) -> list[str]:
             
             # Query per selezionare il titolo del gioco in base al MiniID, alla regione e al PublisherID
             game_name = cursor.execute(
-                """SELECT Title
-                FROM GameLocalePublisher 
-                WHERE MiniID = ? AND Region = ? AND PublisherID IS ?""",
-                (miniID, region, publisherID)
+                """            
+                    SELECT gl.Title
+                    FROM GameLocale gl
+                    JOIN GamePublisher gp
+                        ON gp.Console = gl.Console
+                    AND gp.GameType = gl.GameType
+                    AND gp.MiniID = gl.MiniID
+                    AND gp.Region = gl.Region
+                    WHERE gl.MiniID = ?
+                    AND gl.Region = ?
+                    AND (gp.PublisherID = ? OR (gp.PublisherID IS NULL AND ? IS NULL));
+              """,
+                (miniID, region, publisherID, publisherID)
             ).fetchone()
             
             game_names.append(f"{id} non trovato" if game_name is None else game_name[0])
@@ -33,4 +42,4 @@ def get_titles_by_ids(ids: list[str]) -> list[str]:
     return game_names
 
 if __name__ == "__main__":
-    print(get_titles_by_ids(input("Inserire gli ID dei giochi da cercare separati da uno spazio:\n").split()))
+    print(get_titles_by_ids(input("Inserire gli ID dei giochi da cercare separati da uno spazio:\n").upper().split()))
