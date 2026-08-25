@@ -12,6 +12,9 @@ from ..filters import help_botcommand, info_botcommand, settings_botcommand
 
 async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
     _ = i18n.gettext
+
+    bot_name_key: str = "bot.name"
+    bot_name_eng: str = _(bot_name_key, locale="EN")
     for locale in i18n.available_locales:
         if locale == "EN":
             continue
@@ -22,7 +25,7 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
         # Info bot
 
         try:
-            if _("bot.name", locale="EN") != (new_name := __("bot.name")):
+            if bot_name_eng != (new_name := __("bot.name")):
                 await bot.set_my_name(new_name, language_code)
         except:
             pass
