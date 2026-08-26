@@ -74,7 +74,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     show_covers: bool = state_data.get(*S.show_covers.key)
 
     return InputRichMessage(
-        markdown=f'**{_("settings.language")}**:  \n'
+        markdown=f'**{_("settings.language")}**  \n'
         f'{''.join(f'<tg-button-row>{''.join(
             f'<tg-button {'style="primary" ' if locale == lang else ''}type="callback_data" data="{data}">{text}</tg-button>'
             for lang, data, text in row
@@ -83,5 +83,6 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
         "\n\n---\n\n"
         f'**{_("settings.show_covers")}**: '
         f'<tg-button {'style="primary" ' if show_covers else ''}type="callback_data" data="{SHOW_COVERS}">{true(_('settings.on')) if show_covers else false(_('settings.off'))}</tg-button>  \n'
-        f'*{_("settings.show_covers.description")}*'
+        f'*{_("settings.show_covers.description")}*',
+        skip_entity_detection=True
     )
