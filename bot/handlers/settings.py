@@ -47,7 +47,7 @@ async def set_settings(
         state_data: dict = await state.get_data()
 
         if data == SHOW_COVERS:
-            state_data[option] = not state_data[option]
+            state_data[option] = not state_data.get(option, True)
             await state.set_data(state_data)
         elif option in i18n.available_locales:
             await i18n_middleware.set_locale(state, option)
