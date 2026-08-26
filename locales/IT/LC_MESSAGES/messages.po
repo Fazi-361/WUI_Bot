@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-22 15:03+0200\n"
+"POT-Creation-Date: 2026-08-25 00:34+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -78,11 +78,32 @@ msgstr "Comando sconosciuto"
 msgid "query.unknown"
 msgstr "Non ho capito cos'hai scritto..."
 
-msgid "language.set.answer"
-msgstr "Lingua impostata!"
+msgid "settings.unknown"
+msgstr "Impostazione sconosciuta"
 
-msgid "language.set.message"
-msgstr "Lingua impostata! :)"
+msgid "settings.saved"
+msgstr "Impostazioni salvate!"
+
+msgid "settings.no_admin"
+msgstr "Queste impostazioni non sono per te :)"
+
+msgid "settings.language"
+msgstr "Lingua"
+
+msgid "settings.language.description"
+msgstr "Imposta la lingua del bot"
+
+msgid "settings.show_covers"
+msgstr "Mostra le copertine"
+
+msgid "settings.on"
+msgstr "SÌ"
+
+msgid "settings.off"
+msgstr "NO"
+
+msgid "settings.show_covers.description"
+msgstr "Imposta se /info mostra le copertine dei giochi"
 
 msgid "start.hello"
 msgstr "Ciao! :)"

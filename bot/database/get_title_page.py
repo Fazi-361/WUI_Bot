@@ -36,7 +36,7 @@ def get_title_info(
     title_type: str,
     title_id: str,
     user_lang: str,
-    morphable_lang: bool = True,
+    enforce_title_lang: bool = True,
 ) -> tuple[frozenset[str], bool, InputRichMessage]:
     _ = get_i18n().gettext
     if not title_type:
@@ -68,12 +68,12 @@ def get_title_info(
             AND GameType = ?
             AND MiniID = ?
             {'AND Lang = ?' if user_lang else ''}
-            {'AND Region = ?' if morphable_lang else ''}
+            {'AND Region = ?' if enforce_title_lang else ''}
             ORDER BY REGION DESC
             LIMIT 1""",
             [title_console, title_type, title_mini_id]
             + ([user_lang] if user_lang else [])
-            + ([title_id[3]] if morphable_lang else []),
+            + ([title_id[3]] if enforce_title_lang else []),
         ).fetchone():
             (
                 user_lang,
@@ -101,7 +101,7 @@ def get_title_info(
                 title_publisher = results[0]
 
             japanenglish: bool = (
-                morphable_lang and user_lang == "EN" and title_region == "J"
+                enforce_title_lang and user_lang == "EN" and title_region == "J"
             )
             break
     else:
@@ -205,7 +205,7 @@ def get_title_info(
 
 @alru_cache
 async def get_title_covers(
-    resources: frozenset[str], user_lang: str, japanenglish: bool = False
+    resources: frozenset[str], user_lang: str | None = None, japanenglish: bool = False
 ) -> str:
     # Controlla che tutte le copertine esistano, controllando l'head degli url
     # * Il controllo degli URL è la parte più lenta di questa funzione!
@@ -237,24 +237,27 @@ async def get_title_covers(
 
 async def get_title_page(
     _,
+    show_covers: bool,
     title_console: str = "Wii",
     title_type: str | None = None,
     title_id: str = "ST7P01",
     user_lang: str = "IT",
-    morphable_lang: bool = True,
+    enforce_title_lang: bool = True,
 ):
     cache_size: int = get_title_info.cache_info().currsize
     resources, japanenglish, message = get_title_info(
-        title_console, title_type, title_id, user_lang, morphable_lang
+        title_console, title_type, title_id, user_lang, enforce_title_lang
     )
 
-    # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
-    if get_title_info.cache_info().currsize > cache_size:
-        yield InputRichMessage(
-            markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
-        )
+    if show_covers:
+        # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
+        if get_title_info.cache_info().currsize > cache_size:
+            yield InputRichMessage(
+                markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
+            )
 
-    if prependix := await get_title_covers(resources, user_lang, japanenglish):
-        yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
-    else:
-        yield message
+        if prependix := await get_title_covers(resources, user_lang, japanenglish):
+            yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
+            return
+
+    yield message

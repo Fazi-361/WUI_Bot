@@ -1,44 +1,88 @@
 from aiogram import Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, InputRichMessage, Message
 from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 
 from bot.filters import Administrator, CCommand, settings_botcommand
-from bot.keyboards.inline import LANGUAGE_OPTIONS
 
-from ..filters import BotState
+from ..filters.callbacks import SettingsCallback
 
 settings_router: Router = Router()
-settings_router.message.filter(CCommand(settings_botcommand))
-settings_router.callback_query.filter(BotState.language)
+settings_router.message.filter(CCommand(settings_botcommand), Administrator())
+settings_router.callback_query.filter(SettingsCallback.filter())
+
+LANGUAGE_BUTTON_ROWS: tuple[tuple[tuple[str, str, str], ...], ...] = (
+    (
+        ("US", SettingsCallback(option="US").pack(), "🇺🇸 US"),
+        ("EN", SettingsCallback(option="EN").pack(), "🇬🇧 EN"),
+        ("DE", SettingsCallback(option="DE").pack(), "🇩🇪 DE"),
+        ("FR", SettingsCallback(option="FR").pack(), "🇫🇷 FR"),
+    ),
+    (
+        ("ES", SettingsCallback(option="ES").pack(), "🇪🇸 ES"),
+        ("IT", SettingsCallback(option="IT").pack(), "🇮🇹 IT"),
+        ("JA", SettingsCallback(option="JA").pack(), "🇯🇵 JA"),
+        ("KO", SettingsCallback(option="KO").pack(), "🇰🇷 KO"),
+    ),
+)
+SHOW_COVERS: str = SettingsCallback(option="show_covers").pack()
 
 
-@settings_router.message(Administrator())
-async def settings(message: Message, state: FSMContext) -> None:
-    await state.set_state(BotState.language)
-    await message.reply(
-        "🇺🇸 Select a language to continue.\n"
-        "🇩🇪 Wählen Sie eine Sprache aus, um fortzufahren.\n"
-        "🇫🇷 Sélectionnez une langue pour continuer.\n"
-        "🇪🇸 Selecciona un idioma para continuar.\n"
-        "🇮🇹 Seleziona una lingua per continuare.\n"
-        "🇯🇵 続行するには、言語を選択してください。\n"
-        "🇰🇷 계속하려면 언어를 선택하세요.",
-        reply_markup=LANGUAGE_OPTIONS,
-    )
+@settings_router.message()
+async def settings(message: Message, state: FSMContext, i18n: I18n) -> None:
+    await message.reply_rich(get_settings_page(await state.get_data(), i18n))
 
 
 @settings_router.callback_query(Administrator())
-async def set_language(
+async def set_settings(
     query: CallbackQuery,
+    callback_data: SettingsCallback,
     state: FSMContext,
     i18n_middleware: FSMI18nMiddleware,
     i18n: I18n,
 ) -> None:
     if data := query.data:
         _ = i18n.gettext
-        await state.set_state(None)
-        await i18n_middleware.set_locale(state, data)
-        await query.answer(_("language.set.answer"))
-        try: await query.message.edit_text(_("language.set.message"))  # type: ignore
-        except: pass
+        option: str = callback_data.option
+        state_data: dict = await state.get_data()
+
+        if data == SHOW_COVERS:
+            state_data[option] = not state_data[option]
+            await state.set_data(state_data)
+        elif option in i18n.available_locales:
+            await i18n_middleware.set_locale(state, option)
+        else:
+            await query.answer(_("settings.unknown"))
+            return
+
+        await query.answer(_("settings.saved"))
+        await query.message.edit_text(rich_message=get_settings_page(state_data, i18n))  # type: ignore
+        try: pass
+        except:
+            pass
+
+
+@settings_router.callback_query()
+async def no_admin(query: CallbackQuery, i18n: I18n) -> None:
+    await query.answer(i18n.gettext("settings.no_admin"))
+
+
+def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
+    _ = i18n.gettext
+    true = lambda s: f"✅ {s}"
+    false = lambda s: f"❌ {s}"
+    locale: str = i18n.current_locale
+    show_covers: bool = state_data.get("show_covers", True)
+
+    return InputRichMessage(
+        markdown=f'**{_("settings.language")}**:  \n'
+        f'{''.join(f'<tg-button-row>{''.join(
+            f'<tg-button {'style="primary" ' if locale == lang else ''}type="callback_data" data="{data}">{text}</tg-button>'
+            for lang, data, text in row
+        )}</tg-button-row>' for row in LANGUAGE_BUTTON_ROWS)}  \n'
+        f'*{_("settings.language.description")}*'
+        "\n\n---\n\n"
+        f'**{_("settings.show_covers")}**: '
+        f'<tg-button {'style="primary" ' if show_covers else ''}type="callback_data" data="{SHOW_COVERS}">{true(_('settings.on')) if show_covers else false(_('settings.off'))}</tg-button>  \n'
+        f'*{_("settings.show_covers.description")}*'
+    )

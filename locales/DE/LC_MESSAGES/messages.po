@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-22 15:03+0200\n"
+"POT-Creation-Date: 2026-08-25 00:34+0200\n"
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: de\n"
@@ -72,11 +72,32 @@ msgstr ""
 msgid "query.unknown"
 msgstr ""
 
-msgid "language.set.answer"
-msgstr "Sprache eingestellt!"
+msgid "settings.unknown"
+msgstr ""
 
-msgid "language.set.message"
-msgstr "Sprache eingestellt! :)"
+msgid "settings.saved"
+msgstr ""
+
+msgid "settings.no_admin"
+msgstr ""
+
+msgid "settings.language"
+msgstr "Sprache"
+
+msgid "settings.language.description"
+msgstr ""
+
+msgid "settings.show_covers"
+msgstr ""
+
+msgid "settings.on"
+msgstr ""
+
+msgid "settings.off"
+msgstr ""
+
+msgid "settings.show_covers.description"
+msgstr ""
 
 # HELP REQUIRED!
 msgid "start.hello"
