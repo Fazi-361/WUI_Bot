@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 from bot.database import close_database
 from bot.handlers import ROUTERS
-from bot.utils import constants as C, setup_bot_info
+from bot.utils import C, setup_bot_info
 from bot.utils.fsm import SQLiteStorage
 load_dotenv()
 

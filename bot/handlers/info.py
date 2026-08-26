@@ -7,7 +7,7 @@ from aiogram.utils.i18n import I18n
 
 from ..database import get_title_by_hash, get_title_by_name, get_title_page
 from ..filters import CCommand, MessageType, TextType as T, info_botcommand, text_type
-from ..utils import constants as C
+from ..utils import C, S
 from ..utils.text import strim
 
 info_router: Router = Router()
@@ -59,7 +59,7 @@ async def info(
 
         async for rich_message in get_title_page(
             _,
-            await state.get_value("show_covers", True),
+            await state.get_value(*S.show_covers.key),
             result[0] if results_list else "Wii",
             result[1] if results_list else None,
             result[2] if results_list else result,

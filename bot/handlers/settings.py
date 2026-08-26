@@ -6,6 +6,7 @@ from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 from bot.filters import Administrator, CCommand, settings_botcommand
 
 from ..filters.callbacks import SettingsCallback
+from ..utils import S
 
 settings_router: Router = Router()
 settings_router.message.filter(CCommand(settings_botcommand), Administrator())
@@ -25,7 +26,7 @@ LANGUAGE_BUTTON_ROWS: tuple[tuple[tuple[str, str, str], ...], ...] = (
         ("KO", SettingsCallback(option="KO").pack(), "🇰🇷 KO"),
     ),
 )
-SHOW_COVERS: str = SettingsCallback(option="show_covers").pack()
+SHOW_COVERS: str = SettingsCallback(option=S.show_covers.name).pack()
 
 
 @settings_router.message()
@@ -44,11 +45,9 @@ async def set_settings(
     if data := query.data:
         _ = i18n.gettext
         option: str = callback_data.option
-        state_data: dict = await state.get_data()
 
         if data == SHOW_COVERS:
-            state_data[option] = not state_data.get(option, True)
-            await state.set_data(state_data)
+            await state.update_data({option: not await state.get_value(option, S[option].value)})
         elif option in i18n.available_locales:
             await i18n_middleware.set_locale(state, option)
         else:
@@ -56,7 +55,7 @@ async def set_settings(
             return
 
         await query.answer(_("settings.saved"))
-        await query.message.edit_text(rich_message=get_settings_page(state_data, i18n))  # type: ignore
+        await query.message.edit_text(rich_message=get_settings_page(await state.get_data(), i18n))  # type: ignore
         try: pass
         except:
             pass
@@ -72,7 +71,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     true = lambda s: f"✅ {s}"
     false = lambda s: f"❌ {s}"
     locale: str = i18n.current_locale
-    show_covers: bool = state_data.get("show_covers", True)
+    show_covers: bool = state_data.get(*S.show_covers.key)
 
     return InputRichMessage(
         markdown=f'**{_("settings.language")}**:  \n'
