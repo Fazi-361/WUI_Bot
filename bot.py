@@ -67,7 +67,7 @@ async def main_polling() -> None:
 
 
 @dp.shutdown()
-async def shutdown_func(*args) -> None:
+async def shutdown_func() -> None:
     close_database()
 
 
@@ -101,7 +101,7 @@ async def startup_func() -> None:
 
 if __name__ == "__main__":
     # Middleware
-    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
+    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="US")).setup(dp)
 
     # Handler
     dp.error.register(error_handler)

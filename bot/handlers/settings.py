@@ -30,8 +30,8 @@ SHOW_COVERS: str = SettingsCallback(option=S.show_covers.name).pack()
 
 
 @settings_router.message()
-async def settings(message: Message, state: FSMContext, i18n: I18n) -> None:
-    await message.reply_rich(get_settings_page(await state.get_data(), i18n))
+async def settings(message: Message, state: FSMContext, i18n: I18n):
+    return message.reply_rich(get_settings_page(await state.get_data(), i18n))
 
 
 @settings_router.callback_query(Administrator())
@@ -62,8 +62,8 @@ async def set_settings(
 
 
 @settings_router.callback_query()
-async def no_admin(query: CallbackQuery, i18n: I18n) -> None:
-    await query.answer(i18n.gettext("settings.no_admin"))
+def no_admin(query: CallbackQuery, i18n: I18n):
+    return query.answer(i18n.gettext("settings.no_admin"))
 
 
 def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:

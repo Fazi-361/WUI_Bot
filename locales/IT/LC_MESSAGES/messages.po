@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-25 00:34+0200\n"
+"POT-Creation-Date: 2026-08-27 18:00+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -42,9 +42,6 @@ msgstr "Nome in altre lingue"
 msgid "info.fetching_covers"
 msgstr "Recupero delle copertine..."
 
-msgid "help.header"
-msgstr "Ecco una lista dei comandi:"
-
 msgid "command.start.description"
 msgstr "Avvia il bot"
 
@@ -56,6 +53,15 @@ msgstr "Imposta il bot"
 
 msgid "command.info.description"
 msgstr "Ricevi informazioni su un titolo"
+
+msgid "command.id.description"
+msgstr ""
+
+msgid "command.deid.description"
+msgstr ""
+
+msgid "help.header"
+msgstr "Ecco una lista dei comandi:"
 
 msgid "command.info.usage"
 msgstr ""

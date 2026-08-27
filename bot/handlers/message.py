@@ -10,10 +10,10 @@ message_router.message.filter(F.chat.type == ChatType.PRIVATE)
 
 
 @message_router.message(MessageType(T.COMMAND))
-async def handle_private_command(message: Message, i18n: I18n) -> None:
-    await message.reply(i18n.gettext("command.unknown"))
+def handle_private_command(message: Message, i18n: I18n):
+    return message.reply(i18n.gettext("command.unknown"))
 
 
 @message_router.message()
-async def handle_private_message(message: Message, i18n: I18n) -> None:
-    await message.reply(i18n.gettext("query.unknown"))
+def handle_private_message(message: Message, i18n: I18n):
+    return message.reply(i18n.gettext("query.unknown"))
