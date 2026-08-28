@@ -99,9 +99,18 @@ async def startup_func() -> None:
         except: print(f"Admin {admin} suffers from skill issue.")
 
 
+def setup_i18n() -> None:
+    global i18n
+    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="US")).setup(dp)
+    default_locale = i18n.locales[i18n.default_locale]
+    for locale in i18n.locales.values():
+        if locale is not default_locale:
+            locale.add_fallback(default_locale)
+
+
 if __name__ == "__main__":
     # Middleware
-    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="US")).setup(dp)
+    setup_i18n()
 
     # Handler
     dp.error.register(error_handler)
