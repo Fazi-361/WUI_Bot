@@ -59,7 +59,7 @@ async def info(
 
         async for rich_message in get_title_page(
             _,
-            await state.get_value(*S.show_covers.key),
+            await S.show_covers(state),
             result[0] if results_list else "Wii",
             result[1] if results_list else None,
             result[2] if results_list else result,

@@ -47,7 +47,7 @@ async def set_settings(
         option: str = callback_data.option
 
         if data == SHOW_COVERS:
-            await state.update_data({option: not await state.get_value(option, S[option].value)})
+            await state.update_data({option: not await S[option](state)})
         elif option in i18n.available_locales:
             await i18n_middleware.set_locale(state, option)
         else:
@@ -71,7 +71,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     true = lambda s: f"✅ {s}"
     false = lambda s: f"❌ {s}"
     locale: str = i18n.current_locale
-    show_covers: bool = state_data.get(*S.show_covers.key)
+    show_covers: bool = S.show_covers(state_data)
 
     return InputRichMessage(
         markdown=f'**{_("settings.language")}**  \n'
