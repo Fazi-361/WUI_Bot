@@ -114,10 +114,10 @@ msgid "settings.show_covers"
 msgstr "Show covers"
 
 msgid "settings.on"
-msgstr "✅ ON"
+msgstr "✅"
 
 msgid "settings.off"
-msgstr "❌ OFF"
+msgstr "❌"
 
 msgid "settings.show_covers.description"
 msgstr "Sets if /info must show game covers"
