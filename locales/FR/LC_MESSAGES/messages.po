@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+<<<<<<< Updated upstream
 "POT-Creation-Date: 2026-08-29 16:28+0200\n"
+=======
+"POT-Creation-Date: 2026-08-29 16:59+0200\n"
+>>>>>>> Stashed changes
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -63,6 +67,7 @@ msgstr ""
 msgid "help.header"
 msgstr ""
 
+<<<<<<< Updated upstream
 msgid "command.id.missing_args"
 msgstr ""
 
@@ -70,6 +75,15 @@ msgid "command.id.no_games"
 msgstr ""
 
 msgid "command.ids.possible_games"
+=======
+msgid "command.id.usage"
+msgstr ""
+
+msgid "id.no_games"
+msgstr ""
+
+msgid "id.possible_games"
+>>>>>>> Stashed changes
 msgstr ""
 
 msgid "command.info.usage"
@@ -118,7 +132,6 @@ msgstr ""
 msgid "start.hello"
 msgstr "Salut ! :)"
 
-#, fuzzy
 msgid "bot.name"
 msgstr "Monita"
 

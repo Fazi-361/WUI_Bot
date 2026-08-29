@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+<<<<<<< Updated upstream
 "POT-Creation-Date: 2026-08-29 16:28+0200\n"
+=======
+"POT-Creation-Date: 2026-08-29 16:59+0200\n"
+>>>>>>> Stashed changes
 "PO-Revision-Date: 2026-08-11 16:01+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -55,6 +59,7 @@ msgid "command.info.description"
 msgstr "Get info about the desired title"
 
 msgid "command.id.description"
+<<<<<<< Updated upstream
 msgstr ""
 "Get the game ID of the the desired title"
 
@@ -77,6 +82,26 @@ msgstr ""
 msgid "command.ids.possible_games"
 msgstr ""
 "Possible IDs"
+=======
+msgstr "Get the IDs of a title"
+
+msgid "command.deid.description"
+msgstr "Get the title's name from its ID"
+
+msgid "help.header"
+msgstr "Here's a list of commands:"
+
+msgid "command.id.usage"
+msgstr ""
+"Specify the name of a game after the /.\n"
+"Example: <pre>/id Super Smash Bros. Brawl</pre>"
+
+msgid "id.no_games"
+msgstr "No games with this name have been found"
+
+msgid "id.possible_games"
+msgstr "Possible IDs"
+>>>>>>> Stashed changes
 
 msgid "command.info.usage"
 msgstr ""
@@ -129,7 +154,6 @@ msgstr "Sets if /info must show game covers"
 msgid "start.hello"
 msgstr "Hi there! :)"
 
-#, fuzzy
 msgid "bot.name"
 msgstr "Monita"
 

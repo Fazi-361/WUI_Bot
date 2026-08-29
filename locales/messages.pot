@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+<<<<<<< Updated upstream
 "POT-Creation-Date: 2026-08-29 16:28+0200\n"
+=======
+"POT-Creation-Date: 2026-08-29 16:59+0200\n"
+>>>>>>> Stashed changes
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,6 +66,7 @@ msgstr ""
 msgid "help.header"
 msgstr ""
 
+<<<<<<< Updated upstream
 msgid "command.id.missing_args"
 msgstr ""
 
@@ -69,6 +74,15 @@ msgid "command.id.no_games"
 msgstr ""
 
 msgid "command.ids.possible_games"
+=======
+msgid "command.id.usage"
+msgstr ""
+
+msgid "id.no_games"
+msgstr ""
+
+msgid "id.possible_games"
+>>>>>>> Stashed changes
 msgstr ""
 
 msgid "command.info.usage"

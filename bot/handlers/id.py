@@ -18,7 +18,7 @@ async def id(message: Message, command: CommandObject, i18n: I18n) -> None:
 
     if not command.args:
         # "Inserire il del gioco dopo lo /. \nEsempio: /id Super Smash. Bros Brawl"
-        await message.reply(_("command.id.missing_args"))
+        await message.reply(_("command.id.usage"))
         return
 
     title = command.args
@@ -26,11 +26,11 @@ async def id(message: Message, command: CommandObject, i18n: I18n) -> None:
     games = get_ids_by_title(title, "PAL", 0.95)
     
     if games == []:
-        response = f"{_("command.id.no_games")}"
+        response = f"{_("id.no_games")}"
     elif max(game.similarity for game in games) > 0.99:
         response = max(games, key=lambda game: game.similarity).id
     else:
-        response = f"{_("command.ids.possible_games")}:\n{"\n".join([game.pretty_print() for game in games])}"
+        response = f"{_("id.possible_games")}:\n{"\n".join([game.pretty_print() for game in games])}"
 
     await message.reply(response)
     

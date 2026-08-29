@@ -14,8 +14,9 @@ async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
     _ = i18n.gettext
     default_locale = i18n.default_locale
 
-    bot_name_key: str = "bot.name"
-    bot_name_def: str = _(bot_name_key, locale=default_locale)
+    with i18n.use_locale(default_locale):
+        bot_name_def: str = _("bot.name")
+
     for locale in i18n.available_locales:
         if locale == "EN":
             continue
