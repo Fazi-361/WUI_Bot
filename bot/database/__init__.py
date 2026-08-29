@@ -1,6 +1,16 @@
+from contextlib import contextmanager
 import sqlite3
 
 CONNECTION: sqlite3.Connection = sqlite3.connect("./data/database.db")
+
+
+@contextmanager
+def use_cursor():
+    connection = get_cursor()
+    try:
+        yield connection
+    finally:
+        connection.close()
 
 
 def get_cursor() -> sqlite3.Cursor:
@@ -21,6 +31,7 @@ __all__ = (
     "get_title_by_name",
     "get_title_page",
     "title_exists",
+    "use_cursor",
     "get_cursor",
     "close_database",
     "CONNECTION"
