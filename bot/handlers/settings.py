@@ -3,8 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InputRichMessage, Message
 from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 
-from bot.filters import Administrator, CCommand, settings_botcommand
-
+from ..filters import Administrator, CCommand, settings_botcommand
 from ..filters.callbacks import SettingsCallback
 from ..utils import S
 
