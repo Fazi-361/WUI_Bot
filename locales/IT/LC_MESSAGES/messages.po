@@ -7,11 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-<<<<<<< Updated upstream
-"POT-Creation-Date: 2026-08-29 16:28+0200\n"
-=======
 "POT-Creation-Date: 2026-08-29 16:59+0200\n"
->>>>>>> Stashed changes
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -59,37 +55,14 @@ msgid "command.info.description"
 msgstr "Ricevi informazioni su un titolo"
 
 msgid "command.id.description"
-<<<<<<< Updated upstream
-msgstr ""
-"Ricevi l'ID di un titolo"
-
-msgid "command.deid.description"
-msgstr ""
-"Ricevi il titolo di un gioco dato l'ID"
-=======
 msgstr "Ricevi gli ID di un titolo"
 
 msgid "command.deid.description"
 msgstr "Ricevi il titolo di un gioco dato l'ID"
->>>>>>> Stashed changes
 
 msgid "help.header"
 msgstr "Ecco una lista dei comandi:"
 
-<<<<<<< Updated upstream
-msgid "command.id.missing_args"
-msgstr ""
-"Errore. Inserire il nome del gioco dopo lo /\n"
-"Esempio: /id Super Smash. Bros Brawl"
-
-msgid "command.id.no_games"
-msgstr ""
-"Nessun gioco trovato col titolo fornito"
-
-msgid "command.ids.possible_games"
-msgstr ""
-"ID Possibili"
-=======
 msgid "command.id.usage"
 msgstr ""
 "Inserisci il nome del gioco dopo lo /.\n"
@@ -100,7 +73,6 @@ msgstr "Non è stato trovato alcun gioco con questo nome"
 
 msgid "id.possible_games"
 msgstr "ID possibili"
->>>>>>> Stashed changes
 
 msgid "command.info.usage"
 msgstr ""
