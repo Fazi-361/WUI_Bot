@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-29 15:57+0200\n"
+"POT-Creation-Date: 2026-08-22 15:03+0200\n"
 "PO-Revision-Date: 2026-08-11 16:01+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -42,9 +42,6 @@ msgstr "Name in other languages"
 msgid "info.fetching_covers"
 msgstr "Fetching covers..."
 
-msgid "help.header"
-msgstr "Here's a list of commands:"
-
 msgid "command.start.description"
 msgstr "Starts the bot"
 
@@ -56,19 +53,6 @@ msgstr "Set up the bot"
 
 msgid "command.info.description"
 msgstr "Get info about the desired title"
-
-msgid "command.id.missing_args"
-msgstr ""
-"Error: Provide the name of the game after the /. \n"
-"Example: /id Super Smash. Bros Brawl"
-
-msgid "command.id.no_games"
-msgstr ""
-"No game with given title was found"
-
-msgid "command.ids.possible_games"
-msgstr ""
-"Possible IDs"
 
 msgid "command.info.usage"
 msgstr ""
@@ -91,11 +75,32 @@ msgstr "Unknown command"
 msgid "query.unknown"
 msgstr "I couldn't understand what you typed..."
 
-msgid "language.set.answer"
-msgstr "Language set!"
+msgid "settings.unknown"
+msgstr "Unknown setting"
 
-msgid "language.set.message"
-msgstr "Language set! :)"
+msgid "settings.saved"
+msgstr "Settings saved!"
+
+msgid "settings.no_admin"
+msgstr "These settings are not for you :)"
+
+msgid "settings.language"
+msgstr "Language"
+
+msgid "settings.language.description"
+msgstr "Sets the language of the bot"
+
+msgid "settings.show_covers"
+msgstr "Show covers"
+
+msgid "settings.on"
+msgstr "ON"
+
+msgid "settings.off"
+msgstr "OFF"
+
+msgid "settings.show_covers.description"
+msgstr "Sets if /info must show game covers"
 
 msgid "start.hello"
 msgstr "Hi there! :)"

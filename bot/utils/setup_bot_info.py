@@ -7,70 +7,90 @@ from aiogram.types import (
 )
 from aiogram.utils.i18n import I18n
 
-from ..filters import help_botcommand, info_botcommand, settings_botcommand
+from ..filters.commands import *
 
 
 async def setup_bot_info(bot: Bot, i18n: I18n) -> None:
     _ = i18n.gettext
+    default_locale = i18n.default_locale
+
+    bot_name_key: str = "bot.name"
+    bot_name_def: str = _(bot_name_key, locale=default_locale)
     for locale in i18n.available_locales:
         if locale == "EN":
             continue
 
-        __ = lambda singular: _(singular, locale=locale)
-        language_code: str | None = None if locale == "US" else locale.lower()
+        print("Setting bot info for", locale)
+        with i18n.use_locale(locale):
+            language_code: str | None = locale.lower() if locale != default_locale else None
 
-        # Info bot
+            # * Info bot
 
-        try:
-            if _("bot.name", locale="EN") != (new_name := __("bot.name")):
-                await bot.set_my_name(new_name, language_code)
-        except:
-            pass
-        
-        await bot.set_my_description(__("bot.description"), language_code)
-        await bot.set_my_short_description(__("bot.short_description"), language_code)
+            try:
+                if bot_name_def != (new_name := _("bot.name")):
+                    await bot.set_my_name(new_name, language_code)
+            except:
+                pass
 
-        # Comandi
+            await bot.set_my_description(_("bot.description"), language_code)
+            await bot.set_my_short_description(_("bot.short_description"), language_code)
 
-        # start_command.description = __("command.start.description"))
-        help_botcommand.description = __("command.help.description")
-        settings_botcommand.description = __("command.settings.description")
-        info_botcommand.description = __("command.info.description")
+            # * Comandi
 
-        # Generici (non admin)
-        help_botcommand.is_ephemeral = True
-        settings_botcommand.is_ephemeral = True
-        await bot.set_my_commands(
-            commands=[
-                help_botcommand,
-                info_botcommand,
-            ],
-            language_code=language_code,
-        )
+            for command in BOTCOMMANDS:
+                command.description = _(f"command.{command.command}.description")
 
-        # Generici (admin)
-        await bot.set_my_commands(
-            commands=[
-                help_botcommand,
-                settings_botcommand,
-                info_botcommand,
-            ],
-            scope=BotCommandScopeAllChatAdministrators(),
-            language_code=language_code,
-        )
+            # Gruppi
 
-        # Generici (chat private)
-        help_botcommand.is_ephemeral = False
-        settings_botcommand.is_ephemeral = False
-        await bot.set_my_commands(
-            commands=[
-                help_botcommand,
-                settings_botcommand,
-                info_botcommand,
-            ],
-            scope=BotCommandScopeAllPrivateChats(),
-            language_code=language_code,
-        )
+            help_botcommand.is_ephemeral = True
+            settings_botcommand.is_ephemeral = True
 
-        #? Rate limit ≈ 30r/s
+            # Gruppi: non admin
+            await bot.set_my_commands(
+                commands=[
+                    help_botcommand,
+                    info_botcommand,
+                    deid_botcommand,
+                    id_botcommand
+                ],
+                language_code=language_code,
+            )
+
+            # Gruppi: admin
+            await bot.set_my_commands(
+                commands=[
+                    help_botcommand,
+                    settings_botcommand,
+                    info_botcommand,
+                    deid_botcommand,
+                    id_botcommand
+                ],
+                scope=BotCommandScopeAllChatAdministrators(),
+                language_code=language_code,
+            )
+
+            # Chat private
+
+            help_botcommand.is_ephemeral = False
+            settings_botcommand.is_ephemeral = False
+
+            await bot.set_my_commands(
+                commands=[
+                    help_botcommand,
+                    settings_botcommand,
+                    info_botcommand,
+                    deid_botcommand,
+                    id_botcommand
+                ],
+                scope=BotCommandScopeAllPrivateChats(),
+                language_code=language_code,
+            )
+
+        # ? Rate limit ≈ 30r/s
         await sleep(2)
+
+    # Ripristina la descrizione dei comandi
+    for command in BOTCOMMANDS:
+        command.description = f"command.{command.command}.description"
+        
+    print("Bot info set without errors!")

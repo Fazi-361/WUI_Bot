@@ -1,4 +1,4 @@
-from asyncio import run, create_task
+from asyncio import create_task, run
 import os
 from traceback import format_exception
 
@@ -10,11 +10,9 @@ from aiogram.types import ErrorEvent
 from aiogram.utils.i18n import FSMI18nMiddleware, I18n
 from dotenv import load_dotenv
 
-from bot.bot_functions import *
 from bot.database import close_database
-from bot.filters import CCommand
 from bot.handlers import ROUTERS
-from bot.utils import constants as C, setup_bot_info
+from bot.utils import C, setup_bot_info
 from bot.utils.fsm import SQLiteStorage
 load_dotenv()
 
@@ -69,7 +67,7 @@ async def main_polling() -> None:
 
 
 @dp.shutdown()
-async def shutdown_func(*args) -> None:
+async def shutdown_func() -> None:
     close_database()
 
 
@@ -101,10 +99,20 @@ async def startup_func() -> None:
         except: print(f"Admin {admin} suffers from skill issue.")
 
 
+def setup_i18n() -> None:
+    global i18n
+    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="US")).setup(dp)
+    default_locale = i18n.locales[i18n.default_locale]
+    for locale in i18n.locales.values():
+        if locale is not default_locale:
+            locale.add_fallback(default_locale)
+
+
 if __name__ == "__main__":
     # Middleware
-    FSMI18nMiddleware(i18n := I18n(path="locales", default_locale="EN")).setup(dp)
+    setup_i18n()
 
+    # Handler
     dp.error.register(error_handler)
 
     # Router

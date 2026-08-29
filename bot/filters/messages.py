@@ -6,7 +6,7 @@ from aiogram.types import Message
 from regex_spm import fullmatch_in
 
 from . import CCommand
-from ..database import title_exists
+from ..database.title_exists import title_exists
 from ..utils.text import strim 
 
 

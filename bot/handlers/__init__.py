@@ -6,7 +6,7 @@ from .id import id_router
 from .deid import deid_router
 from .message import message_router
 
-ROUTERS = [
+ROUTERS = (
     start_router,
     help_router,
     settings_router,
@@ -14,8 +14,8 @@ ROUTERS = [
     id_router,
     deid_router,
     message_router # lasciare come ultimo
-]
+)
 
-__all__ = [
+__all__ = (
     "ROUTERS",
-]
+)

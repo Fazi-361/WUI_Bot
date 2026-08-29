@@ -36,7 +36,7 @@ def get_title_info(
     title_type: str,
     title_id: str,
     user_lang: str,
-    morphable_lang: bool = True,
+    enforce_title_lang: bool = True,
 ) -> tuple[frozenset[str], bool, InputRichMessage]:
     _ = get_i18n().gettext
     if not title_type:
@@ -68,15 +68,15 @@ def get_title_info(
             AND GameType = ?
             AND MiniID = ?
             {'AND Lang = ?' if user_lang else ''}
-            {'AND Region = ?' if morphable_lang else ''}
+            {'AND Region = ?' if enforce_title_lang else ''}
             ORDER BY REGION DESC
             LIMIT 1""",
             [title_console, title_type, title_mini_id]
             + ([user_lang] if user_lang else [])
-            + ([title_id[3]] if morphable_lang else []),
+            + ([title_id[3]] if enforce_title_lang else []),
         ).fetchone():
             (
-                user_lang,
+                page_lang,
                 title_title,
                 title_synopsis,
                 title_region,
@@ -101,7 +101,7 @@ def get_title_info(
                 title_publisher = results[0]
 
             japanenglish: bool = (
-                morphable_lang and user_lang == "EN" and title_region == "J"
+                enforce_title_lang and page_lang == "EN" and title_region == "J"
             )
             break
     else:
@@ -141,7 +141,7 @@ def get_title_info(
 
             if result_lang == "EN" and result_region == "J":
                 japanese_transliteration = result_title
-            elif result_lang != user_lang:
+            elif result_lang != page_lang:
                 title_other_names[result_lang] = result_title
 
             title_artworks.extend(
@@ -150,7 +150,8 @@ def get_title_info(
             )
 
     markdown: str = (
-        f"# {'🇯🇵🇬🇧' if japanenglish else LANG_FLAGS.get(user_lang, '❔')} {title_title}{'[^EN]' if user_lang == 'JA' else ''}\n\n"
+        f"# {'🇯🇵🇬🇧' if japanenglish else LANG_FLAGS.get(page_lang, '❔')} {title_title}"
+        f"{f' <sup>(EN: {japanese_transliteration})</sup>  \n' if japanese_transliteration and page_lang == 'JA' != user_lang else ''}  \n"
         f"<sup>=={title_id}=={f", {', '.join(sorted(title_other_titleIDs))}" if title_other_titleIDs else ''}</sup>\n\n"
         f"{
             f'**{_("info.developer")}**: {title_developer}  \n'
@@ -162,7 +163,7 @@ def get_title_info(
         }"
         f"{
             f'{LANG_FLAGS.get("JA" if japanenglish else user_lang, '❔')} **{_("info.release_date")}**: ![{title_release_date}](tg://time?unix={title_release_unix}&format=D)\n\n'
-            if title_release_unix else "\n\n"
+            if title_release_unix else ""
         }"
         f"{
             f'<details><summary>{_("info.synopsis")}</summary>\n> {title_synopsis.replace('\n', '\n> ')}</details>\n'
@@ -184,14 +185,11 @@ def get_title_info(
         }"
         f"{
             f'<details><summary>{_("info.name_in_other_languages")}</summary>\n{'  \n'.join(
-                f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**{'[^EN]' if result_lang == 'JA' and not japanenglish else ''}"
+                f"{LANG_FLAGS.get(result_lang, '❔')} **{result_title}**" 
+                f"{f' <sup>(EN: {japanese_transliteration})</sup>' if japanese_transliteration and result_lang == 'JA' != user_lang else ''}"
                 for result_lang, result_title in title_other_names.items()
-            )}</details>\n\n'
+            )}</details>' # \n\n
             if title_other_names else ''
-        }"
-        f"{
-            f'[^EN]: {japanese_transliteration}'
-            if japanese_transliteration else ''
         }"
     )
 
@@ -205,7 +203,7 @@ def get_title_info(
 
 @alru_cache
 async def get_title_covers(
-    resources: frozenset[str], user_lang: str, japanenglish: bool = False
+    resources: frozenset[str], user_lang: str | None = None, japanenglish: bool = False
 ) -> str:
     # Controlla che tutte le copertine esistano, controllando l'head degli url
     # * Il controllo degli URL è la parte più lenta di questa funzione!
@@ -237,24 +235,27 @@ async def get_title_covers(
 
 async def get_title_page(
     _,
+    show_covers: bool,
     title_console: str = "Wii",
     title_type: str | None = None,
     title_id: str = "ST7P01",
     user_lang: str = "IT",
-    morphable_lang: bool = True,
+    enforce_title_lang: bool = True,
 ):
     cache_size: int = get_title_info.cache_info().currsize
     resources, japanenglish, message = get_title_info(
-        title_console, title_type, title_id, user_lang, morphable_lang
+        title_console, title_type, title_id, user_lang, enforce_title_lang
     )
 
-    # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
-    if get_title_info.cache_info().currsize > cache_size:
-        yield InputRichMessage(
-            markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
-        )
+    if show_covers:
+        # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
+        if get_title_info.cache_info().currsize > cache_size:
+            yield InputRichMessage(
+                markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
+            )
 
-    if prependix := await get_title_covers(resources, user_lang, japanenglish):
-        yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
-    else:
-        yield message
+        if prependix := await get_title_covers(resources, user_lang, japanenglish):
+            yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
+            return
+
+    yield message

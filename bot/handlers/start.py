@@ -8,6 +8,5 @@ start_router: Router = Router()
 
 
 @start_router.message(CCommand(start_botcommand))
-async def start(message: Message, i18n: I18n) -> None:
-    await message.reply(f"{i18n.gettext("start.hello")}\n\n🇺🇸 To change language, use /settings")
-    
+def start(message: Message, i18n: I18n):
+    return message.reply(f"{i18n.gettext("start.hello")}\n\n🇺🇸 To change language, use /settings")

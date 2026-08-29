@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-29 15:57+0200\n"
+"POT-Creation-Date: 2026-08-27 18:00+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -42,9 +42,6 @@ msgstr "Nome in altre lingue"
 msgid "info.fetching_covers"
 msgstr "Recupero delle copertine..."
 
-msgid "help.header"
-msgstr "Ecco una lista dei comandi:"
-
 msgid "command.start.description"
 msgstr "Avvia il bot"
 
@@ -57,18 +54,14 @@ msgstr "Imposta il bot"
 msgid "command.info.description"
 msgstr "Ricevi informazioni su un titolo"
 
-msgid "command.id.missing_args"
+msgid "command.id.description"
 msgstr ""
-"Errore: Inserire il nome del gioco dopo lo /. \n"
-"Esempio: /id Super Smash. Bros Brawl"
 
-msgid "command.id.no_games"
+msgid "command.deid.description"
 msgstr ""
-"Non è stato trovato nessun gioco con questo nome"
 
-msgid "command.ids.possible_games"
-msgstr ""
-"ID Possibili"
+msgid "help.header"
+msgstr "Ecco una lista dei comandi:"
 
 msgid "command.info.usage"
 msgstr ""
@@ -91,11 +84,32 @@ msgstr "Comando sconosciuto"
 msgid "query.unknown"
 msgstr "Non ho capito cos'hai scritto..."
 
-msgid "language.set.answer"
-msgstr "Lingua impostata!"
+msgid "settings.unknown"
+msgstr "Impostazione sconosciuta"
 
-msgid "language.set.message"
-msgstr "Lingua impostata! :)"
+msgid "settings.saved"
+msgstr "Impostazioni salvate!"
+
+msgid "settings.no_admin"
+msgstr "Queste impostazioni non sono per te :)"
+
+msgid "settings.language"
+msgstr "Lingua"
+
+msgid "settings.language.description"
+msgstr "Imposta la lingua del bot"
+
+msgid "settings.show_covers"
+msgstr "Mostra le copertine"
+
+msgid "settings.on"
+msgstr "SÌ"
+
+msgid "settings.off"
+msgstr "NO"
+
+msgid "settings.show_covers.description"
+msgstr "Imposta se /info mostra le copertine dei giochi"
 
 msgid "start.hello"
 msgstr "Ciao! :)"

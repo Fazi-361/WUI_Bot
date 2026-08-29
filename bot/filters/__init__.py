@@ -11,7 +11,7 @@ from .messages import MessageType, TextType, text_type
 from .states import BotState
 from .users import Administrator
 
-__all__ = [
+__all__ = (
     "CCommand",
     "start_botcommand",
     "help_botcommand",
@@ -24,4 +24,4 @@ __all__ = [
     "text_type",
     "BotState",
     "Administrator",
-]
+)
