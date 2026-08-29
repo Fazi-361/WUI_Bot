@@ -4,7 +4,7 @@ from aiogram.types.input_rich_message import InputRichMessage
 from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
 
-from . import get_cursor
+from . import get_cursor, get_regions_by_title
 from ..utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
@@ -43,9 +43,6 @@ def get_title_info(
         title_type = "Wii" if len(title_id) == 6 else "Channel"
 
     title_mini_id: str = title_id[:3]
-    title_artworks: list[str] = []
-    title_other_titleIDs: list[str] = []
-    title_other_names: dict[str, str] = {}
 
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
@@ -91,10 +88,10 @@ def get_title_info(
             if not title_publisher and (
                 results := cursor.execute(
                     """SELECT CompanyName
-                FROM Company
-                WHERE Console = ?
-                AND CompanyCode = ?
-                LIMIT 1""",
+                    FROM Company
+                    WHERE Console = ?
+                    AND CompanyCode = ?
+                    LIMIT 1""",
                     [title_console, title_publisher_id],
                 ).fetchone()
             ):
@@ -108,46 +105,29 @@ def get_title_info(
         raise
 
     # Ottieni le informazioni per le altre lingue, insieme alle copertine
+    title_artworks: list[str] = []
+    title_other_titleIDs: list[str] = []
+    title_other_names: dict[str, str] = {}
+    title_console_lower: str = title_console.lower()
     japanese_transliteration: str = ""
-    if results := cursor.execute(
-        """SELECT DISTINCT Lang, Region, Title, LOWER(Console), MiniID || Region || COALESCE(PublisherID, '')
-        FROM BaseGameLocale
-        WHERE Console = ? AND GameType = ? AND MiniID = ?
-        AND (Lang != 'JA' OR Region IN ('A', 'J'))
-        AND (Lang != 'US' OR Region IN ('A', 'E', 'N', 'X', 'Y', 'Z'))
-        AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'X', 'Y', 'Z', 'J'))
-        AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-        AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-        AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-        AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-        AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
-        AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
-        AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
-        ORDER BY Region DESC""",
-        [title_console, title_type, title_mini_id],
-    ).fetchall():
-        for (
-            result_lang,
-            result_region,
-            result_title,
-            result_console,
-            result_titleID,
-        ) in results:
-            if (
-                result_titleID != title_id
-                and result_titleID not in title_other_titleIDs
-            ):
-                title_other_titleIDs.append(result_titleID)
+    for (
+        result_lang,
+        result_region,
+        result_title,
+        result_titleID,
+    ) in get_regions_by_title(title_console, title_type, title_mini_id):
+        if result_titleID != title_id and result_titleID not in title_other_titleIDs:
+            title_other_titleIDs.append(result_titleID)
 
-            if result_lang == "EN" and result_region == "J":
-                japanese_transliteration = result_title
-            elif result_lang != page_lang:
-                title_other_names[result_lang] = result_title
+        if result_lang == "EN" and result_region == "J":
+            japanese_transliteration = result_title
+        elif result_lang != page_lang:
+            title_other_names[result_lang] = result_title
 
-            title_artworks.extend(
-                f"{result_console}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}"
-                for atype in {("coverfullHQ", "png"), ("coverHQ", "jpg")}
-            )
+        title_artworks.extend(
+            f"{title_console_lower}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}"
+            for atype in {("coverfullHQ", "png"), ("coverHQ", "jpg")}
+        )
 
     markdown: str = (
         f"# {'🇯🇵🇬🇧' if japanenglish else LANG_FLAGS.get(page_lang, '❔')} {title_title}"

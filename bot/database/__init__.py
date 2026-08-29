@@ -21,12 +21,14 @@ def close_database() -> None:
     CONNECTION.close()
 
 
+from .get_regions_by_title import get_regions_by_title
 from .get_title_by_hash import get_title_by_hash
 from .get_title_by_name import get_title_by_name
 from .get_title_page import get_title_page
 from .title_exists import title_exists
 
 __all__ = (
+    "get_regions_by_title",
     "get_title_by_hash",
     "get_title_by_name",
     "get_title_page",
