@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-22 15:03+0200\n"
+"POT-Creation-Date: 2026-08-29 16:28+0200\n"
 "PO-Revision-Date: 2026-08-11 16:01+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -53,6 +53,30 @@ msgstr "Set up the bot"
 
 msgid "command.info.description"
 msgstr "Get info about the desired title"
+
+msgid "command.id.description"
+msgstr ""
+"Get the game ID of the the desired title"
+
+msgid "command.deid.description"
+msgstr ""
+"Get the game's title given its ID"
+
+msgid "help.header"
+msgstr ""
+
+msgid "command.id.missing_args"
+msgstr ""
+"Error. Provide the name of the game afer the /.\n"
+"E.g: /id Super Smash. Bros Brawl"
+
+msgid "command.id.no_games"
+msgstr ""
+"No game found with given title"
+
+msgid "command.ids.possible_games"
+msgstr ""
+"Possible IDs"
 
 msgid "command.info.usage"
 msgstr ""
@@ -107,9 +131,7 @@ msgstr "Hi there! :)"
 
 #, fuzzy
 msgid "bot.name"
-msgid_plural "EN"
-msgstr[0] "Monita"
-msgstr[1] ""
+msgstr "Monita"
 
 msgid "bot.description"
 msgstr ""

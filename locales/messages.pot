@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-27 18:00+0200\n"
+"POT-Creation-Date: 2026-08-29 16:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,6 +62,15 @@ msgstr ""
 msgid "help.header"
 msgstr ""
 
+msgid "command.id.missing_args"
+msgstr ""
+
+msgid "command.id.no_games"
+msgstr ""
+
+msgid "command.ids.possible_games"
+msgstr ""
+
 msgid "command.info.usage"
 msgstr ""
 
@@ -108,9 +117,7 @@ msgid "start.hello"
 msgstr ""
 
 msgid "bot.name"
-msgid_plural "EN"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 msgid "bot.description"
 msgstr ""
