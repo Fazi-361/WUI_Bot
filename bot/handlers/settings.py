@@ -68,11 +68,10 @@ def no_admin(query: CallbackQuery, i18n: I18n):
 
 def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     _ = i18n.gettext
-    true = lambda s: f"✅ {s}"
-    false = lambda s: f"❌ {s}"
     locale: str = i18n.current_locale
     show_covers: bool = S.show_covers(state_data)
 
+    on, off = _('settings.on'), _('settings.off')
     return InputRichMessage(
         markdown=f'**{_("settings.language")}**  \n'
         f'{''.join(f'<tg-button-row>{''.join(
@@ -82,7 +81,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
         f'*{_("settings.language.description")}*'
         "\n\n---\n\n"
         f'**{_("settings.show_covers")}**: '
-        f'<tg-button {'style="primary" ' if show_covers else ''}type="callback_data" data="{SHOW_COVERS}">{true(_('settings.on')) if show_covers else false(_('settings.off'))}</tg-button>  \n'
+        f'<tg-button {'style="primary" ' if show_covers else ''}type="callback_data" data="{SHOW_COVERS}">{on if show_covers else off}</tg-button>  \n'
         f'*{_("settings.show_covers.description")}*',
         skip_entity_detection=True
     )

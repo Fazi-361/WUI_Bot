@@ -106,7 +106,7 @@ msgid "settings.show_covers"
 msgstr ""
 
 msgid "settings.on"
-msgstr ""
+msgstr "⭕"
 
 msgid "settings.off"
 msgstr ""

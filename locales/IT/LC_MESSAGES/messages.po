@@ -114,10 +114,10 @@ msgid "settings.show_covers"
 msgstr "Mostra le copertine"
 
 msgid "settings.on"
-msgstr "SÌ"
+msgstr ""
 
 msgid "settings.off"
-msgstr "NO"
+msgstr ""
 
 msgid "settings.show_covers.description"
 msgstr "Imposta se /info mostra le copertine dei giochi"
