@@ -23,14 +23,21 @@ async def info_command(
 
 
 @info_router.message(
-    F.chat.type == ChatType.PRIVATE, MessageType(T.QUERY, T.GAME_ID, T.HASH, T.MASTER_CODE)
+    F.chat.type == ChatType.PRIVATE,
+    MessageType(T.QUERY, T.GAME_ID, T.HASH, T.MASTER_CODE),
 )
-async def private_message(message: Message, state: FSMContext, i18n: I18n) -> None:
-    await info(message, state, message.text, i18n)
+async def private_message(
+    message: Message, message_type: T, state: FSMContext, i18n: I18n
+) -> None:
+    await info(message, state, message.text, i18n, message_type)
 
 
 async def info(
-    message: Message, state: FSMContext, args: str | None, i18n: I18n
+    message: Message,
+    state: FSMContext,
+    args: str | None,
+    i18n: I18n,
+    message_type: T | None = None,
 ) -> None:
     _ = i18n.gettext
     if not (args and (args := strim(args))):
@@ -43,7 +50,7 @@ async def info(
         user_lang: str = i18n.current_locale
 
         result: str | tuple[str, str, str] | None = ""
-        match text_type(args):
+        match message_type or text_type(args):
             case T.QUERY:
                 result = get_title_by_name(args, C.LANGS_REGION.get(user_lang))
                 enforce_title_lang: bool = False

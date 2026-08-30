@@ -60,13 +60,10 @@ class MessageType(BaseFilter):
     def __init__(self, *types: TextType) -> None:
         self.types: tuple[TextType, ...] = types
 
-    async def __call__(self, message: Message) -> bool:
-        return message.text is not None and text_type(strim(message.text)) in self.types
-
-    # async def __call__(self, message: Message) -> dict[str, TextType | None] | bool:
-    #     return (
-    #         {"text_type": t}
-    #         if message.text is not None
-    #         and (t := text_type(strim(message.text))) in self.types
-    #         else False
-    #     )
+    async def __call__(self, message: Message) -> dict[str, TextType | None] | bool:
+        return (
+            {"message_type": t}
+            if message.text is not None
+            and (t := text_type(strim(message.text))) in self.types
+            else False
+        )
