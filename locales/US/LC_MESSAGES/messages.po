@@ -88,6 +88,7 @@ msgstr ""
 "<pre>/info ST7E01</pre>\n"
 "<pre>/info Super Mario Galaxy</pre>\n"
 "<pre>/info fb84bfc5</pre>\n"
+"<pre>/info LNA-CTR-AREE-USA</pre>\n"
 "Note: channels do not need the final two characters"
 
 msgid "info.generating"

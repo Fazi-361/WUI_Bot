@@ -3,18 +3,20 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     BOT_USERNAME: str
     BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
-    LANG_REGIONS: dict[str, str]
+    LANGS_REGION: dict[str, str]
+    CONSOLE_CODE: dict[str, str]
 
 
 def init_constants() -> None:
     global \
         BOT_USERNAME, \
         BOT_CREATORS, \
-        LANG_REGIONS
+        LANGS_REGION, \
+        CONSOLE_CODE
 
     BOT_USERNAME = "" # filled in later by bot.py on start
     BOT_CREATORS = [] # filled in later by bot.py on start
-    LANG_REGIONS = {
+    LANGS_REGION = {
         "US": "E",
         "EN": "P",
         "DE": "P",
@@ -23,4 +25,13 @@ def init_constants() -> None:
         "IT": "P",
         "JA": "J",
         "KO": "K"
+    }
+    CONSOLE_CODE = {
+        "DOL": "Wii", # Stored as Wii
+        "NTR": "DS",
+        "RVL": "Wii",
+        "TWL": "DS",
+        "CTR": "3DS",
+        "WUP": "WiiU",
+        "KTR": "3DS"
     }

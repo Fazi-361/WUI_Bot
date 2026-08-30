@@ -26,7 +26,7 @@ from .get_title_by_hash import get_title_by_hash
 from .get_title_by_name import get_title_by_name
 from .get_title_roms import get_title_roms
 from .get_title_page import get_title_page
-from .title_exists import title_exists
+from .title_exists import gameid_exists, mastercode_exists
 
 __all__ = (
     "get_regions_by_title",
@@ -34,7 +34,8 @@ __all__ = (
     "get_title_by_name",
     "get_title_roms",
     "get_title_page",
-    "title_exists",
+    "gameid_exists",
+    "mastercode_exists",
     "use_cursor",
     "get_cursor",
     "close_database",

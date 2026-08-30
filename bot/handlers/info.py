@@ -1,3 +1,5 @@
+import traceback
+
 from aiogram import F, Router
 from aiogram.enums import ChatType
 from aiogram.filters import CommandObject
@@ -17,11 +19,11 @@ info_router: Router = Router()
 async def info_command(
     message: Message, command: CommandObject, state: FSMContext, i18n: I18n
 ) -> None:
-    await info(message, state, command.args or message.text, i18n)
+    await info(message, state, command.args, i18n)
 
 
 @info_router.message(
-    F.chat.type == ChatType.PRIVATE, MessageType(T.QUERY, T.GAME_ID, T.HASH)
+    F.chat.type == ChatType.PRIVATE, MessageType(T.QUERY, T.GAME_ID, T.HASH, T.MASTER_CODE)
 )
 async def private_message(message: Message, state: FSMContext, i18n: I18n) -> None:
     await info(message, state, message.text, i18n)
@@ -43,13 +45,16 @@ async def info(
         result: str | tuple[str, str, str] | None = ""
         match text_type(args):
             case T.QUERY:
-                result = get_title_by_name(args, C.LANG_REGIONS.get(user_lang))
+                result = get_title_by_name(args, C.LANGS_REGION.get(user_lang))
                 enforce_title_lang: bool = False
             case T.GAME_ID:
                 result = args.upper()
                 enforce_title_lang = True
             case T.HASH:
                 result = get_title_by_hash(args)
+                enforce_title_lang = True
+            case T.MASTER_CODE as m:
+                result = m.data
                 enforce_title_lang = True
             case _:
                 raise
@@ -68,4 +73,5 @@ async def info(
         ):
             await reply.edit_text(rich_message=rich_message)
     except:
+        print(traceback.format_exc())
         await reply.edit_text(_("info.generation_error"))

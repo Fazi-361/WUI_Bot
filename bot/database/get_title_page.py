@@ -33,16 +33,16 @@ LANG_FLAGS: dict[str, str] = {
 @cache
 def get_title_info(
     title_console: str,
-    title_type: str,
-    title_id: str,
+    title_type: str | None,
+    title_short_id: str,
     user_lang: str,
     enforce_title_lang: bool = True,
 ) -> tuple[frozenset[str], bool, InputRichMessage]:
     _ = get_i18n().gettext
     if not title_type:
-        title_type = "Wii" if len(title_id) == 6 else "Channel"
+        title_type = "Wii" if len(title_short_id) == 6 else "Channel"
 
-    title_mini_id: str = title_id[:3]
+    title_mini_id: str = title_short_id[:3]
 
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
@@ -70,7 +70,7 @@ def get_title_info(
             LIMIT 1""",
             [title_console, title_type, title_mini_id]
             + ([user_lang] if user_lang else [])
-            + ([title_id[3]] if enforce_title_lang else []),
+            + ([title_short_id[3]] if enforce_title_lang else []),
         ).fetchone():
             (
                 page_lang,
@@ -213,13 +213,13 @@ async def get_title_page(
     show_covers: bool,
     title_console: str = "Wii",
     title_type: str | None = None,
-    title_id: str = "ST7P01",
+    title_short_id: str = "ST7P01",
     user_lang: str = "IT",
     enforce_title_lang: bool = True,
 ):
     cache_size: int = get_title_info.cache_info().currsize
     resources, japanenglish, message = get_title_info(
-        title_console, title_type, title_id, user_lang, enforce_title_lang
+        title_console, title_type, title_short_id, user_lang, enforce_title_lang
     )
 
     if show_covers:

@@ -1,10 +1,30 @@
 from functools import cache
 
 from . import use_cursor
+from ..utils import C
 
 
 @cache
-def title_exists(title_id: str) -> bool:
+def mastercode_exists(console_code: str, short_id: str) -> str | bool:
+    if len(console_code) != 3 or len(short_id) != 4 \
+    or not (console := C.CONSOLE_CODE.get(console_code)):
+        return False
+
+    short_id = short_id.upper()
+    with use_cursor() as cursor:
+        return console if cursor.execute(
+            """SELECT 1
+            FROM GamePublisher
+            WHERE Console = ?
+            AND MiniID = ?
+            AND Region = ?
+            """,
+            [console, short_id[:3], short_id[3]]
+        ).fetchone() else False
+
+
+@cache
+def gameid_exists(title_id: str) -> bool:
     """
     Controlla se un titolo Wii esiste nel database dall'ID
     """

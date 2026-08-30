@@ -6,21 +6,27 @@ from aiogram.types import Message
 from regex_spm import fullmatch_in
 
 from . import CCommand
-from ..database.title_exists import title_exists
-from ..utils.text import strim 
+from ..database.title_exists import gameid_exists, mastercode_exists
+from ..utils.text import strim
 
 
 class TextType(Enum):
+    NONE = 0
     COMMAND = 1
     QUERY = 2
     GAME_ID = 3
     HASH = 4
+    MASTER_CODE = 5
+    
+    def __call__(self, *data):
+        self.data = data
+        return self
 
 
 @lru_cache(maxsize=10)
-def text_type(text: str | None) -> TextType | None:
+def text_type(text: str | None) -> TextType:
     if not text or len(text) < 2:
-        return None
+        return TextType.NONE
     elif text[0] in CCommand.prefix:
         return TextType.COMMAND
 
@@ -35,17 +41,32 @@ def text_type(text: str | None) -> TextType | None:
             # Publisher
             r"(?:[0-9A-Z]{2})?$"
         ):
-            return TextType.GAME_ID if title_exists(text) else TextType.QUERY
-        #               crc         md5          sha1
+            return TextType.GAME_ID if gameid_exists(text) else TextType.QUERY
+        #               CRC         MD5          SHA1
         case r"(?i)^(?:[0-9A-F]{8}|[0-9A-F]{32}|[0-9A-F]{40})$":
             return TextType.HASH
+        #              System                                  ShortID
+        case r"(?i)^.*(DOL|NTR|RVL|TWL|CTR|WUP|KTR)-(?:\w+-)*([0-9A-Z]{4}).*$" as m:
+            return (
+                TextType.MASTER_CODE(console, console, m[2])
+                if (console := mastercode_exists(m[1], m[2]))
+                else TextType.QUERY
+            )
 
     return TextType.QUERY
 
 
 class MessageType(BaseFilter):
-    def __init__(self, *types: TextType | None) -> None:
-        self.types: tuple[TextType | None, ...] = types
+    def __init__(self, *types: TextType) -> None:
+        self.types: tuple[TextType, ...] = types
 
     async def __call__(self, message: Message) -> bool:
         return message.text is not None and text_type(strim(message.text)) in self.types
+
+    # async def __call__(self, message: Message) -> dict[str, TextType | None] | bool:
+    #     return (
+    #         {"text_type": t}
+    #         if message.text is not None
+    #         and (t := text_type(strim(message.text))) in self.types
+    #         else False
+    #     )

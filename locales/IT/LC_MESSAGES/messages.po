@@ -88,6 +88,7 @@ msgstr ""
 "<pre>/info ST7P01</pre>\n"
 "<pre>/info Super Mario Galaxy</pre>\n"
 "<pre>/info fb84bfc5</pre>\n"
+"<pre>/info LNA-CTR-AREP-EUR</pre>\n"
 "Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
 
 msgid "info.generating"
