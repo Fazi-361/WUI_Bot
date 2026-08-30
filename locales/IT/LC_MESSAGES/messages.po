@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  WiiWiiUBot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-29 16:59+0200\n"
+"POT-Creation-Date: 2026-08-30 09:43+0200\n"
 "PO-Revision-Date: 2026-08-11 15:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: it\n"
@@ -60,6 +60,10 @@ msgstr "Ricevi gli ID di un titolo"
 msgid "command.deid.description"
 msgstr "Ricevi il titolo di un gioco dato l'ID"
 
+msgid "command.hashes.description"
+msgstr ""
+"Ricevi CRC, MD5 e SHA1 di un gioco dato il titolo o l'ID"
+
 msgid "help.header"
 msgstr "Ecco una lista dei comandi:"
 
@@ -104,6 +108,12 @@ msgstr "Impostazioni salvate!"
 msgid "settings.no_admin"
 msgstr "Queste impostazioni non sono per te :)"
 
+msgid "settings.on"
+msgstr ""
+
+msgid "settings.off"
+msgstr ""
+
 msgid "settings.language"
 msgstr "Lingua"
 
@@ -112,12 +122,6 @@ msgstr "Imposta la lingua del bot"
 
 msgid "settings.show_covers"
 msgstr "Mostra le copertine"
-
-msgid "settings.on"
-msgstr ""
-
-msgid "settings.off"
-msgstr ""
 
 msgid "settings.show_covers.description"
 msgstr "Imposta se /info mostra le copertine dei giochi"

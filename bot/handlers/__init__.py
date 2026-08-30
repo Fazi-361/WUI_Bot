@@ -4,6 +4,7 @@ from .settings import settings_router
 from .info import info_router
 from .id import id_router
 from .deid import deid_router
+from .hashes import hashes_router
 from .message import message_router
 
 ROUTERS = (
@@ -13,6 +14,7 @@ ROUTERS = (
     info_router,
     id_router,
     deid_router,
+    hashes_router,
     message_router # lasciare come ultimo
 )
 

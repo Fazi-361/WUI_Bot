@@ -5,7 +5,8 @@ from .commands import (
     settings_botcommand,
     start_botcommand,
     id_botcommand,
-    deid_botcommand
+    deid_botcommand,
+    hashes_botcommand
 )
 from .messages import MessageType, TextType, text_type
 from .states import BotState
@@ -19,6 +20,7 @@ __all__ = (
     "info_botcommand",
     "id_botcommand",
     "deid_botcommand",
+    "hashes_botcommand",
     "MessageType",
     "TextType",
     "text_type",
