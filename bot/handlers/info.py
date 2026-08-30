@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
 from ..database import get_title_by_hash, get_title_by_name, get_title_page
-from ..filters import CCommand, MessageType, TextType as T, info_botcommand, text_type
+from ..filters import CCommand, MessageType, T, info_botcommand, text_type
 from ..utils import C, S
 from ..utils.text import strim
 
@@ -67,6 +67,5 @@ async def info(
             enforce_title_lang,
         ):
             await reply.edit_text(rich_message=rich_message)
-
-    except Exception:
+    except:
         await reply.edit_text(_("info.generation_error"))

@@ -4,7 +4,7 @@ from aiogram.types.input_rich_message import InputRichMessage
 from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
 
-from . import get_cursor, get_regions_by_title
+from . import get_cursor, get_regions_by_title, get_title_roms
 from ..utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
@@ -156,12 +156,7 @@ def get_title_info(
             f'{''.join(
                 f"`{result_version}`|`{result_crc or '—'}`|`{result_md5 or '—'}`|`{result_sha1 or '—'}`\n"
                 for result_version, result_crc, result_md5, result_sha1 in results
-            )}</details>\n' if (results := cursor.execute(
-                """SELECT ROMVersion, CRC, MD5, SHA1
-                FROM GameROM
-                WHERE Console = ? AND GameType = ? AND MiniID = ? AND Region = ?""",
-                [title_console, title_type, title_mini_id, title_region]
-            ).fetchall()) else ''
+            )}</details>\n' if (results := get_title_roms(title_console, title_type, title_mini_id, title_region)) else ''
         }"
         f"{
             f'<details><summary>{_("info.name_in_other_languages")}</summary>\n{'  \n'.join(

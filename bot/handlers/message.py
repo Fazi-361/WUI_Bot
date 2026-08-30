@@ -3,7 +3,7 @@ from aiogram.enums import ChatType
 from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
-from ..filters import MessageType, TextType as T
+from ..filters import MessageType, T
 
 message_router: Router = Router()
 message_router.message.filter(F.chat.type == ChatType.PRIVATE)

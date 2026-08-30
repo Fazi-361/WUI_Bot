@@ -54,8 +54,8 @@ async def set_settings(
             return
 
         await query.answer(_("settings.saved"))
-        await query.message.edit_text(rich_message=get_settings_page(await state.get_data(), i18n))  # type: ignore
-        try: pass
+        try:
+            await query.message.edit_text(rich_message=get_settings_page(await state.get_data(), i18n))  # type: ignore
         except:
             pass
 

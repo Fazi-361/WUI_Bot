@@ -8,7 +8,7 @@ from .commands import (
     deid_botcommand,
     hashes_botcommand
 )
-from .messages import MessageType, TextType, text_type
+from .messages import MessageType, TextType as T, text_type
 from .states import BotState
 from .users import Administrator
 
@@ -22,7 +22,7 @@ __all__ = (
     "deid_botcommand",
     "hashes_botcommand",
     "MessageType",
-    "TextType",
+    "T",
     "text_type",
     "BotState",
     "Administrator",
