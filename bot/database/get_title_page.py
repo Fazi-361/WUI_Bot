@@ -226,7 +226,7 @@ async def get_title_page(
         # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
         if get_title_info.cache_info().currsize > cache_size:
             yield InputRichMessage(
-                markdown=f"{_("info.fetching_covers")}\n\n{message.markdown}"
+                markdown=f"*{_("info.fetching_covers")}*\n\n{message.markdown}"
             )
 
         if prependix := await get_title_covers(resources, user_lang, japanenglish):
