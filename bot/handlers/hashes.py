@@ -12,8 +12,15 @@ hashes_router: Router = Router()
 @hashes_router.message(CCommand(hashes_botcommand))
 def hashes(message: Message, command: CommandObject, i18n: I18n):
     """Dato l'ID o il titolo del gioco, restituisce i suoi hash"""
-    
+
+    _ = i18n.gettext
+
     game = command.args
-    result = pretty_print(get_hashes(game))
+    result: dict[str, str] | None = get_hashes(game)
+
+    if not result:
+        return message.reply(_("hashses.no_games"))
+
+    result = pretty_print(result)
 
     return message.reply(result)

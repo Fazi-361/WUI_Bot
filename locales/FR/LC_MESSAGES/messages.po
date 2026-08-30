@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-30 09:43+0200\n"
+"POT-Creation-Date: 2026-08-30 09:55+0200\n"
 "PO-Revision-Date: 2026-08-11 15:55+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -61,6 +61,9 @@ msgid "command.deid.description"
 msgstr ""
 
 msgid "command.hashes.description"
+msgstr ""
+
+msgid "hashses.no_games"
 msgstr ""
 
 msgid "help.header"

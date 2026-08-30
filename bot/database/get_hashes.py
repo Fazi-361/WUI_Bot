@@ -21,7 +21,10 @@ def get_hashes(game: str) -> dict[str, str]:
 
     # Trasforma il gioco nel suo corrispondente id nel caso abbiamo ricevuto un titolo
     if not is_game_id(game):
-        game = get_ids_by_title(game, "PAL", 0.95)[0].id
+        try:
+            game = get_ids_by_title(game, "PAL", 0.95)[0].id
+        except IndexError:
+            return None
 
     game = game.strip().upper()
     miniID = game[:3]
@@ -54,10 +57,10 @@ def pretty_print(hashes: dict[str, str]):
 if __name__ == "__main__":
     try:
         result = get_hashes(input("Inserire il gioco da cercare:\n"))
-    except ValueError as e:
-        print(f"Errore: {e}")
+    except:
+        print(f"Errore")
     else:
         if not result:
-            print("Nessun gioco trovato con quell'ID.")
+            print("Nessun gioco trovato.")
         else:
             print(pretty_print(result))
