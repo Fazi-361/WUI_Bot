@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
     LANGS_REGION: dict[str, str]
     CONSOLE_CODE: dict[str, tuple[str, str]]
+    COVERS_ATYPE: dict[str, tuple[str, str]]
 
 
 def init_constants() -> None:
@@ -12,7 +13,8 @@ def init_constants() -> None:
         BOT_USERNAME, \
         BOT_CREATORS, \
         LANGS_REGION, \
-        CONSOLE_CODE
+        CONSOLE_CODE, \
+        COVERS_ATYPE
 
     BOT_USERNAME = "" # filled in later by bot.py on start
     BOT_CREATORS = [] # filled in later by bot.py on start
@@ -35,4 +37,12 @@ def init_constants() -> None:
         "CTR": ("3DS" , "3DS"     ),
         "WUP": ("WiiU", "WUP"     ),
         "KTR": ("3DS" , "New3DS"  )
+    }
+    coverfullHQ = ('coverfullHQ', 'png')
+    coverHQ = ('coverHQ', 'jpg')
+    COVERS_ATYPE = {
+        "Wii" : coverfullHQ,
+        "DS"  : coverHQ    ,
+        "WiiU": coverHQ    ,
+        "3DS" : coverHQ    ,
     }

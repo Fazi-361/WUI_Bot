@@ -116,6 +116,7 @@ def get_title_info(
     title_other_names: dict[str, str] = {}
     title_console_lower: str = title_console.lower()
     japanese_transliteration: str = ""
+    cover_type, cover_extension = C.COVERS_ATYPE[title_console]
     for (
         result_lang,
         result_region,
@@ -130,9 +131,8 @@ def get_title_info(
         elif result_lang != page_lang:
             title_other_names[result_lang] = result_title
 
-        title_artworks.extend(
-            f"{title_console_lower}/{atype[0]}/{result_lang}/{result_titleID}.{atype[1]}"
-            for atype in {("coverfullHQ", "png"), ("coverHQ", "jpg")}
+        title_artworks.append(
+            f"{title_console_lower}/{cover_type}/{result_lang}/{result_titleID}.{cover_extension}"
         )
 
     markdown: str = (
