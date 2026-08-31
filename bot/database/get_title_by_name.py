@@ -1,30 +1,30 @@
 from functools import lru_cache
-import re
 
-from jellyfish import jaro_winkler_similarity
-from unidecode import unidecode
+from jellyfish import jaro_winkler_similarity as jws
+from unidecode import unidecode_expect_nonascii as unidecode
 
 from . import CONNECTION, use_cursor
+from ..utils.text import strim
 
 
 @lru_cache
 def get_title_by_name(input: str, region: str = "P") -> tuple[str, str, str] | None:
-    input = re.sub(r"[^\w\s]", "", unidecode(input.upper()))
+    input = unidecode(strim(input.upper()), errors="preserve")
     input_split: list[str] = input.split()
-    input_split_len: int = len(input_split)
+    treshold: float = 0.82
 
     def similarity(str1: str) -> float:
-        str1 = re.sub(r"[^\w\s]", "", unidecode(str1))
-        str2_split: list[str] = input_split.copy()
+        if input == (str1 := unidecode(str1, errors="preserve")):
+            return 100
 
-        similarity: float = jaro_winkler_similarity(str1, input, True)
-        if similarity == 1:
-            return input_split_len * 100
+        str1_split: list[str] = str1.split()
+        similarity: float = jws(input, str1, True)
 
-        for word1 in str1.split():
-            for word2 in str2_split:
-                if (word_similarity := jaro_winkler_similarity(word1, word2)) >= 0.8:
-                    str2_split.remove(word2)
+        highest_index: int = 0
+        for word2 in input_split:
+            for i, word1 in enumerate(str1_split[highest_index:], 1):
+                if (word_similarity := jws(word2, word1)) >= treshold:
+                    highest_index += i
                     similarity += word_similarity
                     break
 
@@ -57,5 +57,5 @@ def get_title_by_name(input: str, region: str = "P") -> tuple[str, str, str] | N
             OR NOT 'P' IN Regions AND Region = 'J'
             OR NOT 'J' IN Regions
             LIMIT 1""",
-            [input_split_len - input_split_len / 10, region, region],
+            [(1 - treshold) + len(input_split) * 0.9, region, region],
         ).fetchone()
