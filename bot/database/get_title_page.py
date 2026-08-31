@@ -131,8 +131,10 @@ def get_title_info(
         elif result_lang != page_lang:
             title_other_names[result_lang] = result_title
 
-        title_artworks.append(
-            f"{title_console_lower}/{cover_type}/{result_lang}/{result_titleID}.{cover_extension}"
+        title_artworks.extend(
+            f"{title_console_lower}/{cover_type}/{lang}/{result_titleID}.{cover_extension}"
+            for lang in C.LANGS_REGION
+            if result_region in C.PASS_REGIONS.get(lang, [])
         )
 
     markdown: str = (

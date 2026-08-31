@@ -4,6 +4,7 @@ if TYPE_CHECKING:
     BOT_USERNAME: str
     BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
     LANGS_REGION: dict[str, str]
+    PASS_REGIONS: dict[str, tuple[str, ...]]
     CONSOLE_CODE: dict[str, tuple[str, str]]
     COVERS_ATYPE: dict[str, tuple[str, str]]
 
@@ -13,6 +14,7 @@ def init_constants() -> None:
         BOT_USERNAME, \
         BOT_CREATORS, \
         LANGS_REGION, \
+        PASS_REGIONS, \
         CONSOLE_CODE, \
         COVERS_ATYPE
 
@@ -27,6 +29,19 @@ def init_constants() -> None:
         "IT": "P",
         "JA": "J",
         "KO": "K"
+    }
+    PASS_REGIONS = {
+        'JA'  : ('A', 'J'),
+        'US'  : ('A', 'E', 'N', 'X', 'Y', 'Z'),
+        'EN'  : ('A', 'P', 'H', 'U', 'V', 'X', 'Y', 'Z', 'J'),
+        'DE'  : ('A', 'D', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'),
+        'FR'  : ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'),
+        'IT'  : ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'),
+        'ES'  : ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'),
+        'NL'  : ('A', 'H', 'P', 'L', 'M', 'U', 'V', 'X', 'Y', 'Z'),
+        'KO'  : ('A', 'K', 'Q', 'T'),
+        'ZHCN': ('W',),
+        'ZHTW': ('W',)
     }
     CONSOLE_CODE = {
         #       Console  GameType

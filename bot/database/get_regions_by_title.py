@@ -1,6 +1,17 @@
 from functools import cache
 
 from . import use_cursor
+from ..utils import C
+
+REGIONS_QUERY: str = f"""--sql
+SELECT DISTINCT Lang, Region, Title, MiniID || Region || COALESCE(PublisherID, '')
+FROM BaseGameLocale
+WHERE Console = ? AND GameType = ? AND MiniID = ?
+{'\n'.join(f"AND (Lang != '{lang}' OR Region IN {regions})" for lang, regions in C.PASS_REGIONS.items())}
+AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
+AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
+ORDER BY Region DESC
+"""
 
 
 @cache
@@ -12,20 +23,6 @@ def get_regions_by_title(
     """
     with use_cursor() as cursor:
         return cursor.execute(
-            """SELECT DISTINCT Lang, Region, Title, MiniID || Region || COALESCE(PublisherID, '')
-            FROM BaseGameLocale
-            WHERE Console = ? AND GameType = ? AND MiniID = ?
-            AND (Lang != 'JA' OR Region IN ('A', 'J'))
-            AND (Lang != 'US' OR Region IN ('A', 'E', 'N', 'X', 'Y', 'Z'))
-            AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'V', 'X', 'Y', 'Z', 'J'))
-            AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
-            AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
-            AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
-            AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
-            AND (Lang != 'NL' OR Region IN ('A', 'H', 'P', 'L', 'M', 'U', 'V', 'X', 'Y', 'Z'))
-            AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
-            AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
-            AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
-            ORDER BY Region DESC""",
+            REGIONS_QUERY,
             [title_console, title_type, title_mini_id],
         ).fetchall()
