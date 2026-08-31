@@ -5,21 +5,22 @@ from ..utils import C
 
 
 @cache
-def mastercode_exists(console_code: str, short_id: str) -> str | bool:
+def mastercode_exists(console_code: str, short_id: str) -> tuple[str, str] | bool:
     if len(console_code) != 3 or len(short_id) != 4 \
-    or not (console := C.CONSOLE_CODE.get(console_code)):
+    or not (console_and_type := C.CONSOLE_CODE.get(console_code)):
         return False
 
     short_id = short_id.upper()
     with use_cursor() as cursor:
-        return console if cursor.execute(
+        return console_and_type if cursor.execute(
             """SELECT 1
             FROM GamePublisher
             WHERE Console = ?
+            AND GameType = ?
             AND MiniID = ?
             AND Region = ?
             """,
-            [console, short_id[:3], short_id[3]]
+            [console_and_type[0], console_and_type[1], short_id[:3], short_id[3]]
         ).fetchone() else False
 
 

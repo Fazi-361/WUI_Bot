@@ -4,7 +4,7 @@ if TYPE_CHECKING:
     BOT_USERNAME: str
     BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
     LANGS_REGION: dict[str, str]
-    CONSOLE_CODE: dict[str, str]
+    CONSOLE_CODE: dict[str, tuple[str, str]]
 
 
 def init_constants() -> None:
@@ -27,11 +27,12 @@ def init_constants() -> None:
         "KO": "K"
     }
     CONSOLE_CODE = {
-        "DOL": "Wii", # Stored as Wii
-        "NTR": "DS",
-        "RVL": "Wii",
-        "TWL": "DS",
-        "CTR": "3DS",
-        "WUP": "WiiU",
-        "KTR": "3DS"
+        #       Console  GameType
+        "DOL": ("Wii" , "GameCube"), # 0 stored as Wii
+        "NTR": ("DS"  , "DS"      ),
+        "RVL": ("Wii" , "Wii"     ),
+        "TWL": ("DS"  , "DSi"     ),
+        "CTR": ("3DS" , "3DS"     ),
+        "WUP": ("WiiU", "WUP"     ),
+        "KTR": ("3DS" , "New3DS"  )
     }

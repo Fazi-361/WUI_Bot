@@ -48,8 +48,8 @@ def text_type(text: str | None) -> TextType:
         #              System                                  ShortID
         case r"(?i)^.*(DOL|NTR|RVL|TWL|CTR|WUP|KTR)-(?:\w+-)*([0-9A-Z]{4}).*$" as m:
             return (
-                TextType.MASTER_CODE(console, console, m[2])
-                if (console := mastercode_exists(m[1], m[2]))
+                TextType.MASTER_CODE(output[0], output[1], m[2])
+                if (output := mastercode_exists(m[1], m[2]))
                 else TextType.QUERY
             )
 
