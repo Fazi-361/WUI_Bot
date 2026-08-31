@@ -5,6 +5,7 @@ from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
 
 from . import get_cursor, get_regions_by_title, get_title_roms
+from ..utils import C
 from ..utils.fetch_url_head import filter_covers
 
 LANG_FLAGS: dict[str, str] = {
@@ -47,7 +48,12 @@ def get_title_info(
     cursor = get_cursor()
     # Aggiungi fallback alle lingue per titolo e sinossi,
     # cambiando il valore del parametro lang e title_region
-    for user_lang in (user_lang, "US", "EN", "JA", ""):
+    for user_lang in (
+        user_lang,
+        *(("EN", "US") if C.LANGS_REGION[user_lang] == "P" else ("US", "EN")),
+        "JA",
+        "",
+    ):
         if results := cursor.execute(
             f"""SELECT
                 Lang,
@@ -188,7 +194,11 @@ async def get_title_covers(
     ]
 
     # Sposta la copertina della lingua del gioco cercato come prima opzione
-    for filter_lang in ("JA" if japanenglish else user_lang, "US", "EN", "JA"):
+    for filter_lang in (
+        "JA" if japanenglish else user_lang,
+        *(("EN", "US") if user_lang and C.LANGS_REGION[user_lang] == "P" else ("US", "EN")),
+        "JA",
+    ):
         if artwork_userlang := next(
             (
                 _
