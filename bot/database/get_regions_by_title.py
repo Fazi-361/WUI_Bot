@@ -7,7 +7,11 @@ REGIONS_QUERY: str = f"""--sql
 SELECT DISTINCT Lang, Region, Title, MiniID || Region || COALESCE(PublisherID, '')
 FROM BaseGameLocale
 WHERE Console = ? AND GameType = ? AND MiniID = ?
-{'\n'.join(f"AND (Lang != '{lang}' OR Region IN {regions})" for lang, regions in C.PASS_REGIONS.items())}
+{
+    '\n'.join(f"AND (Lang != '{lang}' OR Region IN {regions})"
+    for lang, regions in C.PASS_REGIONS.items()
+    if len(regions) > 1)
+}
 AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
 AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
 ORDER BY Region DESC
