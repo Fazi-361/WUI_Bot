@@ -18,11 +18,11 @@ def get_regions_by_title(
             AND Console = ? AND GameType = ? AND MiniID = ?
             AND (Lang != 'JA' OR Region IN ('A', 'J'))
             AND (Lang != 'US' OR Region IN ('A', 'E', 'N', 'X', 'Y', 'Z'))
-            AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'X', 'Y', 'Z', 'J'))
-            AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-            AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-            AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
-            AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'X', 'Y', 'Z'))
+            AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'V', 'X', 'Y', 'Z', 'J'))
+            AND (Lang != 'DE' OR Region IN ('A', 'D', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
+            AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
+            AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
+            AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
             AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
             ORDER BY Region DESC""",
             [title_console, title_type, title_mini_id],
