@@ -17,9 +17,11 @@ def get_title_by_name(input: str, region: str = "P") -> tuple[str, str, str] | N
         if input == (str1 := unidecode(str1, errors="preserve")):
             return 100
 
-        str1_split: list[str] = str1.split()
         similarity: float = jws(input, str1, True)
+        if similarity < treshold:
+            return 0
 
+        str1_split: list[str] = str1.split()
         highest_index: int = 0
         for word2 in input_split:
             for i, word1 in enumerate(str1_split[highest_index:], 1):
