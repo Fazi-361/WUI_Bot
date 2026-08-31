@@ -14,8 +14,7 @@ def get_regions_by_title(
         return cursor.execute(
             """SELECT DISTINCT Lang, Region, Title, MiniID || Region || COALESCE(PublisherID, '')
             FROM BaseGameLocale
-            WHERE LANG IN ('JA', 'US', 'EN', 'DE', 'FR', 'IT', 'ES', 'KO')
-            AND Console = ? AND GameType = ? AND MiniID = ?
+            WHERE Console = ? AND GameType = ? AND MiniID = ?
             AND (Lang != 'JA' OR Region IN ('A', 'J'))
             AND (Lang != 'US' OR Region IN ('A', 'E', 'N', 'X', 'Y', 'Z'))
             AND (Lang != 'EN' OR Region IN ('A', 'P', 'H', 'U', 'V', 'X', 'Y', 'Z', 'J'))
@@ -23,9 +22,10 @@ def get_regions_by_title(
             AND (Lang != 'FR' OR Region IN ('A', 'F', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
             AND (Lang != 'IT' OR Region IN ('A', 'I', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
             AND (Lang != 'ES' OR Region IN ('A', 'S', 'P', 'L', 'M', 'H', 'U', 'V', 'X', 'Y', 'Z'))
+            AND (Lang != 'NL' OR Region IN ('A', 'H', 'P', 'L', 'M', 'U', 'V', 'X', 'Y', 'Z'))
             AND (Lang != 'KO' OR Region IN ('A', 'K', 'Q', 'T'))
+            AND ((Lang != 'SE' AND Lang != 'FI') OR Region IN ('V', 'W'))
+            AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
             ORDER BY Region DESC""",
             [title_console, title_type, title_mini_id],
         ).fetchall()
-            # AND ((Lang != 'SE' AND Lang != 'FI' AND Lang != 'NL') OR Region IN ('V', 'W'))
-            # AND ((Lang != 'ZHCN' AND Lang != 'ZHTW') OR Region = 'W')
