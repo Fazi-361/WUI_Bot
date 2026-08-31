@@ -50,7 +50,7 @@ def get_title_info(
     # cambiando il valore del parametro lang e title_region
     for user_lang in (
         user_lang,
-        *(("EN", "US") if C.LANGS_REGION[user_lang] == "P" else ("US", "EN")),
+        *(("EN", "US") if C.LANGS_REGION.get(user_lang) == "P" else ("US", "EN")),
         "JA",
         "",
     ):
@@ -196,7 +196,11 @@ async def get_title_covers(
     # Sposta la copertina della lingua del gioco cercato come prima opzione
     for filter_lang in (
         "JA" if japanenglish else user_lang,
-        *(("EN", "US") if user_lang and C.LANGS_REGION[user_lang] == "P" else ("US", "EN")),
+        *(
+            ("EN", "US")
+            if user_lang and C.LANGS_REGION.get(user_lang) == "P"
+            else ("US", "EN")
+        ),
         "JA",
     ):
         if artwork_userlang := next(
