@@ -6,7 +6,7 @@ from ..utils import C
 REGIONS_QUERY: str = f"""--sql
 SELECT DISTINCT Lang, Region, Title, MiniID || Region || COALESCE(PublisherID, '')
 FROM BaseGameLocale
-WHERE Console = ? AND GameType = ? AND MiniID = ?
+WHERE Console = ? AND (GameType IN (?, ? || 'Ware')) AND MiniID = ?
 {
     '\n'.join(f"AND (Lang != '{lang}' OR Region IN {regions})"
     for lang, regions in C.PASS_REGIONS.items()
@@ -28,5 +28,5 @@ def get_regions_by_title(
     with use_cursor() as cursor:
         return cursor.execute(
             REGIONS_QUERY,
-            [title_console, title_type, title_mini_id],
+            [title_console, title_type, title_type, title_mini_id],
         ).fetchall()
