@@ -52,7 +52,7 @@ async def info(
         result: str | tuple[str, str, str] | None = ""
         match message_type or text_type(args):
             case T.QUERY:
-                result = get_title_by_name(args, C.LANGS_REGION.get(user_lang))
+                result = get_title_by_name(args, user_lang)
                 enforce_title_lang: bool = False
             case T.GAME_ID:
                 result = args.upper()

@@ -50,7 +50,7 @@ def get_title_info(
     # cambiando il valore del parametro lang e title_region
     for user_lang in (
         user_lang,
-        *(("EN", "US") if C.LANGS_REGION.get(user_lang) == "P" else ("US", "EN")),
+        *(("EN", "US") if C.USUAL_REGION.get(user_lang) == "P" else ("US", "EN")),
         "JA",
         "",
     ):
@@ -116,7 +116,7 @@ def get_title_info(
     title_other_names: dict[str, str] = {}
     title_console_lower: str = title_console.lower()
     japanese_transliteration: str = ""
-    cover_type, cover_extension = C.COVERS_ATYPE[title_console]
+    cover_type, cover_extension = C.COVER_SOURCE[title_console]
     for (
         result_lang,
         result_region,
@@ -133,7 +133,7 @@ def get_title_info(
 
         title_artworks.extend(
             f"{title_console_lower}/{cover_type}/{lang}/{result_titleID}.{cover_extension}"
-            for lang in C.LANGS_REGION
+            for lang in C.USUAL_REGION
             if result_region in C.PASS_REGIONS.get(lang, [])
         )
 
@@ -200,7 +200,7 @@ async def get_title_covers(
         "JA" if japanenglish else user_lang,
         *(
             ("EN", "US")
-            if user_lang and C.LANGS_REGION.get(user_lang) == "P"
+            if user_lang and C.USUAL_REGION.get(user_lang) == "P"
             else ("US", "EN")
         ),
         "JA",
