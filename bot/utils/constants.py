@@ -3,24 +3,24 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     BOT_USERNAME: str
     BOT_CREATORS: list[str] | tuple[str, ...] | set[str]
-    LANGS_REGION: dict[str, str]
+    USUAL_REGION: dict[str, str]
     PASS_REGIONS: dict[str, tuple[str, ...]]
     CONSOLE_CODE: dict[str, tuple[str, str]]
-    COVERS_ATYPE: dict[str, tuple[str, str]]
+    COVER_SOURCE: dict[str, tuple[str, str]]
 
 
 def init_constants() -> None:
     global \
         BOT_USERNAME, \
         BOT_CREATORS, \
-        LANGS_REGION, \
+        USUAL_REGION, \
         PASS_REGIONS, \
         CONSOLE_CODE, \
-        COVERS_ATYPE
+        COVER_SOURCE
 
     BOT_USERNAME = "" # filled in later by bot.py on start
     BOT_CREATORS = [] # filled in later by bot.py on start
-    LANGS_REGION = {
+    USUAL_REGION = {
         "US": "E",
         "EN": "P",
         "DE": "P",
@@ -55,7 +55,7 @@ def init_constants() -> None:
     }
     coverfullHQ = ('coverfullHQ', 'png')
     coverHQ = ('coverHQ', 'jpg')
-    COVERS_ATYPE = {
+    COVER_SOURCE = {
         "Wii" : coverfullHQ,
         "DS"  : coverHQ    ,
         "WiiU": coverHQ    ,
