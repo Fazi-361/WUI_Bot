@@ -6,6 +6,7 @@ from .id import id_router
 from .deid import deid_router
 from .hashes import hashes_router
 from .message import message_router
+from .my_chat_member import my_chat_member_router
 
 ROUTERS = (
     start_router,
@@ -15,7 +16,9 @@ ROUTERS = (
     id_router,
     deid_router,
     hashes_router,
-    message_router # lasciare come ultimo
+    message_router, # lasciare come ultimo
+    
+    my_chat_member_router,
 )
 
 __all__ = (

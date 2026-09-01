@@ -76,6 +76,10 @@ class SQLiteStorage(BaseStorage):
         ).fetchone()[0])
         self.conn.commit()
         return current_data
+    
+    async def delete(self, key: StorageKey) -> None:
+        self.conn.execute("DELETE FROM FSM WHERE KEY = ?", [str(key)])
+        self.conn.commit()
 
     async def close(self) -> None:
         self.conn.commit()
