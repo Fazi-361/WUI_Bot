@@ -30,5 +30,5 @@ class CCommand(Command):
             commands=commands,
             prefix=self.prefix,
             ignore_case=True,
-            ignore_mention=False,
+            ignore_mention=True
         )
