@@ -1,4 +1,5 @@
-import sqlite3
+from . import use_cursor
+
 
 def get_random_title(console: str = "Wii") -> str:
     """ Restituisce il titolo di un gioco su gameTDB della console data in input.
@@ -9,20 +10,18 @@ def get_random_title(console: str = "Wii") -> str:
     Returns:
         str: Un titolo random
     """
-    
-    with sqlite3.connect("./data/database.db") as connection:
-        cursor = connection.cursor()
 
-        cursor.execute("""
-            SELECT DISTINCT Title FROM BaseGameLocale
+    with use_cursor() as cursor:
+        cursor.execute(
+            """SELECT DISTINCT Title
+            FROM BaseGameLocale
             WHERE Console = ?
             ORDER BY RANDOM()
-            LIMIT 1;
-        """, (console,))
+            LIMIT 1""",
+            [console]
+        )
 
-        result = str(cursor.fetchone()[0])
-
-    return result
+        return str(cursor.fetchone()[0])
 
 
 if __name__ == "__main__":
