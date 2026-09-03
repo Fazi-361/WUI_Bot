@@ -7,7 +7,7 @@ from . import CONNECTION, use_cursor
 from ..utils import C
 from ..utils.text import strim
 
-CONNECTION.create_function("JW", 2, partial(jw, long_tolerance=True))
+CONNECTION.create_function("JAROW", 2, partial(jw, long_tolerance=True))
 
 
 @lru_cache
@@ -35,19 +35,16 @@ def get_title_by_name(input: str, lang: str) -> tuple[str, str, str] | None:
     with use_cursor() as cursor:
         pass_regions: tuple[str, ...] = C.PASS_REGIONS.get(lang) or ()
         return cursor.execute(
-            f"""WITH Codes AS (
+            f"""WITH Target AS (
+                SELECT Title, SIMILARITY(UPPER(Title)) Similarity
+                FROM DistinctTitles
+                WHERE Similarity >= :treshold
+                ORDER BY Similarity DESC
+                LIMIT 1
+            ), Codes AS (
                 SELECT DISTINCT Console, GameType, MiniID, Region, PublisherID
                 FROM BaseGameLocale
-                WHERE JW(Title, (
-                    SELECT Title
-                    FROM (
-                        SELECT Title, SIMILARITY(UPPER(Title)) Similarity
-                        FROM DistinctTitles
-                        WHERE Similarity >= :treshold
-                        ORDER BY Similarity DESC
-                        LIMIT 1
-                    ) _
-                )) >= 0.98
+                WHERE JAROW(Title, (SELECT Title FROM Target)) >= 0.98
             ), Regions AS (
                 Select DISTINCT Region FROM Codes
             )
@@ -56,7 +53,7 @@ def get_title_by_name(input: str, lang: str) -> tuple[str, str, str] | None:
             WHERE Region = :usual
             {
                 f'OR :usual NOT IN Regions AND Region IN {pass_regions}\n'
-                f'OR {' AND '.join(f"{region!r} NOT IN Regions" for region in pass_regions)}'
+                f'OR ({' AND '.join(f"{region!r} NOT IN Regions" for region in pass_regions)})'
                 if pass_regions else ''
             }
             LIMIT 1""",
