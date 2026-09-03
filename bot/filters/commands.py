@@ -10,6 +10,7 @@ info_botcommand = BotCommand(command="info", description=_("command.info.descrip
 id_botcommand = BotCommand(command="id", description=_("command.id.description"))
 deid_botcommand = BotCommand(command="deid", description=_("command.deid.description"))
 hashes_botcommand = BotCommand(command="hashes", description=_("command.hashes.description"))
+random_botcommand = BotCommand(command="random", description=_("command.random.description"))
 
 BOTCOMMANDS: tuple[BotCommand, ...] = tuple([
     command for command in locals().values() if isinstance(command, BotCommand)

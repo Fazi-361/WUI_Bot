@@ -6,7 +6,8 @@ from .commands import (
     start_botcommand,
     id_botcommand,
     deid_botcommand,
-    hashes_botcommand
+    hashes_botcommand,
+    random_botcommand
 )
 from .messages import MessageType, TextType as T, text_type
 from .states import BotState
@@ -21,6 +22,7 @@ __all__ = (
     "id_botcommand",
     "deid_botcommand",
     "hashes_botcommand",
+    "random_botcommand",
     "MessageType",
     "T",
     "text_type",
