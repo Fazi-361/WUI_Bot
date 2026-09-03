@@ -9,7 +9,6 @@ from .message import message_router
 from .random import random_router
 from .my_chat_member import my_chat_member_router
 
-from .random import random_router
 ROUTERS = (
     start_router,
     help_router,
