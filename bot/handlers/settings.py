@@ -74,7 +74,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     return InputRichMessage(
         markdown=f'**{_("settings.language")}**  \n'
         f'{''.join(f'<tg-button-row>{''.join(
-            f'<tg-button {'style="primary" ' if locale == lang else ''}type="callback_data" data="{data}">{text}</tg-button>'
+            f'<tg-button {'style="primary" ' if locale == lang else ''}type="{'callback_data' if lang in ('IT', 'US', 'EN') else 'disabled'}" data="{data}">{text}</tg-button>'
             for lang, data, text in row
         )}</tg-button-row>' for row in LANGUAGE_BUTTON_ROWS)}  \n'
         f'*{_("settings.language.description")}*'
