@@ -83,7 +83,11 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
         f'*{_("settings.language.description")}*'
         "\n\n---\n\n"
         f'**{_("settings.show_covers")}**: '
-        f'<tg-button {'style="primary" ' if show_covers else ''}type="callback_data" data="{SHOW_COVERS}">{on if show_covers else off}</tg-button>  \n'
+        f'{
+            f'<tg-button style="primary" type="callback_data" data="{SHOW_COVERS}">{on}</tg-button>'
+            if show_covers else
+            f'<tg-button type="callback_data" data="{SHOW_COVERS}">{off}</tg-button>'
+        }  \n'
         f'*{_("settings.show_covers.description")}*',
         skip_entity_detection=True
     )
