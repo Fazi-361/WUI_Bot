@@ -1,151 +1,175 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: wuibot\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-13 15:42+0200\n"
-"PO-Revision-Date: 2026-09-13 16:55\n"
-"Last-Translator: \n"
-"Language: es\n"
-"Language-Team: Spanish\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
 "X-Crowdin-SourceKey: msgstr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: wuibot\n"
 "X-Crowdin-Project-ID: 930011\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: /main/locales/US/LC_MESSAGES/messages.po\n"
-"X-Crowdin-File-ID: 23\n"
+"X-Crowdin-File-ID: 33\n"
+"Project-Id-Version: wuibot\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
+"PO-Revision-Date: 2026-09-13 17:07\n"
 
+#: bot/database/get_title_page.py:145
 msgid "info.developer"
 msgstr "Desarrollador"
 
+#: bot/database/get_title_page.py:149
 msgid "info.publisher"
 msgstr "Distribuidor"
 
+#: bot/database/get_title_page.py:153
 msgid "info.release_date"
 msgstr "Lanzamiento"
 
+#: bot/database/get_title_page.py:157
 msgid "info.synopsis"
 msgstr "Sinopsis"
 
+#: bot/database/get_title_page.py:161
 msgid "info.revisions"
 msgstr "Revisiones"
 
+#: bot/database/get_title_page.py:162
 msgid "info.revision.version"
 msgstr "Versión"
 
+#: bot/database/get_title_page.py:170
 msgid "info.name_in_other_languages"
 msgstr "Nombre en otros idiomas"
 
+#: bot/database/get_title_page.py:245
 msgid "info.fetching_covers"
-msgstr "Fetching covers..."
+msgstr ""
 
+#: bot/filters/commands.py:6
 msgid "command.start.description"
-msgstr "Starts the bot"
+msgstr ""
 
+#: bot/filters/commands.py:7
 msgid "command.help.description"
-msgstr "Show the list of available commands"
+msgstr ""
 
+#: bot/filters/commands.py:8
 msgid "command.settings.description"
-msgstr "Set up the bot"
+msgstr ""
 
+#: bot/filters/commands.py:9
 msgid "command.info.description"
-msgstr "Get info about the desired title"
+msgstr ""
 
+#: bot/filters/commands.py:10
 msgid "command.id.description"
-msgstr "Get the IDs of a title"
+msgstr ""
 
+#: bot/filters/commands.py:11
 msgid "command.deid.description"
-msgstr "Get the title's name from its ID"
+msgstr ""
 
+#: bot/filters/commands.py:12
 msgid "command.hashes.description"
-msgstr "Get CRC, MD5 e SHA1 of a game given its title or ID"
+msgstr ""
 
+#: bot/filters/commands.py:13
 msgid "command.random.description"
-msgstr "Get information on a random software"
+msgstr ""
 
+#: bot/handlers/hashes.py:22
 msgid "hashses.no_games"
-msgstr "Given game was not found"
+msgstr ""
 
+#: bot/handlers/help.py:14
 msgid "help.header"
-msgstr "Here's a list of commands:"
+msgstr ""
 
+#: bot/handlers/id.py:21
 msgid "command.id.usage"
-msgstr "Specify the name of a game after the /.\n"
-"Example: <pre>/id Super Smash Bros. Brawl</pre>"
+msgstr ""
 
+#: bot/handlers/id.py:29
 msgid "id.no_games"
-msgstr "No games with this name have been found"
+msgstr ""
 
+#: bot/handlers/id.py:33
 msgid "id.possible_games"
-msgstr "Possible IDs"
+msgstr ""
 
+#: bot/handlers/info.py:44
 msgid "command.info.usage"
-msgstr "Insert the title's ID, name or checksum (crc, md5, sha1) after the commmand. E.g.:\n"
-"<pre>/info ST7E01</pre>\n"
-"<pre>/info Super Mario Galaxy</pre>\n"
-"<pre>/info fb84bfc5</pre>\n"
-"<pre>/info LNA-CTR-AREE-USA</pre>\n"
-"Note: channels do not need the final two characters"
+msgstr ""
 
+#: bot/handlers/info.py:47
 msgid "info.generating"
 msgstr "Generando información..."
 
+#: bot/handlers/info.py:84
 msgid "info.generation_error"
-msgstr "Title not found or error while generating the page."
+msgstr ""
 
+#: bot/handlers/message.py:14
 msgid "command.unknown"
-msgstr "Unknown command"
+msgstr ""
 
+#: bot/handlers/message.py:19
 msgid "query.unknown"
-msgstr "I couldn't understand what you typed..."
+msgstr ""
 
+#: bot/handlers/random.py:36
 msgid "random.invalid_console"
-msgstr "Error, The provided console is invalid. Valid consoles:\n"
-"Wii, DS, 3DS, WiiU"
+msgstr ""
 
+#: bot/handlers/settings.py:53
 msgid "settings.unknown"
-msgstr "Unknown setting"
+msgstr ""
 
+#: bot/handlers/settings.py:56
 msgid "settings.saved"
-msgstr "Settings saved!"
+msgstr ""
 
+#: bot/handlers/settings.py:65
 msgid "settings.no_admin"
-msgstr "These settings are not for you :)"
+msgstr ""
 
+#: bot/handlers/settings.py:73
 msgid "settings.on"
-msgstr "✅"
+msgstr ""
 
+#: bot/handlers/settings.py:73
 msgid "settings.off"
-msgstr "❌"
+msgstr ""
 
+#: bot/handlers/settings.py:75
 msgid "settings.language"
 msgstr "Idioma"
 
+#: bot/handlers/settings.py:83
 msgid "settings.language.description"
-msgstr "Sets the language of the bot"
+msgstr ""
 
+#: bot/handlers/settings.py:85
 msgid "settings.show_covers"
-msgstr "Show covers"
+msgstr ""
 
+#: bot/handlers/settings.py:91
 msgid "settings.show_covers.description"
-msgstr "Sets if /info must show game covers"
+msgstr ""
 
+#: bot/handlers/start.py:12
 msgid "start.hello"
 msgstr "¡Hola! :)"
 
+#: bot/utils/setup_bot_info.py:18 bot/utils/setup_bot_info.py:31
 msgid "bot.name"
 msgstr "Monita"
 
+#: bot/utils/setup_bot_info.py:36
 msgid "bot.description"
-msgstr "This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
-"Any issues? Report to @Tayx361 o @Laxan3000\n"
-"Want to contribute? Here's the source code: github.com/Fazi-361/WUI_Bot"
+msgstr ""
 
+#: bot/utils/setup_bot_info.py:37
 msgid "bot.short_description"
-msgstr "This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
-"Code: github.com/Fazi-361/WUI_Bot"
+msgstr ""
 
