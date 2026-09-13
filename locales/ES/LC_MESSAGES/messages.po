@@ -1,121 +1,161 @@
+#: bot/database/get_title_page.py:145
 msgid "info.developer"
 msgstr "Desarrollador"
 
+#: bot/database/get_title_page.py:149
 msgid "info.publisher"
 msgstr "Distribuidor"
 
+#: bot/database/get_title_page.py:153
 msgid "info.release_date"
 msgstr "Lanzamiento"
 
+#: bot/database/get_title_page.py:157
 msgid "info.synopsis"
 msgstr "Sinopsis"
 
+#: bot/database/get_title_page.py:161
 msgid "info.revisions"
 msgstr "Revisiones"
 
+#: bot/database/get_title_page.py:162
 msgid "info.revision.version"
 msgstr "Versión"
 
+#: bot/database/get_title_page.py:170
 msgid "info.name_in_other_languages"
 msgstr "Nombre en otros idiomas"
 
+#: bot/database/get_title_page.py:245
 msgid "info.fetching_covers"
 msgstr ""
 
+#: bot/filters/commands.py:6
 msgid "command.start.description"
 msgstr ""
 
+#: bot/filters/commands.py:7
 msgid "command.help.description"
 msgstr ""
 
+#: bot/filters/commands.py:8
 msgid "command.settings.description"
 msgstr ""
 
+#: bot/filters/commands.py:9
 msgid "command.info.description"
 msgstr ""
 
+#: bot/filters/commands.py:10
 msgid "command.id.description"
 msgstr ""
 
+#: bot/filters/commands.py:11
 msgid "command.deid.description"
 msgstr ""
 
+#: bot/filters/commands.py:12
 msgid "command.hashes.description"
 msgstr ""
 
+#: bot/filters/commands.py:13
 msgid "command.random.description"
 msgstr ""
 
+#: bot/handlers/hashes.py:22
 msgid "hashses.no_games"
 msgstr ""
 
+#: bot/handlers/help.py:14
 msgid "help.header"
 msgstr ""
 
+#: bot/handlers/id.py:21
 msgid "command.id.usage"
 msgstr ""
 
+#: bot/handlers/id.py:29
 msgid "id.no_games"
 msgstr ""
 
+#: bot/handlers/id.py:33
 msgid "id.possible_games"
 msgstr ""
 
+#: bot/handlers/info.py:44
 msgid "command.info.usage"
 msgstr ""
 
+#: bot/handlers/info.py:47
 msgid "info.generating"
 msgstr "Generando información..."
 
+#: bot/handlers/info.py:84
 msgid "info.generation_error"
 msgstr ""
 
+#: bot/handlers/message.py:14
 msgid "command.unknown"
 msgstr ""
 
+#: bot/handlers/message.py:19
 msgid "query.unknown"
 msgstr ""
 
+#: bot/handlers/random.py:36
 msgid "random.invalid_console"
 msgstr ""
 
+#: bot/handlers/settings.py:53
 msgid "settings.unknown"
 msgstr ""
 
+#: bot/handlers/settings.py:56
 msgid "settings.saved"
 msgstr ""
 
+#: bot/handlers/settings.py:65
 msgid "settings.no_admin"
 msgstr ""
 
+#: bot/handlers/settings.py:73
 msgid "settings.on"
 msgstr ""
 
+#: bot/handlers/settings.py:73
 msgid "settings.off"
 msgstr ""
 
+#: bot/handlers/settings.py:75
 msgid "settings.language"
 msgstr "Idioma"
 
+#: bot/handlers/settings.py:83
 msgid "settings.language.description"
 msgstr ""
 
+#: bot/handlers/settings.py:85
 msgid "settings.show_covers"
 msgstr ""
 
+#: bot/handlers/settings.py:91
 msgid "settings.show_covers.description"
 msgstr ""
 
 # HELP REQUIRED!
+#: bot/handlers/start.py:12
 msgid "start.hello"
 msgstr "¡Hola! :)"
 
+#: bot/utils/setup_bot_info.py:18 bot/utils/setup_bot_info.py:31
 msgid "bot.name"
 msgstr "Monita"
 
+#: bot/utils/setup_bot_info.py:36
 msgid "bot.description"
 msgstr ""
 
+#: bot/utils/setup_bot_info.py:37
 msgid "bot.short_description"
 msgstr ""
 

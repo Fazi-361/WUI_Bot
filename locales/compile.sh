@@ -1,1 +1,1 @@
-pybabel compile -d locales -D messages
+pybabel compile -d locales -D messages -f
