@@ -2,16 +2,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wuibot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-03 23:09+0200\n"
-"PO-Revision-Date: 2026-09-13 12:51\n"
+"POT-Creation-Date: 2026-09-13 15:42+0200\n"
+"PO-Revision-Date: 2026-09-13 13:44\n"
 "Last-Translator: \n"
 "Language: fr\n"
 "Language-Team: French\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+"X-Crowdin-SourceKey: msgstr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Crowdin-Project: wuibot\n"
 "X-Crowdin-Project-ID: 930011\n"
 "X-Crowdin-Language: fr\n"
@@ -19,122 +20,132 @@ msgstr ""
 "X-Crowdin-File-ID: 13\n"
 
 msgid "info.developer"
-msgstr "Développeur"
+msgstr "Developer"
 
 msgid "info.publisher"
-msgstr "Éditeur"
+msgstr "Publisher"
 
 msgid "info.release_date"
-msgstr "Date"
+msgstr "Release"
 
 msgid "info.synopsis"
 msgstr "Synopsis"
 
 msgid "info.revisions"
-msgstr "Révisions"
+msgstr "Revisions"
 
 msgid "info.revision.version"
 msgstr "Version"
 
 msgid "info.name_in_other_languages"
-msgstr "Nom dans d'autres langues"
+msgstr "Name in other languages"
 
 msgid "info.fetching_covers"
-msgstr ""
+msgstr "Fetching covers..."
 
 msgid "command.start.description"
-msgstr ""
+msgstr "Starts the bot"
 
 msgid "command.help.description"
-msgstr ""
+msgstr "Show the list of available commands"
 
 msgid "command.settings.description"
-msgstr ""
+msgstr "Set up the bot"
 
 msgid "command.info.description"
-msgstr ""
+msgstr "Get info about the desired title"
 
 msgid "command.id.description"
-msgstr ""
+msgstr "Get the IDs of a title"
 
 msgid "command.deid.description"
-msgstr ""
+msgstr "Get the title's name from its ID"
 
 msgid "command.hashes.description"
-msgstr ""
+msgstr "Get CRC, MD5 e SHA1 of a game given its title or ID"
 
 msgid "command.random.description"
-msgstr ""
+msgstr "Get information on a random software"
 
 msgid "hashses.no_games"
-msgstr ""
+msgstr "Given game was not found"
 
 msgid "help.header"
-msgstr ""
+msgstr "Here's a list of commands:"
 
 msgid "command.id.usage"
-msgstr ""
+msgstr "Specify the name of a game after the /.\n"
+"Example: <pre>/id Super Smash Bros. Brawl</pre>"
 
 msgid "id.no_games"
-msgstr ""
+msgstr "No games with this name have been found"
 
 msgid "id.possible_games"
-msgstr ""
+msgstr "Possible IDs"
 
 msgid "command.info.usage"
-msgstr ""
+msgstr "Insert the title's ID, name or checksum (crc, md5, sha1) after the commmand. E.g.:\n"
+"<pre>/info ST7E01</pre>\n"
+"<pre>/info Super Mario Galaxy</pre>\n"
+"<pre>/info fb84bfc5</pre>\n"
+"<pre>/info LNA-CTR-AREE-USA</pre>\n"
+"Note: channels do not need the final two characters"
 
 msgid "info.generating"
-msgstr "Génération des informations..."
+msgstr "Generating info..."
 
 msgid "info.generation_error"
-msgstr ""
+msgstr "Title not found or error while generating the page."
 
 msgid "command.unknown"
-msgstr ""
+msgstr "Unknown command"
 
 msgid "query.unknown"
-msgstr ""
+msgstr "I couldn't understand what you typed..."
 
 msgid "random.invalid_console"
-msgstr ""
+msgstr "Error, The provided console is invalid. Valid consoles:\n"
+"Wii, DS, 3DS, WiiU"
 
 msgid "settings.unknown"
-msgstr ""
+msgstr "Unknown setting"
 
 msgid "settings.saved"
-msgstr ""
+msgstr "Settings saved!"
 
 msgid "settings.no_admin"
-msgstr ""
+msgstr "These settings are not for you :)"
 
 msgid "settings.on"
-msgstr ""
+msgstr "✅"
 
 msgid "settings.off"
-msgstr ""
+msgstr "❌"
 
 msgid "settings.language"
-msgstr "Langue"
+msgstr "Language"
 
 msgid "settings.language.description"
-msgstr ""
+msgstr "Sets the language of the bot"
 
 msgid "settings.show_covers"
-msgstr ""
+msgstr "Show covers"
 
 msgid "settings.show_covers.description"
-msgstr ""
+msgstr "Sets if /info must show game covers"
 
 msgid "start.hello"
-msgstr "Salut ! :)"
+msgstr "Hi there! :)"
 
 msgid "bot.name"
 msgstr "Monita"
 
 msgid "bot.description"
-msgstr ""
+msgstr "This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
+"Any issues? Report to @Tayx361 o @Laxan3000\n"
+"Want to contribute? Here's the source code: github.com/Fazi-361/WUI_Bot"
 
 msgid "bot.short_description"
-msgstr ""
+msgstr "This bot retrieves game IDs, synopsis and covers from the DS to the Wii U.\n"
+"Code: github.com/Fazi-361/WUI_Bot"
 
