@@ -1,22 +1,4 @@
-# English translations for WiiWiiUBot.
-# Copyright (C) 2026 ORGANIZATION
-# This file is distributed under the same license as the WiiWiiUBot project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
-#
-msgid ""
-msgstr ""
-"Project-Id-Version: WiiWiiUBot VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-03 23:09+0200\n"
-"PO-Revision-Date: 2026-08-11 16:01+0200\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
-"Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
+"X-Crowdin-SourceKey: msgstr\n"
 
 msgid "info.developer"
 msgstr "Developer"
@@ -64,8 +46,7 @@ msgid "command.hashes.description"
 msgstr "Get CRC, MD5 e SHA1 of a game given its title or ID"
 
 msgid "command.random.description"
-msgstr ""
-"Get information on a random software"
+msgstr "Get information on a random software"
 
 msgid "hashses.no_games"
 msgstr "Given game was not found"
