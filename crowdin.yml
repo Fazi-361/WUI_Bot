@@ -1,9 +1,5 @@
 bundles:
   - 3
-
-"files": [
-  {
-    "source": "/locales/US/**/*.po",
-    "translation": "/locales/%two_letters_code%/**/%original_file_name%"
-  },
-]
+files:
+  - source: /locales/US/**/*.po
+    translation: /locales/%two_letters_code%/**/%original_file_name%
