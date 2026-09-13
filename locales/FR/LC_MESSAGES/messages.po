@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: wuibot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2026-09-13 19:19+0200\n"
-"PO-Revision-Date: 2026-09-13 17:34\n"
+"PO-Revision-Date: 2026-09-13 17:47\n"
 "Last-Translator: \n"
 "Language: fr\n"
 "Language-Team: French\n"
@@ -104,6 +104,9 @@ msgstr "No games with this name have been found"
 msgid "id.possible_games"
 msgstr "Possible IDs"
 
+# You are free to edit these examples with localized ones (e.g. ST7P01 for the
+# european version instead). This includes both ID, name, hash and master
+# code.
 #: bot/handlers/info.py:44
 msgid "command.info.usage"
 msgstr "Insert the title's ID, name or checksum (crc, md5, sha1) after the commmand. E.g.:\n"
@@ -174,6 +177,7 @@ msgstr "Sets if /info must show game covers"
 msgid "start.hello"
 msgstr "Salut ! :)"
 
+# Monita from Nintendo Land
 #: bot/utils/setup_bot_info.py:18 bot/utils/setup_bot_info.py:31
 msgid "bot.name"
 msgstr "Monita"
