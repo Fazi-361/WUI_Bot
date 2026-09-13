@@ -105,6 +105,9 @@ msgstr "No games with this name have been found"
 msgid "id.possible_games"
 msgstr "Possible IDs"
 
+# You are free to edit these examples with localized ones (e.g. ST7P01 for the
+# european version instead). This includes both ID, name, hash and master
+# code.
 #: bot/handlers/info.py:44
 msgid "command.info.usage"
 msgstr ""
@@ -178,6 +181,7 @@ msgstr "Sets if /info must show game covers"
 msgid "start.hello"
 msgstr "Hi there! :)"
 
+# Monita from Nintendo Land
 #: bot/utils/setup_bot_info.py:18 bot/utils/setup_bot_info.py:31
 msgid "bot.name"
 msgstr "Monita"
