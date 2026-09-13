@@ -1,0 +1,1 @@
+[![Crowdin](https://badges.crowdin.net/wuibot/localized.svg)](https://crowdin.com/project/wuibot)
