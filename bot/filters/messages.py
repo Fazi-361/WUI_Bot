@@ -2,7 +2,7 @@ from enum import Enum
 from functools import lru_cache
 
 from aiogram.filters import BaseFilter
-from aiogram.types import Message
+from aiogram.types import InlineQuery, Message
 from regex_spm import fullmatch_in
 
 from . import CCommand
@@ -17,7 +17,7 @@ class TextType(Enum):
     GAME_ID = 3
     HASH = 4
     MASTER_CODE = 5
-    
+
     def __call__(self, *data):
         self.data = data
         return self
@@ -60,10 +60,12 @@ class MessageType(BaseFilter):
     def __init__(self, *types: TextType) -> None:
         self.types: tuple[TextType, ...] = types
 
-    async def __call__(self, message: Message) -> dict[str, TextType | None] | bool:
+    async def __call__(
+        self, message: Message | InlineQuery
+    ) -> dict[str, TextType | None] | bool:
+        text: str | None = message.text if isinstance(message, Message) else message.query
         return (
             {"message_type": t}
-            if message.text is not None
-            and (t := text_type(strim(message.text))) in self.types
+            if text is not None and (t := text_type(strim(text))) in self.types
             else False
         )

@@ -1,3 +1,4 @@
+from .inline import inline_router
 from .start import start_router
 from .help import help_router
 from .settings import settings_router
@@ -10,6 +11,8 @@ from .random import random_router
 from .my_chat_member import my_chat_member_router
 
 ROUTERS = (
+    inline_router,
+
     start_router,
     help_router,
     settings_router,
