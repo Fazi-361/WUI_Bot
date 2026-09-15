@@ -46,7 +46,7 @@ def get_title_info(
     title_short_id: str,
     user_lang: str,
     enforce_title_lang: bool = True,
-) -> tuple[frozenset[str], bool, InputRichMessage]:
+) -> tuple[str, frozenset[str], bool, InputRichMessage]:
     _ = get_i18n().gettext
     if not title_type:
         title_type = "Wii" if len(title_short_id) == 6 else "Channel"
@@ -186,6 +186,7 @@ def get_title_info(
 
     cursor.close()
     return (
+        title_title,
         frozenset(title_artworks),
         japanenglish,
         InputRichMessage(markdown=markdown, skip_entity_detection=True),
@@ -195,11 +196,11 @@ def get_title_info(
 @alru_cache
 async def get_title_covers(
     resources: frozenset[str], user_lang: str | None = None, japanenglish: bool = False
-) -> str:
+) -> tuple[str | None, str]:
     # Controlla che tutte le copertine esistano, controllando l'head degli url
     # * Il controllo degli URL è la parte più lenta di questa funzione!
     title_artworks = [
-        f"![](https://art.gametdb.com/{resource})"
+        f"https://art.gametdb.com/{resource}"
         for resource in await filter_covers(resources)
     ]
 
@@ -226,9 +227,9 @@ async def get_title_covers(
             break
 
     return (
-        f"<tg-slideshow>{''.join(title_artworks)}</tg-slideshow>"
+        (title_artworks[0], f"<tg-slideshow>![]({')![]('.join(title_artworks)})</tg-slideshow>")
         if title_artworks
-        else ""
+        else (None, "")
     )
 
 
@@ -237,7 +238,15 @@ async def get_title_page(
     args: str,
     show_covers: bool,
     message_type: T | None = None,
-) -> AsyncGenerator[InputRichMessage, None]:
+) -> AsyncGenerator[tuple[str, str | None, InputRichMessage], None]:
+    """
+    Metodo definitivo per ottenere la pagina di un titolo. Generatore che ritorna
+    la pagina progressivamente man mano che viene generata; in particolar modo
+    l'impostazione finale delle copertine se `show_covers` è `True`.
+
+    Cede: titolo, url della copertina, messaggio
+    """
+    
     _, user_lang = i18n.gettext, i18n.current_locale
     match message_type or text_type(args):
         case T.QUERY:
@@ -258,7 +267,7 @@ async def get_title_page(
     assert result
 
     cache_size: int = get_title_info.cache_info().currsize
-    resources, japanenglish, message = (
+    title_name, resources, japanenglish, message = (
         get_title_info(result[0], result[1], result[2], user_lang, enforce_title_lang)
         if isinstance(result, tuple)
         else get_title_info("Wii", None, result, user_lang, enforce_title_lang)
@@ -269,12 +278,13 @@ async def get_title_page(
     if show_covers:
         # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers
         if get_title_info.cache_info().currsize > cache_size:
-            yield InputRichMessage(
+            yield title_name, None, InputRichMessage(
                 markdown=f"*{_("info.fetching_covers")}*\n\n{message.markdown}"
             )
 
-        if prependix := await get_title_covers(resources, user_lang, japanenglish):
-            yield InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
+        front_cover, prependix = await get_title_covers(resources, user_lang, japanenglish)
+        if prependix:
+            yield title_name, front_cover, InputRichMessage(markdown=f"{prependix}\n\n{message.markdown}")
             return
 
-    yield message
+    yield title_name, None, message

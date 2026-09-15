@@ -47,7 +47,7 @@ async def info(
     reply: Message = await message.reply(_("info.generating"))
 
     try:
-        async for rich_message in get_title_page(
+        async for *__, rich_message in get_title_page(
             i18n, args, await S.show_covers(state), message_type
         ):
             await reply.edit_text(rich_message=rich_message)
