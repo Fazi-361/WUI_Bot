@@ -48,7 +48,7 @@ async def info(
 
     try:
         async for rich_message in get_title_page(
-            _, args, i18n.current_locale, await S.show_covers(state), message_type
+            i18n, args, await S.show_covers(state), message_type
         ):
             await reply.edit_text(rich_message=rich_message)
     except:

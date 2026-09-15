@@ -1,7 +1,8 @@
 from functools import cache
+from typing import AsyncGenerator
 
 from aiogram.types.input_rich_message import InputRichMessage
-from aiogram.utils.i18n import get_i18n
+from aiogram.utils.i18n import I18n, get_i18n
 from async_lru import alru_cache
 
 from . import (
@@ -232,12 +233,12 @@ async def get_title_covers(
 
 
 async def get_title_page(
-    _,  # gettext
+    i18n: I18n,
     args: str,
-    user_lang: str,
     show_covers: bool,
     message_type: T | None = None,
-):
+) -> AsyncGenerator[InputRichMessage, None]:
+    _, user_lang = i18n.gettext, i18n.current_locale
     match message_type or text_type(args):
         case T.QUERY:
             result = get_title_by_name(args, user_lang)
@@ -257,14 +258,11 @@ async def get_title_page(
     assert result
 
     cache_size: int = get_title_info.cache_info().currsize
-    if isinstance(result, tuple):
-        resources, japanenglish, message = get_title_info(
-            result[0], result[1], result[2], user_lang, enforce_title_lang
-        )
-    else:
-        resources, japanenglish, message = get_title_info(
-            "Wii", None, result, user_lang, enforce_title_lang
-        )
+    resources, japanenglish, message = (
+        get_title_info(result[0], result[1], result[2], user_lang, enforce_title_lang)
+        if isinstance(result, tuple)
+        else get_title_info("Wii", None, result, user_lang, enforce_title_lang)
+    )
 
     del result
 
