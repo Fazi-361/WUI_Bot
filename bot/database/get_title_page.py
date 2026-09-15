@@ -4,7 +4,14 @@ from aiogram.types.input_rich_message import InputRichMessage
 from aiogram.utils.i18n import get_i18n
 from async_lru import alru_cache
 
-from . import get_cursor, get_regions_by_title, get_title_roms
+from . import (
+    get_cursor,
+    get_regions_by_title,
+    get_title_by_hash,
+    get_title_by_name,
+    get_title_roms,
+)
+from ..filters import T, text_type
 from ..utils import C
 from ..utils.fetch_url_head import filter_covers
 
@@ -225,18 +232,41 @@ async def get_title_covers(
 
 
 async def get_title_page(
-    _,
+    _,  # gettext
+    args: str,
+    user_lang: str,
     show_covers: bool,
-    title_console: str = "Wii",
-    title_type: str | None = None,
-    title_short_id: str = "ST7P01",
-    user_lang: str = "IT",
-    enforce_title_lang: bool = True,
+    message_type: T | None = None,
 ):
+    match message_type or text_type(args):
+        case T.QUERY:
+            result = get_title_by_name(args, user_lang)
+            enforce_title_lang: bool = False
+        case T.GAME_ID:
+            result = args.upper()
+            enforce_title_lang = True
+        case T.HASH:
+            result = get_title_by_hash(args)
+            enforce_title_lang = True
+        case T.MASTER_CODE as m:
+            result = m.data
+            enforce_title_lang = True
+        case _:
+            raise
+
+    assert result
+
     cache_size: int = get_title_info.cache_info().currsize
-    resources, japanenglish, message = get_title_info(
-        title_console, title_type, title_short_id, user_lang, enforce_title_lang
-    )
+    if isinstance(result, tuple):
+        resources, japanenglish, message = get_title_info(
+            result[0], result[1], result[2], user_lang, enforce_title_lang
+        )
+    else:
+        resources, japanenglish, message = get_title_info(
+            "Wii", None, result, user_lang, enforce_title_lang
+        )
+
+    del result
 
     if show_covers:
         # Se get_title_info non ha messo in cache, esisterà la cache anche di get_title_covers

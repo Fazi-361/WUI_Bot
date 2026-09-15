@@ -7,9 +7,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.i18n import I18n
 
-from ..database import get_title_by_hash, get_title_by_name, get_title_page
-from ..filters import CCommand, MessageType, T, info_botcommand, text_type
-from ..utils import C, S
+from ..database import get_title_page
+from ..filters import CCommand, MessageType, T, info_botcommand
+from ..utils import S
 from ..utils.text import strim
 
 info_router: Router = Router()
@@ -47,36 +47,8 @@ async def info(
     reply: Message = await message.reply(_("info.generating"))
 
     try:
-        user_lang: str = i18n.current_locale
-
-        result: str | tuple[str, str, str] | None = ""
-        match message_type or text_type(args):
-            case T.QUERY:
-                result = get_title_by_name(args, user_lang)
-                enforce_title_lang: bool = False
-            case T.GAME_ID:
-                result = args.upper()
-                enforce_title_lang = True
-            case T.HASH:
-                result = get_title_by_hash(args)
-                enforce_title_lang = True
-            case T.MASTER_CODE as m:
-                result = m.data
-                enforce_title_lang = True
-            case _:
-                raise
-
-        assert result
-        results_list: bool = isinstance(result, tuple)
-
         async for rich_message in get_title_page(
-            _,
-            await S.show_covers(state),
-            result[0] if results_list else "Wii",
-            result[1] if results_list else None,
-            result[2] if results_list else result,
-            user_lang,
-            enforce_title_lang,
+            _, args, i18n.current_locale, await S.show_covers(state), message_type
         ):
             await reply.edit_text(rich_message=rich_message)
     except:
