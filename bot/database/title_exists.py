@@ -7,7 +7,7 @@ from ..utils import C
 @cache
 def mastercode_exists(console_code: str, short_id: str) -> tuple[str, str] | bool:
     if len(console_code) != 3 or len(short_id) != 4 \
-    or not (console_and_type := C.CONSOLE_CODE.get(console_code)):
+    or not (console_and_type := C.CONSOLE_CODE.get(console_code.upper())):
         return False
 
     short_id = short_id.upper()
