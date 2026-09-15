@@ -42,9 +42,10 @@ def get_title_by_name(input: str, lang: str) -> tuple[str, str, str] | None:
                 ORDER BY Similarity DESC
                 LIMIT 1
             ), Codes AS (
-                SELECT DISTINCT Console, GameType, MiniID, Region, PublisherID
+                SELECT DISTINCT Console, GameType, MiniID, Region, PublisherID, JAROW(Title, (SELECT Title FROM Target)) Similarity
                 FROM BaseGameLocale
-                WHERE JAROW(Title, (SELECT Title FROM Target)) >= 0.98
+                WHERE Similarity >= 0.98
+                ORDER BY Similarity DESC
             ), Regions AS (
                 Select DISTINCT Region FROM Codes
             )
@@ -58,7 +59,7 @@ def get_title_by_name(input: str, lang: str) -> tuple[str, str, str] | None:
             }
             LIMIT 1""",
             {
-                "treshold": len(input_split) * 0.9 + 0.2,
+                "treshold": len(input_split) * 0.9,
                 "usual": C.USUAL_REGION.get(lang),
             },
         ).fetchone()
