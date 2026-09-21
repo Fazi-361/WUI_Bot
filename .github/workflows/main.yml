@@ -13,7 +13,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             git pull
-            ./.venv/bin/pip install -r requirements.txt
+            pip install -r requirements.txt
             ./locales/compile.sh
       - name: Restart bot using curl API request
         run: "curl -X POST --basic --user ${{ secrets.API_KEY }}: https://api.alwaysdata.com/v1/${{ vars.SERVICE }}/${{ secrets.SERVICE_ID }}/restart/"
