@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: wuibot\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2026-09-13 19:19+0200\n"
-"PO-Revision-Date: 2026-09-13 17:47\n"
+"PO-Revision-Date: 2026-09-22 19:53\n"
 "Last-Translator: \n"
 "Language: de\n"
 "Language-Team: German\n"
@@ -19,35 +19,35 @@ msgstr ""
 "X-Crowdin-File: /main/locales/US/LC_MESSAGES/messages.po\n"
 "X-Crowdin-File-ID: 33\n"
 
-#: bot/database/get_title_page.py:145
+#: bot/database/get_title_page.py:153
 msgid "info.developer"
 msgstr "Entwickler"
 
-#: bot/database/get_title_page.py:149
+#: bot/database/get_title_page.py:157
 msgid "info.publisher"
 msgstr "Publisher"
 
-#: bot/database/get_title_page.py:153
+#: bot/database/get_title_page.py:161
 msgid "info.release_date"
 msgstr "Veröffentlichung"
 
-#: bot/database/get_title_page.py:157
+#: bot/database/get_title_page.py:165
 msgid "info.synopsis"
 msgstr "Zusammenfassung"
 
-#: bot/database/get_title_page.py:161
+#: bot/database/get_title_page.py:169
 msgid "info.revisions"
 msgstr "Revisionen"
 
-#: bot/database/get_title_page.py:162
+#: bot/database/get_title_page.py:170
 msgid "info.revision.version"
 msgstr "Version"
 
-#: bot/database/get_title_page.py:170
+#: bot/database/get_title_page.py:178
 msgid "info.name_in_other_languages"
 msgstr "Name in anderen Sprachen"
 
-#: bot/database/get_title_page.py:245
+#: bot/database/get_title_page.py:282
 msgid "info.fetching_covers"
 msgstr "Fetching covers..."
 
@@ -83,6 +83,15 @@ msgstr "Get CRC, MD5 e SHA1 of a game given its title or ID"
 msgid "command.random.description"
 msgstr "Get information on a random software"
 
+#: bot/handlers/__guest_message.py:33 bot/handlers/info.py:47
+msgid "info.generating"
+msgstr "Informationen werden generiert..."
+
+#: bot/handlers/__guest_message.py:50 bot/handlers/info.py:56
+#: bot/handlers/inline.py:39
+msgid "info.generation_error"
+msgstr "Title not found or error while generating the page."
+
 #: bot/handlers/hashes.py:22
 msgid "hashses.no_games"
 msgstr "Given game was not found"
@@ -116,14 +125,6 @@ msgstr "Insert the title's ID, name or checksum (crc, md5, sha1) after the commm
 "<pre>/info LNA-CTR-AREE-USA</pre>\n"
 "Note: channels do not need the final two characters"
 
-#: bot/handlers/info.py:47
-msgid "info.generating"
-msgstr "Informationen werden generiert..."
-
-#: bot/handlers/info.py:84
-msgid "info.generation_error"
-msgstr "Title not found or error while generating the page."
-
 #: bot/handlers/message.py:14
 msgid "command.unknown"
 msgstr "Unknown command"
@@ -137,43 +138,47 @@ msgid "random.invalid_console"
 msgstr "Error, The provided console is invalid. Valid consoles:\n"
 "Wii, DS, 3DS, WiiU"
 
-#: bot/handlers/settings.py:53
+#: bot/handlers/settings.py:65
 msgid "settings.unknown"
 msgstr "Unknown setting"
 
-#: bot/handlers/settings.py:56
+#: bot/handlers/settings.py:68
 msgid "settings.saved"
 msgstr "Settings saved!"
 
-#: bot/handlers/settings.py:65
+#: bot/handlers/settings.py:78
 msgid "settings.no_admin"
 msgstr "These settings are not for you :)"
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.on"
 msgstr "✅"
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.off"
 msgstr "❌"
 
-#: bot/handlers/settings.py:75
+#: bot/handlers/settings.py:88
 msgid "settings.language"
 msgstr "Sprache"
 
-#: bot/handlers/settings.py:83
+#: bot/handlers/settings.py:96
 msgid "settings.language.description"
 msgstr "Sets the language of the bot"
 
-#: bot/handlers/settings.py:85
+#: bot/handlers/settings.py:98
 msgid "settings.show_covers"
 msgstr "Show covers"
 
-#: bot/handlers/settings.py:91
+#: bot/handlers/settings.py:104
 msgid "settings.show_covers.description"
 msgstr "Sets if /info must show game covers"
 
-#: bot/handlers/start.py:12
+#: bot/handlers/settings.py:106
+msgid "settings.close"
+msgstr "Close"
+
+#: bot/handlers/start.py:14
 msgid "start.hello"
 msgstr "Hallo! :)"
 
