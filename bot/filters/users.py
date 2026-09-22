@@ -1,4 +1,4 @@
-from aiogram.enums import ChatType
+from aiogram.enums import ChatMemberStatus, ChatType
 from aiogram.filters import BaseFilter
 from aiogram.types import (
     CallbackQuery,
@@ -22,8 +22,11 @@ class Administrator(BaseFilter):
                     return True
                 case ChatMemberAdministrator():
                     return member.can_manage_chat
-            
-            return member.user.id == 1087968824  # GroupAnonymousBot
+
+            return (
+                member.user.id == 1087968824  # GroupAnonymousBot
+                or member.status == ChatMemberStatus.LEFT  # ? Anon admins
+            )
         except:
             pass
 
