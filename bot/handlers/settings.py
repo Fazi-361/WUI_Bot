@@ -26,6 +26,7 @@ LANGUAGE_BUTTON_ROWS: tuple[tuple[tuple[str, str, str], ...], ...] = (
     ),
 )
 SHOW_COVERS: str = SettingsCallback(option=S.show_covers.name).pack()
+CLOSE: str = SettingsCallback(option="close").pack()
 
 
 @settings_router.message()
@@ -45,15 +46,27 @@ async def set_settings(
         _ = i18n.gettext
         option: str = callback_data.option
 
-        if data == SHOW_COVERS:
-            await state.update_data({option: not await S[option](state)})
-        elif option in i18n.available_locales:
-            await i18n_middleware.set_locale(state, option)
-        else:
-            await query.answer(_("settings.unknown"))
+        if option == "open":
+            await query.answer()
+        elif option == "close":
+            await query.answer()
+            try:
+                await query.message.delete()  # type: ignore
+                await query.message.reply_to_message.delete()  # type: ignore
+            except:
+                pass
             return
+        else:
+            if data == SHOW_COVERS:
+                await state.update_data({option: not await S[option](state)})
+            elif option in i18n.available_locales:
+                await i18n_middleware.set_locale(state, option)
+            else:
+                await query.answer(_("settings.unknown"))
+                return
 
-        await query.answer(_("settings.saved"))
+            await query.answer(_("settings.saved"))
+
         try:
             await query.message.edit_text(rich_message=get_settings_page(await state.get_data(), i18n))  # type: ignore
         except:
@@ -70,7 +83,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
     locale: str = i18n.current_locale
     show_covers: bool = S.show_covers(state_data)
 
-    on, off = _('settings.on'), _('settings.off')
+    on, off = _("settings.on"), _("settings.off")
     return InputRichMessage(
         markdown=f'**{_("settings.language")}**  \n'
         f'{''.join(f'<tg-button-row>{''.join(
@@ -88,6 +101,8 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
             if show_covers else
             f'<tg-button type="callback_data" data="{SHOW_COVERS}">{off}</tg-button>'
         }  \n'
-        f'*{_("settings.show_covers.description")}*',
-        skip_entity_detection=True
+        f'*{_("settings.show_covers.description")}*'
+        "\n\n---\n\n"
+        f'<tg-button-row><tg-button style="danger" type="callback_data" data="{CLOSE}">{_("settings.close")}</tg-button></tg-button-row>',
+        skip_entity_detection=True,
     )

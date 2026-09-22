@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-13 19:47+0200\n"
+"POT-Creation-Date: 2026-09-22 21:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: bot/database/get_title_page.py:145
+#: bot/database/get_title_page.py:153
 msgid "info.developer"
 msgstr ""
 
-#: bot/database/get_title_page.py:149
+#: bot/database/get_title_page.py:157
 msgid "info.publisher"
 msgstr ""
 
-#: bot/database/get_title_page.py:153
+#: bot/database/get_title_page.py:161
 msgid "info.release_date"
 msgstr ""
 
-#: bot/database/get_title_page.py:157
+#: bot/database/get_title_page.py:165
 msgid "info.synopsis"
 msgstr ""
 
-#: bot/database/get_title_page.py:161
+#: bot/database/get_title_page.py:169
 msgid "info.revisions"
 msgstr ""
 
-#: bot/database/get_title_page.py:162
+#: bot/database/get_title_page.py:170
 msgid "info.revision.version"
 msgstr ""
 
-#: bot/database/get_title_page.py:170
+#: bot/database/get_title_page.py:178
 msgid "info.name_in_other_languages"
 msgstr ""
 
-#: bot/database/get_title_page.py:245
+#: bot/database/get_title_page.py:282
 msgid "info.fetching_covers"
 msgstr ""
 
@@ -81,6 +81,15 @@ msgstr ""
 msgid "command.random.description"
 msgstr ""
 
+#: bot/handlers/__guest_message.py:33 bot/handlers/info.py:47
+msgid "info.generating"
+msgstr ""
+
+#: bot/handlers/__guest_message.py:50 bot/handlers/info.py:56
+#: bot/handlers/inline.py:39
+msgid "info.generation_error"
+msgstr ""
+
 #: bot/handlers/hashes.py:22
 msgid "hashses.no_games"
 msgstr ""
@@ -105,14 +114,6 @@ msgstr ""
 msgid "command.info.usage"
 msgstr ""
 
-#: bot/handlers/info.py:47
-msgid "info.generating"
-msgstr ""
-
-#: bot/handlers/info.py:84
-msgid "info.generation_error"
-msgstr ""
-
 #: bot/handlers/message.py:14
 msgid "command.unknown"
 msgstr ""
@@ -125,43 +126,47 @@ msgstr ""
 msgid "random.invalid_console"
 msgstr ""
 
-#: bot/handlers/settings.py:53
+#: bot/handlers/settings.py:65
 msgid "settings.unknown"
 msgstr ""
 
-#: bot/handlers/settings.py:56
+#: bot/handlers/settings.py:68
 msgid "settings.saved"
 msgstr ""
 
-#: bot/handlers/settings.py:65
+#: bot/handlers/settings.py:78
 msgid "settings.no_admin"
 msgstr ""
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.on"
 msgstr ""
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.off"
 msgstr ""
 
-#: bot/handlers/settings.py:75
+#: bot/handlers/settings.py:88
 msgid "settings.language"
 msgstr ""
 
-#: bot/handlers/settings.py:83
+#: bot/handlers/settings.py:96
 msgid "settings.language.description"
 msgstr ""
 
-#: bot/handlers/settings.py:85
+#: bot/handlers/settings.py:98
 msgid "settings.show_covers"
 msgstr ""
 
-#: bot/handlers/settings.py:91
+#: bot/handlers/settings.py:104
 msgid "settings.show_covers.description"
 msgstr ""
 
-#: bot/handlers/start.py:12
+#: bot/handlers/settings.py:106
+msgid "settings.close"
+msgstr ""
+
+#: bot/handlers/start.py:14
 msgid "start.hello"
 msgstr ""
 

@@ -19,35 +19,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: bot/database/get_title_page.py:145
+#: bot/database/get_title_page.py:153
 msgid "info.developer"
 msgstr "Sviluppo"
 
-#: bot/database/get_title_page.py:149
+#: bot/database/get_title_page.py:157
 msgid "info.publisher"
 msgstr "Pubblicazione"
 
-#: bot/database/get_title_page.py:153
+#: bot/database/get_title_page.py:161
 msgid "info.release_date"
 msgstr "Data"
 
-#: bot/database/get_title_page.py:157
+#: bot/database/get_title_page.py:165
 msgid "info.synopsis"
 msgstr "Sinossi"
 
-#: bot/database/get_title_page.py:161
+#: bot/database/get_title_page.py:169
 msgid "info.revisions"
 msgstr "Revisioni"
 
-#: bot/database/get_title_page.py:162
+#: bot/database/get_title_page.py:170
 msgid "info.revision.version"
 msgstr "Versione"
 
-#: bot/database/get_title_page.py:170
+#: bot/database/get_title_page.py:178
 msgid "info.name_in_other_languages"
 msgstr "Nome in altre lingue"
 
-#: bot/database/get_title_page.py:245
+#: bot/database/get_title_page.py:282
 msgid "info.fetching_covers"
 msgstr "Recupero delle copertine..."
 
@@ -83,6 +83,15 @@ msgstr "Ricevi CRC, MD5 e SHA1 di un gioco dato il titolo o l'ID"
 msgid "command.random.description"
 msgstr "Ricevi le info di un software casuale."
 
+#: bot/handlers/__guest_message.py:33 bot/handlers/info.py:47
+msgid "info.generating"
+msgstr "Generando le informazioni..."
+
+#: bot/handlers/__guest_message.py:50 bot/handlers/info.py:56
+#: bot/handlers/inline.py:39
+msgid "info.generation_error"
+msgstr "Titolo non trovato o errore nella generazione della pagina."
+
 #: bot/handlers/hashes.py:22
 msgid "hashses.no_games"
 msgstr "Il gioco dato non è stato trovato"
@@ -116,14 +125,6 @@ msgstr ""
 "<pre>/info LNA-CTR-AREP-EUR</pre>\n"
 "Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
 
-#: bot/handlers/info.py:47
-msgid "info.generating"
-msgstr "Generando le informazioni..."
-
-#: bot/handlers/info.py:84
-msgid "info.generation_error"
-msgstr "Titolo non trovato o errore nella generazione della pagina."
-
 #: bot/handlers/message.py:14
 msgid "command.unknown"
 msgstr "Comando sconosciuto"
@@ -138,43 +139,47 @@ msgstr ""
 "Errore, la console inserita è invalida o non supportata. Console valide:\n"
 "Wii, DS, 3DS, WiiU"
 
-#: bot/handlers/settings.py:53
+#: bot/handlers/settings.py:65
 msgid "settings.unknown"
 msgstr "Impostazione sconosciuta"
 
-#: bot/handlers/settings.py:56
+#: bot/handlers/settings.py:68
 msgid "settings.saved"
 msgstr "Impostazioni salvate!"
 
-#: bot/handlers/settings.py:65
+#: bot/handlers/settings.py:78
 msgid "settings.no_admin"
 msgstr "Queste impostazioni non sono per te :)"
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.on"
 msgstr ""
 
-#: bot/handlers/settings.py:73
+#: bot/handlers/settings.py:86
 msgid "settings.off"
 msgstr ""
 
-#: bot/handlers/settings.py:75
+#: bot/handlers/settings.py:88
 msgid "settings.language"
 msgstr "Lingua"
 
-#: bot/handlers/settings.py:83
+#: bot/handlers/settings.py:96
 msgid "settings.language.description"
 msgstr "Imposta la lingua del bot"
 
-#: bot/handlers/settings.py:85
+#: bot/handlers/settings.py:98
 msgid "settings.show_covers"
 msgstr "Mostra le copertine"
 
-#: bot/handlers/settings.py:91
+#: bot/handlers/settings.py:104
 msgid "settings.show_covers.description"
 msgstr "Imposta se /info mostra le copertine dei giochi"
 
-#: bot/handlers/start.py:12
+#: bot/handlers/settings.py:106
+msgid "settings.close"
+msgstr "Chiudi"
+
+#: bot/handlers/start.py:14
 msgid "start.hello"
 msgstr "Ciao! :)"
 
