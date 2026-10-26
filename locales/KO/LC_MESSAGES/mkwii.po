@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-26 02:30+0100\n"
+"POT-Creation-Date: 2026-10-26 19:26+0100\n"
 "PO-Revision-Date: 2026-10-25 22:58+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -19,191 +19,191 @@ msgstr ""
 "Generated-By: Babel 2.18.0\n"
 
 msgid "Baby Mario"
-msgstr ""
+msgstr "베이비마리오"
 
 msgid "Baby Peach"
-msgstr ""
+msgstr "베이비피치"
 
 msgid "Toad"
-msgstr ""
+msgstr "키노피오"
 
 msgid "Koopa Troopa"
-msgstr ""
+msgstr "엉금엉금"
 
 msgid "Baby Luigi"
-msgstr ""
+msgstr "베이비루이지"
 
 msgid "Baby Daisy"
-msgstr ""
+msgstr "베이비데이지"
 
 msgid "Toadette"
-msgstr ""
+msgstr "키노피코"
 
 msgid "Dry Bones"
-msgstr ""
+msgstr "와르르"
 
 msgid "Mii S"
-msgstr ""
+msgstr "Mii S"
 
 msgid "Standard Kart S"
-msgstr ""
+msgstr "스탠더드카트S"
 
 msgid "Booster Seat"
-msgstr ""
+msgstr "슈퍼유모차"
 
 msgid "Mini Beast"
-msgstr ""
+msgstr "미니비스트"
 
 msgid "Cheep Charger"
-msgstr ""
+msgstr "슈퍼뽀꾸뽀꾸"
 
 msgid "Tiny Titan"
-msgstr ""
+msgstr "오프로드카고"
 
 msgid "Blue Falcon"
-msgstr ""
+msgstr "블루팔콘"
 
 msgid "Standard Bike S"
-msgstr ""
+msgstr "스탠더드바이크S"
 
 msgid "Bullet Bike"
-msgstr ""
+msgstr "로켓킬러"
 
 msgid "Bit Bike"
-msgstr ""
+msgstr "비트바이크"
 
 msgid "Quacker"
-msgstr ""
+msgstr "스피드스완"
 
 msgid "Magikruiser"
-msgstr ""
+msgstr "마귀라이더"
 
 msgid "Jet Bubble"
-msgstr ""
+msgstr "제트볼"
 
 msgid "Mario"
-msgstr ""
+msgstr "마리오"
 
 msgid "Luigi"
-msgstr ""
+msgstr "루이지"
 
 msgid "Peach"
-msgstr ""
+msgstr "피치"
 
 msgid "Yoshi"
-msgstr ""
+msgstr "요시"
 
 msgid "Daisy"
-msgstr ""
+msgstr "데이지"
 
 msgid "Birdo"
-msgstr ""
+msgstr "캐서린"
 
 msgid "Diddy Kong"
-msgstr ""
+msgstr "디디콩"
 
 msgid "Bowser Jr."
-msgstr ""
+msgstr "쿠파주니어"
 
 msgid "Mii M"
-msgstr ""
+msgstr "Mii M"
 
 msgid "Standard Kart M"
-msgstr ""
+msgstr "스탠더드카트M"
 
 msgid "Classic Dragster"
-msgstr ""
+msgstr "노스텔지아"
 
 msgid "Wild Wing"
-msgstr ""
+msgstr "와일드스타"
 
 msgid "Super Blooper"
-msgstr ""
+msgstr "슈퍼징오징오"
 
 msgid "Daytripper"
-msgstr ""
+msgstr "판타지아"
 
 msgid "Sprinter"
-msgstr ""
+msgstr "뉴B대시"
 
 msgid "Standard Bike M"
-msgstr ""
+msgstr "스탠더드바이크M"
 
 msgid "Mach Bike"
-msgstr ""
+msgstr "마하바이크"
 
 msgid "Sugarscoot"
-msgstr ""
+msgstr "캔디스쿠터"
 
 msgid "Zip Zip"
-msgstr ""
+msgstr "하바네로"
 
 msgid "Sneakster"
-msgstr ""
+msgstr "인터셉터"
 
 msgid "Dolphin Dasher"
-msgstr ""
+msgstr "돌핀킥"
 
 msgid "Wario"
-msgstr ""
+msgstr "와리오"
 
 msgid "Waluigi"
-msgstr ""
+msgstr "와루이지"
 
 msgid "Donkey Kong"
-msgstr ""
+msgstr "동키콩"
 
 msgid "Bowser"
-msgstr ""
+msgstr "쿠파"
 
 msgid "King Boo"
-msgstr ""
+msgstr "킹부끄"
 
 msgid "Rosalina"
-msgstr ""
+msgstr "로젤리나"
 
 msgid "Funky Kong"
-msgstr ""
+msgstr "펑키콩"
 
 msgid "Dry Bowser"
-msgstr ""
+msgstr "좀비쿠파"
 
 msgid "Mii L"
-msgstr ""
+msgstr "Mii L"
 
 msgid "Standard Kart L"
-msgstr ""
+msgstr "스탠더드카트L"
 
 msgid "Offroader"
-msgstr ""
+msgstr "서바이벌카고"
 
 msgid "Flame Flyer"
-msgstr ""
+msgstr "파이어카트"
 
 msgid "Piranha Prowler"
-msgstr ""
+msgstr "뻐끔카트"
 
 msgid "Jetsetter"
-msgstr ""
+msgstr "제트글라이드"
 
 msgid "Honeycoupe"
-msgstr ""
+msgstr "트릭키"
 
 msgid "Standard Bike L"
-msgstr ""
+msgstr "스탠더드바이크L"
 
 msgid "Flame Runner"
-msgstr ""
+msgstr "쿠파라이더"
 
 msgid "Wario Bike"
-msgstr ""
+msgstr "와리오바이크"
 
 msgid "Shooting Star"
-msgstr ""
+msgstr "슈팅스타"
 
 msgid "Spear"
-msgstr ""
+msgstr "와일드스피어"
 
 msgid "Phantom"
-msgstr ""
+msgstr "팬텀"
 
