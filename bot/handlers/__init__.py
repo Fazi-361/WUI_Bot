@@ -1,3 +1,4 @@
+
 from .inline import inline_router
 from .start import start_router
 from .help import help_router
@@ -8,6 +9,7 @@ from .deid import deid_router
 from .hashes import hashes_router
 from .message import message_router
 from .random import random_router
+from .mkwiirandom import mkwiirandom_router
 from .my_chat_member import my_chat_member_router
 
 ROUTERS = (
@@ -21,6 +23,7 @@ ROUTERS = (
     deid_router,
     hashes_router,
     random_router,
+    mkwiirandom_router,
     message_router, # lasciare come ultimo
     
     my_chat_member_router,

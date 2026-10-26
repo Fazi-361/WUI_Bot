@@ -83,6 +83,10 @@ msgstr "Ricevi CRC, MD5 e SHA1 di un gioco dato il titolo o l'ID"
 msgid "command.random.description"
 msgstr "Ricevi le info di un software casuale."
 
+#: bot/filters/commands.py:14
+msgid "command.mkwiirandom.description"
+msgstr "Combo casuali per Mario Kart Wii"
+
 #: bot/handlers/__guest_message.py:33 bot/handlers/info.py:47
 msgid "info.generating"
 msgstr "Generando le informazioni..."
@@ -104,7 +108,7 @@ msgstr "Ecco una lista dei comandi:"
 msgid "command.id.usage"
 msgstr ""
 "Inserisci il nome del gioco dopo lo /.\n"
-"Esempio: <pre>/id Super Smash Bros. Brawl</pre>"
+"Esempio: <code>/id Super Smash Bros. Brawl</code>"
 
 #: bot/handlers/id.py:29
 msgid "id.no_games"
@@ -119,10 +123,10 @@ msgid "command.info.usage"
 msgstr ""
 "Inserisci l'ID del titolo, il suo nome o il suo checksum (crc, md5, sha1)"
 " dopo il comando. Es:\n"
-"<pre>/info ST7P01</pre>\n"
-"<pre>/info Super Mario Galaxy</pre>\n"
-"<pre>/info fb84bfc5</pre>\n"
-"<pre>/info LNA-CTR-AREP-EUR</pre>\n"
+"<code>/info ST7P01</code>\n"
+"<code>/info Super Mario Galaxy</code>\n"
+"<code>/info fb84bfc5</code>\n"
+"<code>/info LNA-CTR-AREP-EUR</code>\n"
 "Nota: i canali non hanno bisogno delle due lettere dell'iD finali"
 
 #: bot/handlers/message.py:14
@@ -132,6 +136,16 @@ msgstr "Comando sconosciuto"
 #: bot/handlers/message.py:19
 msgid "query.unknown"
 msgstr "Non ho capito cos'hai scritto..."
+
+#: bot/handlers/mkwiirandom.py:113
+msgid "command.mkwiirandom.usage"
+msgstr ""
+"Inserisci il numero di giocatori [1-12] dopo il comando.\n"
+"Esempio: <code>/mkwiirandom 6</code>"
+
+#: bot/handlers/mkwiirandom.py:119
+msgid "mkwiirandom.player"
+msgstr "<b>Giocatore {}</b>:"
 
 #: bot/handlers/random.py:36
 msgid "random.invalid_console"

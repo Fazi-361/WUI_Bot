@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WiiWiiUBot VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-09-22 21:48+0200\n"
+"POT-Creation-Date: 2026-10-26 01:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,6 +81,10 @@ msgstr ""
 msgid "command.random.description"
 msgstr ""
 
+#: bot/filters/commands.py:14
+msgid "command.mkwiirandom.description"
+msgstr ""
+
 #: bot/handlers/__guest_message.py:33 bot/handlers/info.py:47
 msgid "info.generating"
 msgstr ""
@@ -120,6 +124,14 @@ msgstr ""
 
 #: bot/handlers/message.py:19
 msgid "query.unknown"
+msgstr ""
+
+#: bot/handlers/mkwiirandom.py:113
+msgid "command.mkwiirandom.usage"
+msgstr ""
+
+#: bot/handlers/mkwiirandom.py:119
+msgid "mkwiirandom.player"
 msgstr ""
 
 #: bot/handlers/random.py:36

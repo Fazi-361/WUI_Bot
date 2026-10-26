@@ -1,0 +1,209 @@
+# Spanish translations for WiiWiiUBot.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the WiiWiiUBot project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WiiWiiUBot VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-26 02:30+0100\n"
+"PO-Revision-Date: 2026-10-25 22:58+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Baby Mario"
+msgstr "Bebé Mario"
+
+msgid "Baby Peach"
+msgstr "Bebé Peach"
+
+msgid "Toad"
+msgstr "Toad"
+
+msgid "Koopa Troopa"
+msgstr "Koopa Troopa"
+
+msgid "Baby Luigi"
+msgstr "Bebé Luigi"
+
+msgid "Baby Daisy"
+msgstr "Bebé Daisy"
+
+msgid "Toadette"
+msgstr "Toadette"
+
+msgid "Dry Bones"
+msgstr "Huesitos"
+
+msgid "Mii S"
+msgstr "Mii P"
+
+msgid "Standard Kart S"
+msgstr "Kart Estándar Pequeño"
+
+msgid "Booster Seat"
+msgstr "Supercuna"
+
+msgid "Mini Beast"
+msgstr "Minibestia"
+
+msgid "Cheep Charger"
+msgstr "Carruaje Cheep"
+
+msgid "Tiny Titan"
+msgstr "Minitractor"
+
+msgid "Blue Falcon"
+msgstr "Blue Falcon"
+
+msgid "Standard Bike S"
+msgstr "Moto Estándar Pequeña"
+
+msgid "Bullet Bike"
+msgstr "Moto Bala"
+
+msgid "Bit Bike"
+msgstr "Pequeciclo"
+
+msgid "Quacker"
+msgstr "Pato Raudo"
+
+msgid "Magikruiser"
+msgstr "Magiciclo"
+
+msgid "Jet Bubble"
+msgstr "Moto Cúpula"
+
+msgid "Mario"
+msgstr "Mario"
+
+msgid "Luigi"
+msgstr "Luigi"
+
+msgid "Peach"
+msgstr "Peach"
+
+msgid "Yoshi"
+msgstr "Yoshi"
+
+msgid "Daisy"
+msgstr "Daisy"
+
+msgid "Birdo"
+msgstr "Birdo"
+
+msgid "Diddy Kong"
+msgstr "Diddy Kong"
+
+msgid "Bowser Jr."
+msgstr "Bowsy"
+
+msgid "Mii M"
+msgstr "Mii M"
+
+msgid "Standard Kart M"
+msgstr "Kart Estándar Mediano"
+
+msgid "Classic Dragster"
+msgstr "Modelo Clásico"
+
+msgid "Wild Wing"
+msgstr "Alerón Chiflado"
+
+msgid "Super Blooper"
+msgstr "Bloopercarro"
+
+msgid "Daytripper"
+msgstr "Dominguero"
+
+msgid "Sprinter"
+msgstr "Super Rayo GTI"
+
+msgid "Standard Bike M"
+msgstr "Moto Estándar Mediana"
+
+msgid "Mach Bike"
+msgstr "Moto Hipersónica"
+
+msgid "Sugarscoot"
+msgstr "Ciclomotor Dulzón"
+
+msgid "Zip Zip"
+msgstr "Zum-Zum"
+
+msgid "Sneakster"
+msgstr "Nitrocicleta"
+
+msgid "Dolphin Dasher"
+msgstr "Velocidelfín"
+
+msgid "Wario"
+msgstr "Wario"
+
+msgid "Waluigi"
+msgstr "Waluigi"
+
+msgid "Donkey Kong"
+msgstr "Donkey Kong"
+
+msgid "Bowser"
+msgstr "Bowser"
+
+msgid "King Boo"
+msgstr "Rey Boo"
+
+msgid "Rosalina"
+msgstr "Estela"
+
+msgid "Funky Kong"
+msgstr "Funky Kong"
+
+msgid "Dry Bowser"
+msgstr "Bowsitos"
+
+msgid "Mii L"
+msgstr "Mii G"
+
+msgid "Standard Kart L"
+msgstr "Kart Estándar Grande"
+
+msgid "Offroader"
+msgstr "Todoterreno"
+
+msgid "Flame Flyer"
+msgstr "Carro Fulminante"
+
+msgid "Piranha Prowler"
+msgstr "Piraña Maleante"
+
+msgid "Jetsetter"
+msgstr "Autodeslizador"
+
+msgid "Honeycoupe"
+msgstr "Fullero"
+
+msgid "Standard Bike L"
+msgstr "Moto Estándar Grande"
+
+msgid "Flame Runner"
+msgstr "Moto de Bowser"
+
+msgid "Wario Bike"
+msgstr "Moto de Wario"
+
+msgid "Shooting Star"
+msgstr "Estrella Fugaz"
+
+msgid "Spear"
+msgstr "Torpedo"
+
+msgid "Phantom"
+msgstr "Fantasma"
+

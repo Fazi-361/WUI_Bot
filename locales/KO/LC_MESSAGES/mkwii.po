@@ -1,0 +1,209 @@
+# Korean translations for WiiWiiUBot.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the WiiWiiUBot project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WiiWiiUBot VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-26 02:30+0100\n"
+"PO-Revision-Date: 2026-10-25 22:58+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ko\n"
+"Language-Team: ko <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Baby Mario"
+msgstr ""
+
+msgid "Baby Peach"
+msgstr ""
+
+msgid "Toad"
+msgstr ""
+
+msgid "Koopa Troopa"
+msgstr ""
+
+msgid "Baby Luigi"
+msgstr ""
+
+msgid "Baby Daisy"
+msgstr ""
+
+msgid "Toadette"
+msgstr ""
+
+msgid "Dry Bones"
+msgstr ""
+
+msgid "Mii S"
+msgstr ""
+
+msgid "Standard Kart S"
+msgstr ""
+
+msgid "Booster Seat"
+msgstr ""
+
+msgid "Mini Beast"
+msgstr ""
+
+msgid "Cheep Charger"
+msgstr ""
+
+msgid "Tiny Titan"
+msgstr ""
+
+msgid "Blue Falcon"
+msgstr ""
+
+msgid "Standard Bike S"
+msgstr ""
+
+msgid "Bullet Bike"
+msgstr ""
+
+msgid "Bit Bike"
+msgstr ""
+
+msgid "Quacker"
+msgstr ""
+
+msgid "Magikruiser"
+msgstr ""
+
+msgid "Jet Bubble"
+msgstr ""
+
+msgid "Mario"
+msgstr ""
+
+msgid "Luigi"
+msgstr ""
+
+msgid "Peach"
+msgstr ""
+
+msgid "Yoshi"
+msgstr ""
+
+msgid "Daisy"
+msgstr ""
+
+msgid "Birdo"
+msgstr ""
+
+msgid "Diddy Kong"
+msgstr ""
+
+msgid "Bowser Jr."
+msgstr ""
+
+msgid "Mii M"
+msgstr ""
+
+msgid "Standard Kart M"
+msgstr ""
+
+msgid "Classic Dragster"
+msgstr ""
+
+msgid "Wild Wing"
+msgstr ""
+
+msgid "Super Blooper"
+msgstr ""
+
+msgid "Daytripper"
+msgstr ""
+
+msgid "Sprinter"
+msgstr ""
+
+msgid "Standard Bike M"
+msgstr ""
+
+msgid "Mach Bike"
+msgstr ""
+
+msgid "Sugarscoot"
+msgstr ""
+
+msgid "Zip Zip"
+msgstr ""
+
+msgid "Sneakster"
+msgstr ""
+
+msgid "Dolphin Dasher"
+msgstr ""
+
+msgid "Wario"
+msgstr ""
+
+msgid "Waluigi"
+msgstr ""
+
+msgid "Donkey Kong"
+msgstr ""
+
+msgid "Bowser"
+msgstr ""
+
+msgid "King Boo"
+msgstr ""
+
+msgid "Rosalina"
+msgstr ""
+
+msgid "Funky Kong"
+msgstr ""
+
+msgid "Dry Bowser"
+msgstr ""
+
+msgid "Mii L"
+msgstr ""
+
+msgid "Standard Kart L"
+msgstr ""
+
+msgid "Offroader"
+msgstr ""
+
+msgid "Flame Flyer"
+msgstr ""
+
+msgid "Piranha Prowler"
+msgstr ""
+
+msgid "Jetsetter"
+msgstr ""
+
+msgid "Honeycoupe"
+msgstr ""
+
+msgid "Standard Bike L"
+msgstr ""
+
+msgid "Flame Runner"
+msgstr ""
+
+msgid "Wario Bike"
+msgstr ""
+
+msgid "Shooting Star"
+msgstr ""
+
+msgid "Spear"
+msgstr ""
+
+msgid "Phantom"
+msgstr ""
+
