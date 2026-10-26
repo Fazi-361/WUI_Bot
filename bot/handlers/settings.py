@@ -85,7 +85,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
 
     on, off = _("settings.on"), _("settings.off")
     return InputRichMessage(
-        markdown=f'**{_("settings.language")}**  \n'
+        markdown=f'[**{_("settings.language")}**](https://crowdin.com/project/wuibot)  \n'
         f'{''.join(f'<tg-button-row>{''.join(
             f'<tg-button style="primary" type="disabled">{text}</tg-button>'
             if locale == lang else
