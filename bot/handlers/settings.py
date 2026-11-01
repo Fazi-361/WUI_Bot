@@ -90,7 +90,7 @@ def get_settings_page(state_data: dict, i18n: I18n) -> InputRichMessage:
             f'<tg-button style="primary" type="disabled">{text}</tg-button>'
             if locale == lang else
             # ! Hack temporaneo, in quanto solo l'inglese e l'italiano sono lingue supportate
-            f'<tg-button type="{'callback_data' if lang in ('IT', 'US', 'EN') else 'disabled'}" data="{data}">{text}</tg-button>'
+            f'<tg-button type="{'callback_data' if lang in ('IT', 'US', 'EN') else 'danger'}" data="{data}">{text}</tg-button>'
             for lang, data, text in row
         )}</tg-button-row>' for row in LANGUAGE_BUTTON_ROWS)}  \n'
         f'*{_("settings.language.description")}*'
